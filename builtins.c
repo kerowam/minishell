@@ -68,3 +68,43 @@ int	echo_command(char **args)
 		printf("\n");
 	return (EXIT_SUCCESS);
 }
+
+int	unset_command_with_args(char **args, char ***envp)
+{
+	int		i;
+	char	*current_var;
+	int		j;
+
+	i = 0;
+	while (args[i] != NULL)
+	{
+		current_var = args[i];
+		j = 0;
+		while ((*envp)[j] != NULL)
+		{
+			if (ft_strncmp((*envp)[j], current_var,
+				ft_strlen(current_var)) == 0)
+			{
+				while ((*envp)[j++] != NULL)
+				{
+					(*envp)[j] = (*envp)[j + 1];
+				}
+				break ;
+			}
+			j++;
+		}
+		i++;
+	}
+	return (EXIT_SUCCESS);
+}
+
+int	unset_command(char **args, char ***envp)
+{
+	if (args[1] == NULL)
+	{
+		printf("Unset: missing argument\n");
+		return (EXIT_FAILURE);
+	}
+	else
+		return (unset_command_with_args(args, envp));
+}
