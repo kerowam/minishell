@@ -15,7 +15,7 @@ char	*update_variable(char *variable, char *new_value)
 		new_len = ft_strlen(new_value);
 		if (new_len <= var_len)
 		{
-			ft_strlcpy((char *)var_name, new_value, var_len);
+			ft_strlcpy(var_name, new_value, var_len + 1);
 			updated_variable = variable;
 		}
 		else
