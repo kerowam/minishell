@@ -24,18 +24,24 @@ void	run_shell(char **env)
 	t_prompt	prompt;	
 	char		*line;
 	char		cwd[500];
+	int			q;
 
 	prompt.envp = env;
 	while (1)
 	{
 		if (getcwd(cwd, sizeof(cwd)) != NULL)
-			printf(MAGENTA "Minishell@" YELLOW "%s ~ " RESET, cwd);
+			printf(MAGENTA "Minishell@" YELLOW "%s ~\n" RESET, cwd);
 		else
 			perror("getcwd() error");
-		line = readline("");
-		add_history(line);
+		line = readline(BLUE "Minishell@ ~ " RESET);
+		if (line && *line)
+			add_history(line);
 		if (line == NULL)
 			break ;
+		q = check_closed_quotes(line, 0, 0);
+		printf("q = %d", q);
+		if (q == 1)
+			printf("error: dequoted line"); //Hacer función para enviar errores a stderr
 		process_line(line, &prompt.envp);
 		free(line);
 	}
@@ -73,7 +79,7 @@ int	main(int argc, char **argv, char **env)
 		ft_header();
 		run_shell(env);
 	}
-	clear_history();
+	rl_clear_history();
 	return (EXIT_SUCCESS);
 }
 

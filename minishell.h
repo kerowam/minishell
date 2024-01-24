@@ -58,9 +58,12 @@ void		ft_header(void);
 void		run_shell(char **env);
 void		process_line(char *line, char ***env);
 int			main(int argc, char **argv, char **env);
-//void		ft_leaks(void);
+void		ft_leaks(void);
 
 //utils.c
 void		free_str_array(char **str_array);
+
+//parse.c
+int			check_closed_quotes(char *line, int q, int i);
 
 #endif
