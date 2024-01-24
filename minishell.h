@@ -24,8 +24,9 @@
 typedef struct s_prompt
 {
 	char	**envp;
-	pid_t	pid;
-	int		g_status;
+	char	*line;
+	char	**args;
+	char	cwd[500];
 }				t_prompt;
 
 //builtins.c
@@ -49,12 +50,5 @@ void		ft_leaks(void);
 
 //utils.c
 void		free_str_array(char **str_array);
-
-//cd_utils.c
-int			get_int_length(int value);
-void		int_to_str(char *buffer, int value);
-size_t		handle_percent(char *buffer, int *j, char *format, void *args[]);
-size_t		handle_string(char *buffer, int *j, char *str);
-int			my_sprintf(char *buffer, char *format, void *args[]);
 
 #endif

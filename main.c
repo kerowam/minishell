@@ -21,22 +21,20 @@ void	ft_header(void)
 void	run_shell(char **env)
 {
 	t_prompt	prompt;	
-	char		*line;
-	char		cwd[500];
 
 	prompt.envp = env;
 	while (1)
 	{
-		if (getcwd(cwd, sizeof(cwd)) != NULL)
-			printf(MAGENTA "Minishell@" YELLOW "%s ~ " RESET, cwd);
+		if (getcwd(prompt.cwd, sizeof(prompt.cwd)) != NULL)
+			printf(MAGENTA "Minishell@" YELLOW "%s ~ " RESET, prompt.cwd);
 		else
 			perror("getcwd() error");
-		line = readline("");
-		add_history(line);
-		if (line == NULL)
+		prompt.line = readline("");
+		add_history(prompt.line);
+		if (prompt.line == NULL)
 			break ;
-		process_line(line, &prompt.envp);
-		free(line);
+		process_line(prompt.line, &prompt.envp);
+		free(prompt.line);
 	}
 }
 
