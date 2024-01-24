@@ -1,4 +1,3 @@
-
 #include "minishell.h"
 
 void	free_str_array(char **str_array)

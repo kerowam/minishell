@@ -1,4 +1,3 @@
-
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -22,18 +21,8 @@
 # define CYAN		"\x1B[36m"
 # define WHITE		"\x1B[37m"
 
-typedef struct s_mini
-{
-	char			**full_cmd;
-	char			*full_path;
-	int				infile;
-	int				outfile;
-	struct s_mini	*next;
-}			t_mini;
-
 typedef struct s_prompt
 {
-	t_mini	*cmds;
 	char	**envp;
 	pid_t	pid;
 	int		g_status;
@@ -47,20 +36,25 @@ int			unset_command_with_args(char **args, char ***envp);
 int			unset_command(char **args, char ***envp);
 
 //builtins2.c
-void		cd_command(char *path);
-int			find_env_var(char **environ, char *name);
-void		delete_env_var(char **environ, int index);
-void		add_env_var(char **environ, char *new_var);
-void		export_func(char ***environ, char *input);
+char		*update_variable(char *variable, char *new_value);
+void		update_pwd(char ***envp, char *new_pwd);
+void		cd_command(char *path, char ***envp);
 
 //main.c
 void		ft_header(void);
 void		run_shell(char **env);
 void		process_line(char *line, char ***env);
 int			main(int argc, char **argv, char **env);
-//void		ft_leaks(void);
+void		ft_leaks(void);
 
 //utils.c
 void		free_str_array(char **str_array);
+
+//cd_utils.c
+int			get_int_length(int value);
+void		int_to_str(char *buffer, int value);
+size_t		handle_percent(char *buffer, int *j, char *format, void *args[]);
+size_t		handle_string(char *buffer, int *j, char *str);
+int			my_sprintf(char *buffer, char *format, void *args[]);
 
 #endif

@@ -1,4 +1,3 @@
-
 #include "minishell.h"
 
 void	ft_header(void)
@@ -58,13 +57,11 @@ void	process_line(char *line, char ***env)
 		if (ft_strncmp(args[0], "pwd\0", 4) == 0)
 			pwd_command();
 		if (ft_strncmp(args[0], "cd\0", 3) == 0)
-			cd_command(args[1]);
+			cd_command(args[1], env);
 		if (args[0] != NULL && ft_strncmp(args[0], "echo\0", 5) == 0)
 			echo_command(args);
 		if (args[0] != NULL && ft_strncmp(args[0], "unset\0", 6) == 0)
 			unset_command(args, env);
-		if (args[0] != NULL && ft_strncmp(args[0], "export\0", 7) == 0)
-			export_func(env, args[1]);
 	}
 	free_str_array(args);
 }

@@ -1,94 +1,74 @@
-
 #include "minishell.h"
 
-void	cd_command(char *path)
+char	*update_variable(char *variable, char *new_value)
 {
-	if (chdir(path) != 0)
-		perror("Error changing directory");
-}
-//falta hacer que se actualice pwd cada vexz que cambie de directorio.
+	char	*var_name;
+	char	*updated_variable;
+	size_t	var_len;
+	size_t	new_len;
 
-int	find_env_var(char **environ, char *name)
-{
-	int	i;
-
-	i = 0;
-	while (environ[i] != NULL)
+	updated_variable = NULL;
+	if (variable != NULL)
 	{
-		if (ft_strncmp(environ[i], name, ft_strlen(name)) == 0
-			&& environ[i][ft_strlen(name)] == '=')
-			return (i);
-		i++;
-	}
-	return (-1);
-}
-
-//Elimina una variable de entorno existente
-void	delete_env_var(char **environ, int index)
-{
-	int	i;
-
-	i = index;
-	while (environ[i] != NULL)
-	{
-		environ[i] = environ[i + 1];
-		i++;
-	}
-}
-
-//Agrega una nueva variable de entorno
-void	add_env_var(char **environ, char *new_var)
-{
-	int	i;
-
-	i = 0;
-	while (environ[i] != NULL)
-		i++;
-	environ[i] = ft_strdup(new_var);
-	environ[i + 1] = NULL;
-}
-
-//Esta es la función export
-void	export_func(char ***environ, char *input)
-{
-	char	*name;
-	char 	*value;
-	char	*equal_sign;
-	int		index;
-
-	name = NULL;
-	value = NULL;
-	equal_sign = ft_strchr(input, '=');
-	if (equal_sign != NULL)
-	{
-		name = malloc(equal_sign - input + 1);
-		ft_strlcpy(name, input, equal_sign - input);
-		name[equal_sign - input] = '\0';
-		value = ft_strdup(equal_sign + 1);
-		if (name != NULL && value != NULL)
+		var_name = ft_strchr(variable, '=') + 1;
+		var_len = ft_strlen(var_name);
+		new_len = ft_strlen(new_value);
+		if (new_len <= var_len)
 		{
-			index = find_env_var(*environ, name);
-			if (index != -1)
-			{
-				free((*environ)[index]);
-				(*environ)[index] = strdup(input);
-			}
-			else
-				add_env_var(*environ, input);
+			ft_strlcpy((char *)var_name, new_value, var_len);
+			updated_variable = variable;
 		}
 		else
-			printf("Error: Formato inválido. Debe ser 'nombre=valor'.\n");
-		free(name);
-		free(value);
+		{
+			updated_variable = malloc(new_len + var_len + 1);
+			if (updated_variable != NULL)
+				ft_strlcpy((char *)var_name, new_value, var_len + new_len + 1);
+			free(updated_variable);
+		}
 	}
-	else
-		fprintf(stderr, "Error: Formato inválido. Debe ser 'nombre=valor'.\n");
+	return (updated_variable);
 }
 
-//Modificar caso "nombre"= "valor" de export y separar funcion.
+void	update_pwd(char ***envp, char *new_pwd)
+{
+	char	**current;
 
-//Arreglar unset para que funcione como debe y no haga cosas raras
+	current = *envp;
+	while (*current)
+	{
+		if (ft_strncmp(*current, "PWD=", 4) == 0
+			|| ft_strncmp(*current, "OLDPWD=", 7) == 0)
+		{
+			if (new_pwd != NULL)
+				update_variable(*current, new_pwd);
+		}
+		++current;
+	}
+}
 
-//Añadir la actualizacion de pwd a cd una vez export funcione como debe funcionar.
+void	cd_command(char *path, char ***envp)
+{
+	char	*previous_directory;
+	char	*current_directory;
 
-//Mirar porque el prompt se borra al usar el historial.
+	if (path == NULL || *path == '\0')
+	{
+		path = getenv("HOME");
+		if (path == NULL)
+		{
+			perror("Error getting HOME directory");
+			return ;
+		}
+	}
+	previous_directory = getcwd(NULL, 0);
+	if (chdir(path) != 0)
+	{
+		perror("Error changing directory");
+		free(previous_directory);
+		return ;
+	}
+	current_directory = getcwd(NULL, 0);
+	update_pwd(envp, current_directory);
+	free(current_directory);
+	free(previous_directory);
+}

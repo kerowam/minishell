@@ -1,4 +1,3 @@
-
 #include "minishell.h"
 
 int	env_command(char **envp)
