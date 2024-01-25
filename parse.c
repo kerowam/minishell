@@ -20,6 +20,7 @@ int	check_closed_quotes(char *line, int q, int i)
 	in_quot = 0;
 	while (line[i])
 	{
+		printf("line[%d] = %c\n", i, line[i]);
 		if (line[i] == quot || line[i] == d_quot)
 		{
 			q = 1;
@@ -35,7 +36,10 @@ int	check_closed_quotes(char *line, int q, int i)
 					q = 2;
 					i++;
 					if (line[i] != '\0')
+					{
 						q = check_closed_quotes(line, 2, i);
+						return (q);
+					}
 				}
 				else
 				i++;

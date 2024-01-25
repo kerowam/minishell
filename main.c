@@ -25,7 +25,7 @@ void	run_shell(char **env)
 	char		*line;
 	char		cwd[500];
 	int			q;
-
+	int			len;
 	prompt.envp = env;
 	while (1)
 	{
@@ -34,6 +34,8 @@ void	run_shell(char **env)
 		else
 			perror("getcwd() error");
 		line = readline(BLUE "Minishell@ ~ " RESET);
+		len = ft_strlen(line);
+		printf("len = %d\n", len);
 		if (line && *line)
 			add_history(line);
 		if (line == NULL)
@@ -79,7 +81,7 @@ int	main(int argc, char **argv, char **env)
 		ft_header();
 		run_shell(env);
 	}
-	rl_clear_history();
+	//srl_clear_history();
 	return (EXIT_SUCCESS);
 }
 
