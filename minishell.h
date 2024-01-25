@@ -39,6 +39,31 @@ typedef struct s_prompt
 	int		g_status;
 }				t_prompt;
 
+//Para
+typedef struct	s_process
+{
+	struct	t_process	*next;
+	char				**argv;//Así o solo con 1 *???
+	pid_t				pid;
+	char				*token;//?????
+	int					completed;//?????
+	int					stopped;//?????
+	int					status;//????
+}				t_process;
+
+//Cada trabajo representa un proceso (Todo lo que hay dentro de un pipe)
+typedef struct	s_job
+{
+	struct t_job	*next_job;
+	char			*command;
+	t_process		*first_process;
+	pid_t			pid_group;//???
+	int				stdin;
+	int				stdout;
+	int				stderr;
+
+}				t_job;
+
 //builtins.c
 int			env_command(char **envp);
 int			pwd_command(void);
