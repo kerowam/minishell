@@ -12,43 +12,49 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 
-# define RESET		"\x1B[0m"
-# define RED		"\x1B[31m"
-# define GREEN		"\x1B[32m"
-# define YELLOW		"\x1B[33m"
-# define BLUE		"\x1B[34m"
-# define MAGENTA	"\x1B[35m"
-# define CYAN		"\x1B[36m"
-# define WHITE		"\x1B[37m"
+# define RESET			"\x1B[0m"
+# define BOLD_MAGENTA	"\x1B[1;35m"
+# define LIGHT_CYAN		"\x1B[96m"
+# define BOLD_WHITE		"\x1B[1;37m"
+# define BOLD_BLUE		"\x1B[1;34m"
 
-typedef struct s_prompt
+typedef struct s_env
+{
+	char			*name;
+	char			*value;
+	int				index;
+	struct s_env	*next;
+}				t_env;
+
+typedef struct s_data
 {
 	char	**envp;
-	char	*line;
-	char	**args;
+	char	**echo;
+	char	*line;	
 	char	cwd[500];
-}				t_prompt;
+	int		del; //delimitador para variables
+	t_env	*env;
+	t_env	*temp_env;
+}				t_data;
 
 //builtins.c
-int			env_command(char **envp);
-int			pwd_command(void);
-int			echo_command(char **args);
-int			unset_command_with_args(char **args, char ***envp);
-int			unset_command(char **args, char ***envp);
+void	env_command(t_data *shell);
+void	pwd_command(t_data *shell);
 
-//builtins2.c
-char		*update_variable(char *variable, char *new_value);
-void		update_pwd(char ***envp, char *new_pwd);
-void		cd_command(char *path, char ***envp);
+//enviroment.c
+void	initialize_env(t_data *shell, char **env);
+void	add_newenv_back(t_env **first, t_env *new, char **temp);
+void	add_oldpwd(t_data *shell);
 
 //main.c
-void		ft_header(void);
-void		run_shell(char **env);
-void		process_line(char *line, char ***env);
-int			main(int argc, char **argv, char **env);
-void		ft_leaks(void);
+void	initialize_minishell(t_data **shell, char **env);
+void	start_minishell(t_data *shell);
+void	ft_header(void);
+int		main(int argc, char **argv, char **env);
+//void	print_env_list(t_env *env);
+//void	ft_leaks(void);
 
 //utils.c
-void		free_str_array(char **str_array);
+void	free_temp(char **temp);
 
 #endif

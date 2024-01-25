@@ -1,19 +1,17 @@
 #include "minishell.h"
 
-void	free_str_array(char **str_array)
+void	free_temp(char **temp)
 {
-	size_t	i;
+	int	i;
 
-	if (str_array == NULL)
-		return ;
-	if (str_array)
+	i = 0;
+	if (temp)
 	{
-		i = 0;
-		while (str_array[i] != NULL)
+		while (temp[i])
 		{
-			free(str_array[i]);
+			free(temp[i]);
 			i++;
 		}
-		free(str_array);
+		free(temp);
 	}
 }
