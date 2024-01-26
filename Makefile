@@ -6,7 +6,8 @@ LIBFT = ./libft
 SRCS = main.c\
 		builtins.c\
 		utils.c\
-		parse.c
+		parse.c\
+		lexer.c
 
 CC = gcc
 

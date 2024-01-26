@@ -22,6 +22,9 @@
 # define CYAN		"\x1B[36m"
 # define WHITE		"\x1B[37m"
 
+# define Q		'\''
+# define D_Q	'\"'
+
 typedef struct s_mini
 {
 	char			**full_cmd;
@@ -38,6 +41,31 @@ typedef struct s_prompt
 	pid_t	pid;
 	int		g_status;
 }				t_prompt;
+
+//Para
+typedef struct	s_process
+{
+	struct	t_process	*next;
+	char				**argv;//Así o solo con 1 *???
+	pid_t				pid;
+	char				token;//?????
+	int					completed;//?????
+	int					stopped;//?????
+	int					status;//????
+}				t_process;
+
+//Cada trabajo representa un proceso (Todo lo que hay dentro de un pipe)
+typedef struct	s_job
+{
+	struct t_job	*next_job;
+	char			*command;
+	t_process		*first_process;
+	pid_t			pid_group;//???
+	int				infile;
+	int				outfile;
+	int				stderr;
+
+}				t_job;
 
 //builtins.c
 int			env_command(char **envp);
@@ -68,4 +96,6 @@ int			check_closed_quotes(char *line, int q, int i, char in_quot);
 int			check_quotes(char *line, int q, int i);
 char		set_in_quot(char *line, int i);
 
+//lexer.c
+int			word_counter(char	*line); //Es una static, hay que quitarla de aquí.
 #endif
