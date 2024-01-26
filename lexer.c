@@ -33,20 +33,29 @@ static int	search_end_quoted_string(char q, char *line, int i)
 		{
 			count++;
 			while (line[i] && line[i] != ' ' && line[i] != Q && line[i] != D_Q)
-			i++;
+				i++;
 		}
 	}
 	return (count);
 }
 
-/*char	**line_split(char *line)
+char	**split_line(char *line)
+{
+
+}
+
+char	**create_line_splited(char *line)
 {
 	char	**first_split;
-	int		segments;
+	int		n_words;
 	int		i;
 	int		start;
 
-	segments = word_counter(line);
-	first_split = (char **)malloc(sizeof(char *) * (segments + 1));
-
-}*/
+	n_words = word_counter(line);
+	if (n_words == 0)
+		return (NULL);
+	first_split = (char **)malloc(sizeof(char *) * (n_words + 1));
+	if (!first_split)
+		return (NULL);
+	
+}
