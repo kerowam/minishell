@@ -42,7 +42,7 @@ void	run_shell(char **env)
 		q = check_quotes(line, 0, 0);
 		//printf("q = %d\n", q);
 		if (q % 2 != 0)
-			printf("error: dequoted line"); //Hacer función para enviar errores a stderr
+			printf("error: dequoted line\n"); //Hacer función para enviar errores a stderr
 		words_count = word_counter(line);
 		printf("words: %d\n", words_count);
 		process_line(line, &prompt.envp);

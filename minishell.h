@@ -22,6 +22,9 @@
 # define CYAN		"\x1B[36m"
 # define WHITE		"\x1B[37m"
 
+# define Q		'\''
+# define D_Q	'\"'
+
 typedef struct s_mini
 {
 	char			**full_cmd;
@@ -94,5 +97,5 @@ int			check_quotes(char *line, int q, int i);
 char		set_in_quot(char *line, int i);
 
 //lexer.c
-//int			word_counter(char	*line); //Es una static, hay que quitarla de aquí.
+int			word_counter(char	*line); //Es una static, hay que quitarla de aquí.
 #endif

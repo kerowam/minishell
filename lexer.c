@@ -4,40 +4,35 @@ static int	search_end_quoted_string(char q, char *line, int i)
 {
 	while (line[i] != q)
 		i++;
+	i++;
 	return (i);
 }
 
 
 
-static int	word_counter(char	*line)
+/*static*/ int	word_counter(char	*line)
 {
 	int		count;
 	int		i;
-	char	q;
-	char	d_q;
 
 	count = 0;
 	i = 0;
-	q = '\'';
-	d_q = '\"';
 	while (line[i])
 	{
-		if (line[i] == q || line[i] == d_q)
+		if (line[i] == Q || line[i] == D_Q)
 		{
 			count++;
-			i++;
-			if (line[i] == q)
-				i = search_end_quoted_string(q, line, i);
+			if (line[i] == Q)
+				i = search_end_quoted_string(Q, line, i + 1);
 			else
-				i = search_end_quoted_string(d_q, line, i);
-			i++;
+				i = search_end_quoted_string(D_Q, line, i + 1);
 		}
 		else if (line[i] == ' ')
 			i++;
-		else if (line[i] != ' ' && line[i] != q && line[i] != d_q)
+		else if (line[i] != ' ' && line[i] != Q && line[i] != D_Q)
 		{
 			count++;
-			while (line[i] && line[i] != ' ' && line[i] != q && line[i] != d_q)
+			while (line[i] && line[i] != ' ' && line[i] != Q && line[i] != D_Q)
 			i++;
 		}
 	}
@@ -46,5 +41,12 @@ static int	word_counter(char	*line)
 
 /*char	**line_split(char *line)
 {
+	char	**first_split;
+	int		segments;
+	int		i;
+	int		start;
+
+	segments = word_counter(line);
+	first_split = (char **)malloc(sizeof(char *) * (segments + 1));
 
 }*/
