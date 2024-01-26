@@ -45,7 +45,7 @@ typedef struct	s_process
 	struct	t_process	*next;
 	char				**argv;//Así o solo con 1 *???
 	pid_t				pid;
-	char				*token;//?????
+	char				token;//?????
 	int					completed;//?????
 	int					stopped;//?????
 	int					status;//????
@@ -58,8 +58,8 @@ typedef struct	s_job
 	char			*command;
 	t_process		*first_process;
 	pid_t			pid_group;//???
-	int				stdin;
-	int				stdout;
+	int				infile;
+	int				outfile;
 	int				stderr;
 
 }				t_job;
@@ -93,4 +93,6 @@ int			check_closed_quotes(char *line, int q, int i, char in_quot);
 int			check_quotes(char *line, int q, int i);
 char		set_in_quot(char *line, int i);
 
+//lexer.c
+//int			word_counter(char	*line); //Es una static, hay que quitarla de aquí.
 #endif
