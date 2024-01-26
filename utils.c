@@ -18,3 +18,17 @@ void	free_str_array(char **str_array)
 		free(str_array);
 	}
 }
+
+
+// Para comprobar lo que se aloja en la linea dividida
+void	print_split(char **line_splited)
+{
+	int	i;
+
+	i = 0;
+	while (line_splited[i] != NULL)
+	{
+		printf("line_splited[%d] = %s\n", i, line_splited[i]);
+		i++;
+	}
+}

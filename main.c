@@ -25,7 +25,8 @@ void	run_shell(char **env)
 	char		*line;
 	char		cwd[500];
 	int			q;
-	int			words_count;
+	//int			words_count;
+	char		**first_split;
 
 	prompt.envp = env;
 	while (1)
@@ -43,8 +44,10 @@ void	run_shell(char **env)
 		//printf("q = %d\n", q);
 		if (q % 2 != 0)
 			printf("error: dequoted line\n"); //Hacer función para enviar errores a stderr
-		words_count = word_counter(line);
-		printf("words: %d\n", words_count);
+		//words_count = word_counter(line);
+		first_split = create_line_splited(line);
+		//printf("words: %d\n", words_count);
+		print_split(first_split);
 		process_line(line, &prompt.envp);
 		free(line);
 	}

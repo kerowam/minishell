@@ -10,7 +10,7 @@ static int	search_end_quoted_string(char q, char *line, int i)
 
 
 
-/*static*/ int	word_counter(char	*line)
+static int	word_counter(char	*line)
 {
 	int		count;
 	int		i;
@@ -19,29 +19,52 @@ static int	search_end_quoted_string(char q, char *line, int i)
 	i = 0;
 	while (line[i])
 	{
-		if (line[i] == Q || line[i] == D_Q)
+		if (line[i] == '\'' || line[i] == '\"')
 		{
 			count++;
-			if (line[i] == Q)
-				i = search_end_quoted_string(Q, line, i + 1);
+			if (line[i] == '\'')
+				i = search_end_quoted_string('\'', line, i + 1);
 			else
-				i = search_end_quoted_string(D_Q, line, i + 1);
+				i = search_end_quoted_string('\"', line, i + 1);
 		}
 		else if (line[i] == ' ')
 			i++;
-		else if (line[i] != ' ' && line[i] != Q && line[i] != D_Q)
+		else if (line[i] != ' ' && line[i] != '\'' && line[i] != '\"')
 		{
 			count++;
-			while (line[i] && line[i] != ' ' && line[i] != Q && line[i] != D_Q)
+			while (line[i] && line[i] != ' ' && line[i] != '\'' && line[i] != '\"')
 				i++;
 		}
 	}
 	return (count);
 }
 
-char	**split_line(char *line)
+static int	len_split(char *line, int i)
 {
+	int		j;
+	int		start;
 
+	j = 0;
+	while (line[i])
+	{
+		if (line[i] == '\'' || line[i] == '\"')
+		{
+			start = i;
+			if (line[i] == '\'')
+				i = search_end_quoted_string('\'', line, i + 1);
+			else
+				i = search_end_quoted_string('\"', line, i + 1);
+			return (i - start);
+		}
+		else if (line[i] != ' ' && line[i] != '\'' && line[i] != '\"')
+		{
+			start = i;
+			while (line[i] && line[i] != ' ' && line[i] != '\'' && line[i] != '\"')
+				i++;
+			return (i - start);
+		}
+	}
+	return (0);
 }
 
 char	**create_line_splited(char *line)
@@ -49,6 +72,7 @@ char	**create_line_splited(char *line)
 	char	**first_split;
 	int		n_words;
 	int		i;
+	int		j;
 	int		start;
 
 	n_words = word_counter(line);
@@ -57,5 +81,21 @@ char	**create_line_splited(char *line)
 	first_split = (char **)malloc(sizeof(char *) * (n_words + 1));
 	if (!first_split)
 		return (NULL);
-	
+	i = 0;
+	j = 0;
+	while (line[i] && j < n_words)
+	{
+		if (line[i] == ' ')
+			i++;
+		if (line[i] != ' ')
+		{
+			start = i;
+			i = len_split(line, i) + start;
+			first_split[j] = ft_substr(line, start, i - start);
+		}
+		j++;
+		i++;
+	}
+	first_split[j] = NULL;
+	return (first_split);
 }

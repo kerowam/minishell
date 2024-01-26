@@ -90,6 +90,8 @@ void		ft_leaks(void);
 
 //utils.c
 void		free_str_array(char **str_array);
+//solo para pruebas
+void	print_split(char **line_splited);
 
 //parse.c
 int			check_closed_quotes(char *line, int q, int i, char in_quot);
@@ -97,5 +99,6 @@ int			check_quotes(char *line, int q, int i);
 char		set_in_quot(char *line, int i);
 
 //lexer.c
-int			word_counter(char	*line); //Es una static, hay que quitarla de aquí.
+char		**create_line_splited(char *line);
+
 #endif
