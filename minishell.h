@@ -29,6 +29,8 @@ typedef struct s_env
 typedef struct s_data
 {
 	char	**envp;
+	char	*cd;
+	char	*cd1;
 	char	**echo;
 	char	*line;	
 	char	cwd[500];
@@ -40,6 +42,21 @@ typedef struct s_data
 //builtins.c
 void	env_command(t_data *shell);
 void	pwd_command(t_data *shell);
+void	echo_command(char **str, int exists);
+void	unset_command(t_data *shell, char *name);
+
+//cd_utils.c
+void	update_pwd(t_data *shell);
+void	update_oldpwd(t_data *shell);
+void	update_oldpwd_again(t_data *shell, char *pwd);
+void	obtain_env(t_data *shell, char *env_var);
+
+//cd.c
+void	handle_home_directory(t_data *shell);
+void	handle_previous_directory(t_data *shell);
+void	handle_given_directory(char **str, t_data *shell);
+void	cd_command(char **str, t_data *shell);
+int		handle_directory(t_data *shell, char **str);
 
 //enviroment.c
 void	initialize_env(t_data *shell, char **env);
@@ -48,13 +65,14 @@ void	add_oldpwd(t_data *shell);
 
 //main.c
 void	initialize_minishell(t_data **shell, char **env);
+void	process_builtins(t_data *shell);
 void	start_minishell(t_data *shell);
 void	ft_header(void);
 int		main(int argc, char **argv, char **env);
-//void	print_env_list(t_env *env);
 //void	ft_leaks(void);
 
 //utils.c
 void	free_temp(char **temp);
+void	free_echo(char **str);
 
 #endif
