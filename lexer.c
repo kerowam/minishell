@@ -10,7 +10,7 @@ static int	search_end_quoted_string(char q, char *line, int i)
 
 
 
-static int	word_counter(char	*line)
+/*static int	word_counter(char	*line)
 {
 	int		count;
 	int		i;
@@ -37,7 +37,7 @@ static int	word_counter(char	*line)
 		}
 	}
 	return (count);
-}
+}*/
 
 static int	len_split(char *line, int i)
 {
@@ -67,23 +67,25 @@ static int	len_split(char *line, int i)
 	return (0);
 }
 
-char	**create_line_splited(char *line)
+t_list	**create_line_splited(char *line, t_list **list)
 {
-	char	**first_split;
-	int		n_words;
+	char	*tmp_word;
+	//int		n_words;
 	int		i;
-	int		j;
+	//int		j;
 	int		start;
+	t_list	**tmp;
 
-	n_words = word_counter(line);
+	tmp = list;
+	/*n_words = word_counter(line);
 	if (n_words == 0)
 		return (NULL);
 	first_split = (char **)malloc(sizeof(char *) * (n_words + 1));
 	if (!first_split)
-		return (NULL);
+		return (NULL);*/
 	i = 0;
-	j = 0;
-	while (line[i] && j < n_words)
+	//j = 0;
+	while (line[i]/* && j < n_words*/)
 	{
 		if (line[i] == ' ')
 			i++;
@@ -91,11 +93,15 @@ char	**create_line_splited(char *line)
 		{
 			start = i;
 			i = len_split(line, i) + start;
-			first_split[j] = ft_substr(line, start, i - start);
+			tmp_word = ft_substr(line, start, i - start);
+			ft_lstadd_back(tmp, ft_lstnew(tmp_word));
 		}
-		j++;
+		//j++;
 		i++;
 	}
-	first_split[j] = NULL;
-	return (first_split);
+	//first_split[j] = NULL;
+	tmp = list;
+	//free (tmp);
+	free (tmp_word);
+	return (tmp);
 }

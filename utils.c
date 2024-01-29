@@ -32,3 +32,18 @@ void	print_split(char **line_splited)
 		i++;
 	}
 }
+
+void	print_list_splited(t_list **list)
+{
+	t_list	*tmp;
+	int		i;
+
+	tmp = *list;
+	i = 0;
+	while (tmp)
+	{
+		printf("list[%d] = %s\n", i, tmp->content);
+		tmp = tmp->next;
+		i++;
+	}
+}

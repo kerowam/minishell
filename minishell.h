@@ -92,6 +92,7 @@ void		ft_leaks(void);
 void		free_str_array(char **str_array);
 //solo para pruebas
 void	print_split(char **line_splited);
+void	print_list_splited(t_list **list);
 
 //parse.c
 int			check_closed_quotes(char *line, int q, int i, char in_quot);
@@ -99,6 +100,6 @@ int			check_quotes(char *line, int q, int i);
 char		set_in_quot(char *line, int i);
 
 //lexer.c
-char		**create_line_splited(char *line);
+t_list	**create_line_splited(char *line, t_list **list);
 
 #endif
