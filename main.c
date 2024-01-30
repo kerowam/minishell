@@ -30,6 +30,9 @@ void	run_shell(char **env)
 	t_list		**words_splited;
 
 	prompt.envp = env;
+	words_splited = (t_list **)malloc(sizeof(t_list *));
+	if (!words_splited)
+		printf("error: malloc\n"); //Hacer función para enviar errores a stderr
 	while (1)
 	{
 		if (getcwd(cwd, sizeof(cwd)) != NULL)

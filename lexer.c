@@ -41,10 +41,8 @@ static int	search_end_quoted_string(char q, char *line, int i)
 
 static int	len_split(char *line, int i)
 {
-	int		j;
 	int		start;
 
-	j = 0;
 	while (line[i])
 	{
 		if (line[i] == '\'' || line[i] == '\"')
@@ -89,7 +87,7 @@ t_list	**create_line_splited(char *line, t_list **list)
 	{
 		if (line[i] == ' ')
 			i++;
-		if (line[i] != ' ')
+		if (line[i] != ' ' && line[i])
 		{
 			start = i;
 			i = len_split(line, i) + start;
@@ -97,7 +95,8 @@ t_list	**create_line_splited(char *line, t_list **list)
 			ft_lstadd_back(tmp, ft_lstnew(tmp_word));
 		}
 		//j++;
-		i++;
+		if (line[i] != '\0')
+			i++;
 	}
 	//first_split[j] = NULL;
 	tmp = list;
