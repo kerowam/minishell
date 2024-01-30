@@ -51,6 +51,7 @@ void	run_shell(char **env)
 		//words_count = word_counter(line);
 		words_splited = create_line_splited(line, words_splited);
 		//printf("words: %d\n", words_count);
+		words_splited = split_pipes(words_splited);
 		print_list_splited(words_splited);
 		process_line(line, &prompt.envp);
 		free(line);

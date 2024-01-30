@@ -100,6 +100,12 @@ int			check_quotes(char *line, int q, int i);
 char		set_in_quot(char *line, int i);
 
 //lexer.c
-t_list	**create_line_splited(char *line, t_list **list);
+t_list		**create_line_splited(char *line, t_list **list);
+t_list		**split_pipes(t_list **list);
+
+//lexer_utils.c
+int			get_pipe_nbr(char *line, int i);
+int			get_pipe_index(char *line, int i);
+void		insert_node(t_list **list, char *content);
 
 #endif

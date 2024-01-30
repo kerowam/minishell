@@ -7,7 +7,8 @@ SRCS = main.c\
 		builtins.c\
 		utils.c\
 		parse.c\
-		lexer.c
+		lexer.c\
+		lexer_utils.c\
 
 CC = gcc
 

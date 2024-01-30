@@ -104,3 +104,74 @@ t_list	**create_line_splited(char *line, t_list **list)
 	free (tmp_word);
 	return (tmp);
 }
+
+t_list	*split_pipe(t_list *list, int i)
+{
+	char	*tmp_word;
+	char	*tmp_split;
+	int		pipe_index;
+
+	tmp_word = list->content;
+	if (i == 0)
+	{
+		pipe_index = get_pipe_index(tmp_word, i);
+		if (pipe_index == 0)
+		{
+			list->content = ft_strdup("|");
+			i++;
+		}
+		else
+			tmp_split = ft_substr(tmp_word, 0, pipe_index);
+	}
+	else
+	{
+		if (tmp_word[i] == '|')
+		{
+			insert_node(&list, ft_strdup("|"));
+		}
+		else
+		{
+			pipe_index = get_pipe_index(tmp_word, i);
+			tmp_split = ft_substr(tmp_word, i, pipe_index);
+			insert_node(&list, tmp_split);
+		}
+	}
+	return (list);
+}
+
+t_list	**split_pipes(t_list **list)
+{
+	char	*tmp_word;
+	//char	*tmp_split;
+	int		i;
+	int		len;
+	int		n_pipes;
+	t_list	**tmp;
+
+	i = 0;
+	len = 0;
+	tmp = list;
+	while (*list)
+	{
+		tmp_word = (*list)->content;
+		if (tmp_word[0] == '\'' || tmp_word[0] == '\"')
+		{
+			*list = (*list)->next;
+		}
+		else
+		{
+			len = ft_strlen(tmp_word);
+			n_pipes = get_pipe_nbr(tmp_word, i);
+			if (len > 1 && n_pipes > 0)
+			{
+				split_pipe(*list, i);
+			}
+			if ((*list)->next)
+				*list = (*list)->next;
+			else
+				break ;
+		}
+	}
+	*list = *tmp;
+	return (list);
+}
