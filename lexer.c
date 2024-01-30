@@ -97,7 +97,8 @@ t_list	**create_line_splited(char *line, t_list **list)
 			ft_lstadd_back(tmp, ft_lstnew(tmp_word));
 		}
 		//j++;
-		i++;
+		if (line[i] != '\0')
+			i++;
 	}
 	//first_split[j] = NULL;
 	tmp = list;
