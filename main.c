@@ -79,7 +79,7 @@ void	start_minishell(t_data *shell)
 				printf("error: dequoted line\n");
 				break ;
 			}
-			words_splited = create_line_splited((*shell).line, words_splited);
+			words_splited = create_line_splited(shell->line, words_splited);
 			//print_list_splited(words_splited);
 			shell->echo = ft_split(shell->line, ' ');
 			if (shell->echo && shell->echo[0] != NULL)

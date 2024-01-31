@@ -83,7 +83,7 @@ t_list	**create_line_splited(char *line, t_list **list)
 		return (NULL);*/
 	i = 0;
 	//j = 0;
-	while (line[i]/* && j < n_words*/)
+	while (line[i]) /* && j < n_words*/
 	{
 		if (line[i] == ' ')
 			i++;
@@ -91,8 +91,11 @@ t_list	**create_line_splited(char *line, t_list **list)
 		{
 			start = i;
 			i = len_split(line, i) + start;
+			tmp_word = (char *)malloc(sizeof(char) * (i - start + 1));
 			tmp_word = ft_substr(line, start, i - start);
-			ft_lstadd_back(tmp, ft_lstnew(tmp_word));
+			if (*tmp_word)
+				ft_lstadd_back(tmp, ft_lstnew(tmp_word));
+			free(tmp_word);
 		}
 		//j++;
 		if (line[i] != '\0')
@@ -101,7 +104,7 @@ t_list	**create_line_splited(char *line, t_list **list)
 	//first_split[j] = NULL;
 	tmp = list;
 	//free (tmp);
-	free (tmp_word);
+	//free (tmp_word);
 	return (tmp);
 }
 
