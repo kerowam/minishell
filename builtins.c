@@ -1,59 +1,96 @@
-
 #include "minishell.h"
 
-int	env_command(char **envp)
+void	env_command(t_data *shell)
 {
-	int	i;
+	t_env	*current_env;
 
-	i = 0;
-	while (envp[i] != NULL)
+	current_env = shell->env;
+	while (current_env != NULL)
 	{
-		printf("%s\n", envp[i]);
-		i++;
+		printf("%s%s\n", current_env->name, current_env->value);
+		current_env = current_env->next;
 	}
-	return (EXIT_SUCCESS);
 }
 
-int	pwd_command(void)
+void	pwd_command(t_data *shell)
 {
-	char	*current_directory;
-
-	current_directory = getenv("PWD");
-	if (current_directory != NULL)
-		printf("%s\n", current_directory);
+	if (getcwd(shell->cwd, sizeof(shell->cwd)) != NULL)
+		printf("%s\n", shell->cwd);
 	else
-	{
-		perror("getenv");
-		return (EXIT_FAILURE);
-	}
-	return (EXIT_SUCCESS);
+		perror("getcwd");
 }
 
-int	echo_command(char **args)
+void	echo_command(char **str, int exists)
+{
+	int	str_size;
+	int	i;
+
+	str_size = 0;
+	while (str[str_size])
+		str_size++;
+	if (str_size > 1)
+	{
+		str_size = 0;
+		while (str[++str_size] && !ft_strncmp(str[str_size], "-n", 2))
+			exists = 1;
+		while (str[str_size])
+		{
+			i = -1;
+			while (str[str_size][++i])
+				if (str[str_size][i] != '\'' && str[str_size][i] != '\"')
+					printf("%c", str[str_size][i]);
+			if (str[str_size + 1] || str[str_size][0] == '\0')
+				printf(" ");
+			str_size++;
+		}
+	}
+	if (exists == 0)
+		printf("\n");
+}
+
+void	unset_command(t_data *shell, char *name)
+{
+	t_env	*aux;
+	t_env	*delete;
+	t_env	*previous;
+
+	if (!name)
+		return ;
+	aux = shell->env;
+	previous = NULL;
+	while (aux)
+	{
+		if (ft_strncmp(aux->name, name, ft_strlen(name)))
+		{
+			delete = aux;
+			if (previous)
+				previous->next = aux->next;
+			else
+				shell->env = aux->next;
+			free(delete->name);
+			free(delete->value);
+			free(delete);
+			break ;
+		}
+		previous = aux;
+		aux = aux->next;
+	}
+}
+
+void	export_command(char **cmd, t_data *shell)
 {
 	int	i;
-	int	flag_n;
 
 	i = 1;
-	flag_n = 0;
-	while (args[i] != NULL)
+	if (!cmd[1])
+		ft_non_arg_export(shell);
+	else
 	{
-		if (ft_strncmp(args[i], "-n", 2) == 0)
+		while (cmd[i])
 		{
-			flag_n = 1;
+			if (input_checker(cmd[i], cmd[0]))
+				save_variable(cmd[i], shell);
 			i++;
 		}
-		else
-			break ;
 	}
-	while (args[i] != NULL)
-	{
-		printf("%s", args[i]);
-		i++;
-		if (args[i] != NULL)
-			printf(" ");
-	}
-	if (!flag_n)
-		printf("\n");
-	return (EXIT_SUCCESS);
 }
