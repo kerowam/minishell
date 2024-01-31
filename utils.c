@@ -33,3 +33,13 @@ void	free_echo(char **str)
 		str = NULL;
 	}
 }
+
+void	env_add_back(t_env **root, t_env *new)
+{
+	t_env	*ptr;
+
+	ptr = *root;
+	while (ptr->next)
+		ptr = ptr->next;
+	ptr->next = new;
+}

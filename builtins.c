@@ -76,3 +76,21 @@ void	unset_command(t_data *shell, char *name)
 		aux = aux->next;
 	}
 }
+
+void	export_command(char **cmd, t_data *shell)
+{
+	int	i;
+
+	i = 1;
+	if (!cmd[1])
+		ft_non_arg_export(shell);
+	else
+	{
+		while (cmd[i])
+		{
+			if (input_checker(cmd[i], cmd[0]))
+				save_variable(cmd[i], shell);
+			i++;
+		}
+	}
+}
