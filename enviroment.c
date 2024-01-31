@@ -74,3 +74,23 @@ void	add_oldpwd(t_data *shell)
 		add_newenv_back(&shell->env, new, NULL);
 	}
 }
+
+char	*ft_get_env_name(char *fullenv)
+{
+	int	i;
+
+	i = 0;
+	while (fullenv[i] && fullenv[i] != '=' && fullenv[i] != ' ')
+		i++;
+	return (ft_substr(fullenv, 0, i));
+}
+
+char	*ft_get_env_value(char *fullenv)
+{
+	int	i;
+
+	i = 0;
+	while (fullenv[i] && fullenv[i] != '=' && fullenv[i] != ' ')
+		i++;
+	return (ft_substr(fullenv, i + 1, ft_strlen(fullenv) - i));
+}

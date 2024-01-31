@@ -27,8 +27,34 @@ void	initialize_minishell(t_data **shell, char **env)
 		exit(EXIT_FAILURE);
 	}
 	initialize_env(*shell, env);
-	//printf("Variables de entorno después de initialize_env:\n");
-	//print_env_list((*shell)->env);
+}
+
+void	process_builtins(t_data *shell)
+{
+	if (ft_strncmp(shell->line, "exit\0", 5) == 0
+		|| ft_strncmp(shell->line, "EXIT\0", 5) == 0)
+	{
+		free(shell->line);
+		exit(EXIT_FAILURE);
+	}
+	if (ft_strncmp(shell->line, "env\0", 4) == 0
+		|| ft_strncmp(shell->line, "ENV\0", 4) == 0)
+		env_command(shell);
+	if (ft_strncmp(shell->line, "pwd\0", 4) == 0
+		|| ft_strncmp(shell->line, "PWD\0", 4) == 0)
+		pwd_command(shell);
+	if (ft_strncmp(shell->echo[0], "echo\0", 5) == 0
+		|| ft_strncmp(shell->echo[0], "ECHO\0", 5) == 0)
+		echo_command(shell->echo, 0);
+	if (ft_strncmp(shell->line, "unset\0", 6) == 0
+		|| ft_strncmp(shell->line, "UNSET\0", 6) == 0)
+		unset_command(shell, shell->echo[1]);
+	if (ft_strncmp(*shell->echo, "cd\0", 3) == 0
+		|| ft_strncmp(shell->line, "CD\0", 3) == 0)
+		cd_command(shell->echo, shell);
+	if (ft_strncmp(shell->echo[0], "export\0", 7) == 0
+		|| ft_strncmp(shell->echo[0], "EXPORT\0", 7) == 0)
+		export_command(shell->echo, shell);
 }
 
 void	start_minishell(t_data *shell)
@@ -36,21 +62,22 @@ void	start_minishell(t_data *shell)
 	while (1)
 	{
 		shell->line = readline("Minishell@ ~ ");
-		//printf("Comando introducido: %s\n", shell->line);
-		if (shell && *(shell->line))
-			add_history(shell->line);
 		if (shell->line == NULL)
-			break ;
-		if (ft_strncmp(shell->line, "exit\0", 5) == 0)
+			printf("\n");
+		else
 		{
-			free(shell->line);
-			exit(EXIT_FAILURE);
+			shell->echo = ft_split(shell->line, ' ');
+			if (shell->echo && shell->echo[0] != NULL)
+			{
+				if (*shell->line)
+					add_history(shell->line);
+				process_builtins(shell);
+				free_echo(shell->echo);
+				free(shell->line);
+			}
+			else
+				free(shell->line);
 		}
-		if (ft_strncmp(shell->line, "env\0", 4) == 0)
-			env_command(shell);
-		if (ft_strncmp(shell->line, "pwd\0", 4) == 0)
-			pwd_command(shell);
-		free(shell->line);
 	}
 }
 
@@ -59,8 +86,9 @@ int	main(int argc, char **argv, char **env)
 	t_data	*shell;
 
 	(void)argv;
-	//atexit(ft_leaks);
+	atexit(ft_leaks);
 	initialize_minishell(&shell, env);
+	shell->line = NULL;
 	if (argc == 1)
 	{
 		ft_header();
@@ -71,16 +99,7 @@ int	main(int argc, char **argv, char **env)
 	return (EXIT_SUCCESS);
 }
 
-/*void	print_env_list(t_env *env)
-{
-	while (env != NULL)
-	{
-		printf("%s%s\n", env->name, env->value);
-		env = env->next;
-	}
-}*/
-
-/*void	ft_leaks(void)
+void	ft_leaks(void)
 {
 	system("leaks -q minishell");
-}*/
+}

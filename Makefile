@@ -6,7 +6,10 @@ LIBFT = ./libft
 SRCS = main.c\
 		enviroment.c\
 		utils.c\
-		builtins.c
+		builtins.c\
+		cd_utils.c\
+		cd.c\
+		export_utils.c
 
 CC = gcc
 
