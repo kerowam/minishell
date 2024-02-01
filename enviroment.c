@@ -75,7 +75,7 @@ void	add_oldpwd(t_data *shell)
 	}
 }
 
-char	*ft_get_env_name(char *fullenv)
+char	*obtain_env_name(char *fullenv)
 {
 	int	i;
 
@@ -85,7 +85,7 @@ char	*ft_get_env_name(char *fullenv)
 	return (ft_substr(fullenv, 0, i));
 }
 
-char	*ft_get_env_value(char *fullenv)
+char	*obtain_env_value(char *fullenv)
 {
 	int	i;
 
