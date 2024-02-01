@@ -9,7 +9,7 @@ SRCS = main.c\
 		builtins.c\
 		cd_utils.c\
 		cd.c\
-		export_utils.c
+		export_utils.c\
 
 CC = gcc
 
