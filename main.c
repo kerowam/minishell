@@ -62,22 +62,19 @@ void	start_minishell(t_data *shell)
 	while (1)
 	{
 		shell->line = readline("Minishell@ ~ ");
-		if (shell->line == NULL)
-			printf("\n");
-		else
+		if (shell->line != NULL && *shell->line != '\0')
 		{
 			shell->echo = ft_split(shell->line, ' ');
 			if (shell->echo && shell->echo[0] != NULL)
 			{
-				if (*shell->line)
-					add_history(shell->line);
+				add_history(shell->line);
 				process_builtins(shell);
 				free_echo(shell->echo);
-				free(shell->line);
 			}
-			else
-				free(shell->line);
+			free(shell->line);
 		}
+		else if (shell->line != NULL)
+			free(shell->line);
 	}
 }
 

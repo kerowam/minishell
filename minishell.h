@@ -66,15 +66,15 @@ int		handle_directory(t_data *shell, char **str);
 void	initialize_env(t_data *shell, char **env);
 void	add_newenv_back(t_env **first, t_env *new, char **temp);
 void	add_oldpwd(t_data *shell);
-char	*ft_get_env_name(char *fullenv);
-char	*ft_get_env_value(char *fullenv);
+char	*obtain_env_name(char *fullenv);
+char	*obtain_env_value(char *fullenv);
 
 //export_utils.c
-void	ft_non_arg_export(t_data *shell);
-void	save_variable(char *variable, t_data *shell);
-bool	input_checker(char *arg, char *cmd);
-int		check_variable(char *name, char *value, t_data *shell);
-t_env	*ft_new_env_node(char *name, char *value);
+void	only_export(t_data *shell);
+void	create_variable(char *variable, t_data *shell);
+bool	check_args(char *arg, char *cmd);
+int		check_if_exists(char *name, char *value, t_data *shell);
+t_env	*new_node(char *name, char *value);
 
 //main.c
 void	initialize_minishell(t_data **shell, char **env);
