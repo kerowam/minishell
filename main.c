@@ -93,8 +93,8 @@ void	start_minishell(t_data *shell)
 				shell->echo = ft_split(shell->line, ' ');
 				if (shell->echo && shell->echo[0] != NULL)
 				{
-					/*if (*shell->line)
-						add_history(shell->line);*/
+					if (*shell->line)
+						add_history(shell->line);
 					process_builtins(shell);
 					free_echo(shell->echo);
 					free(shell->line);
