@@ -4,10 +4,15 @@ CFLAGS = -g -Wextra -Wall -Werror
 LIBFT = ./libft
 
 SRCS = main.c\
-		builtins.c\
+		enviroment.c\
 		utils.c\
+		builtins.c\
+		cd_utils.c\
+		cd.c\
+		export_utils.c\
 		parse.c\
-		lexer.c
+		lexer.c\
+		lexer_utils.c\
 
 CC = gcc
 
