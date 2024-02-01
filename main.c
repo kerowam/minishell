@@ -21,13 +21,14 @@ void	ft_header(void)
 
 void	initialize_minishell(t_data **shell, char **env)
 {
+	(void)env;
 	*shell = (t_data *)malloc(sizeof(t_data));
 	if (!*shell)
 	{
 		perror("Error al asignar memoria para t_data");
 		exit(EXIT_FAILURE);
 	}
-	initialize_env(*shell, env);
+	//initialize_env(*shell, env);
 }
 
 void	process_builtins(t_data *shell)
@@ -62,6 +63,8 @@ void	start_minishell(t_data *shell)
 {
 	int			q;
 	t_list		**words_splited;
+	//int			len;
+	char		*line;
 
 	words_splited = (t_list **)malloc(sizeof(t_list *));
 	if (!words_splited)
@@ -77,21 +80,28 @@ void	start_minishell(t_data *shell)
 			if (q % 2 != 0)
 			{
 				printf("error: dequoted line\n");
-				break ;
+				free(shell->line);
+				//start_minishell(shell); //Hay que buscar otra solución
+				shell->line = readline("Minishell@ ~ ");
 			}
-			words_splited = create_line_splited(shell->line, words_splited);
-			//print_list_splited(words_splited);
-			shell->echo = ft_split(shell->line, ' ');
-			if (shell->echo && shell->echo[0] != NULL)
+			if (shell->line && *shell->line)
 			{
-				if (*shell->line)
-					add_history(shell->line);
-				process_builtins(shell);
-				free_echo(shell->echo);
-				free(shell->line);
+				line = ft_strdup(shell->line);
+				printf("line = %s\n", line);
+				words_splited = create_line_splited(line, words_splited);
+				print_list_splited(words_splited);
+				shell->echo = ft_split(shell->line, ' ');
+				if (shell->echo && shell->echo[0] != NULL)
+				{
+					/*if (*shell->line)
+						add_history(shell->line);*/
+					process_builtins(shell);
+					free_echo(shell->echo);
+					free(shell->line);
+				}
+				else
+					free(shell->line);
 			}
-			else
-				free(shell->line);
 		}
 	}
 }
