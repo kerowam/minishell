@@ -1,4 +1,3 @@
-
 #include "minishell.h"
 
 void	ft_header(void)
@@ -19,60 +18,80 @@ void	ft_header(void)
 	printf("\n");
 }
 
-void	run_shell(char **env)
+void	initialize_minishell(t_data **shell, char **env)
 {
-	t_prompt	prompt;	
-	char		*line;
-	char		cwd[500];
-
-	prompt.envp = env;
-	while (1)
+	*shell = (t_data *)malloc(sizeof(t_data));
+	if (!*shell)
 	{
-		if (getcwd(cwd, sizeof(cwd)) != NULL)
-			printf(MAGENTA "Minishell@" YELLOW "%s ~ " RESET, cwd);
-		else
-			perror("getcwd() error");
-		line = readline("");
-		add_history(line);
-		if (line == NULL)
-			break ;
-		process_line(line, &prompt.envp);
-		free(line);
+		perror("Error al asignar memoria para t_data");
+		exit(EXIT_FAILURE);
 	}
+	initialize_env(*shell, env);
 }
 
-void	process_line(char *line, char ***env)
+void	process_builtins(t_data *shell)
 {
-	char		**args;
-
-	args = ft_split(line, ' ');
-	if (args[0] != NULL)
+	if (ft_strncmp(shell->line, "exit\0", 5) == 0
+		|| ft_strncmp(shell->line, "EXIT\0", 5) == 0)
 	{
-		if (ft_strncmp(args[0], "exit\0", 5) == 0)
-		{
-			free(line);
-			exit(EXIT_FAILURE);
-		}
-		if (ft_strncmp(args[0], "env\0", 4) == 0)
-			env_command(*env);
-		if (ft_strncmp(args[0], "pwd\0", 4) == 0)
-			pwd_command();
-		if (args[0] != NULL && ft_strncmp(args[0], "echo\0", 5) == 0)
-			echo_command(args);
+		free(shell->line);
+		exit(EXIT_FAILURE);
 	}
-	free_str_array(args);
+	if (ft_strncmp(shell->line, "env\0", 4) == 0
+		|| ft_strncmp(shell->line, "ENV\0", 4) == 0)
+		env_command(shell->echo, shell);
+	if (ft_strncmp(shell->line, "pwd\0", 4) == 0
+		|| ft_strncmp(shell->line, "PWD\0", 4) == 0)
+		pwd_command(shell);
+	if (ft_strncmp(shell->echo[0], "echo\0", 5) == 0
+		|| ft_strncmp(shell->echo[0], "ECHO\0", 5) == 0)
+		echo_command(shell->echo, 0);
+	if (ft_strncmp(shell->echo[0], "unset\0", 6) == 0
+		|| ft_strncmp(shell->echo[0], "UNSET\0", 6) == 0)
+		unset_command(shell, shell->echo[1]);
+	if (ft_strncmp(*shell->echo, "cd\0", 3) == 0
+		|| ft_strncmp(*shell->echo, "CD\0", 3) == 0)
+		cd_command(shell->echo, shell);
+	if (ft_strncmp(shell->echo[0], "export\0", 7) == 0
+		|| ft_strncmp(shell->echo[0], "EXPORT\0", 7) == 0)
+		export_command(shell->echo, shell);
+}
+
+void	start_minishell(t_data *shell)
+{
+	while (1)
+	{
+		shell->line = readline("Minishell@ ~ ");
+		if (shell->line != NULL && *shell->line != '\0')
+		{
+			shell->echo = ft_split(shell->line, ' ');
+			if (shell->echo && shell->echo[0] != NULL)
+			{
+				add_history(shell->line);
+				process_builtins(shell);
+				free_echo(shell->echo);
+			}
+			free(shell->line);
+		}
+		else if (shell->line != NULL)
+			free(shell->line);
+	}
 }
 
 int	main(int argc, char **argv, char **env)
 {
-	(void)argc;
+	t_data	*shell;
+
 	(void)argv;
 	atexit(ft_leaks);
+	initialize_minishell(&shell, env);
+	shell->line = NULL;
 	if (argc == 1)
 	{
 		ft_header();
-		run_shell(env);
+		start_minishell(shell);
 	}
+	free(shell);
 	clear_history();
 	return (EXIT_SUCCESS);
 }
