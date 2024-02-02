@@ -76,40 +76,47 @@ t_list	*split_pipe(t_list *list, int i)
 	return (list);
 }
 
+t_list **handle_quotes(t_list **list)
+{
+	char *tmp_word;
 
+	if (tmp_word[0] == '\'' || tmp_word[0] == '\"')
+	{
+		*list = (*list)->next;
+	}
+	return (list);
+}
+
+t_list **handle_pipes(t_list **list, int i)
+{
+	char *tmp_word;
+	int len;
+	int n_pipes;
+
+	tmp_word = (*list)->content;
+	len = ft_strlen(tmp_word);
+	n_pipes = get_pipe_nbr(tmp_word, i);
+	if (len > 0 && n_pipes > 0)
+	{
+		*list = split_pipe(*list, i);
+	}
+	return (list);
+}
 
 t_list	**split_pipes(t_list **list)
 {
-	char	*tmp_word;
-	int		i;
-	int		len;
-	int		n_pipes;
 	t_list	**tmp;
 
-	i = 0;
-	len = 0;
 	tmp = (t_list **)malloc(sizeof(t_list *));
 	*tmp = *list;
 	while (*tmp)
 	{
-		tmp_word = (*tmp)->content;
-		if (tmp_word[0] == '\'' || tmp_word[0] == '\"')
-		{
+		tmp = handle_quotes(tmp);
+		tmp = handle_pipes(tmp, i);
+		if ((*tmp)->next)
 			*tmp = (*tmp)->next;
-		}
 		else
-		{
-			len = ft_strlen(tmp_word);
-			n_pipes = get_pipe_nbr(tmp_word, i);
-			if (len > 0 && n_pipes > 0)
-			{
-				*tmp = split_pipe(*tmp, i);
-			}
-			if ((*tmp)->next)
-				*tmp = (*tmp)->next;
-			else
-				break ;
-		}
+			break ;
 	}
 	*tmp = *list;
 	return (tmp);
