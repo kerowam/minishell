@@ -113,6 +113,7 @@ t_list	*split_pipe(t_list *list, int i)
 	char	*tmp_word;
 	char	*tmp_split;
 	int		pipe_index;
+	int		end;
 
 	tmp_word = list->content;
 	while (tmp_word[i])
@@ -137,18 +138,21 @@ t_list	*split_pipe(t_list *list, int i)
 			if (tmp_word[i] == '|')
 			{
 				insert_node(&list, ft_strdup("|"));
+				list = list->next;
 				i++;
 			}
 			else
 			{
 				pipe_index = get_pipe_index(tmp_word, i);
 				if (pipe_index > 0)
-					tmp_split = ft_substr(tmp_word, i, pipe_index);
+					tmp_split = ft_substr(tmp_word, i, pipe_index - i);
 				else
 				{
-					
+					end = get_end_index(tmp_word, i);
+					tmp_split = ft_substr(tmp_word, i, end);
 				}
 				insert_node(&list, tmp_split);
+				list = list->next;
 				i = pipe_index;
 			}
 		}
@@ -182,7 +186,7 @@ t_list	**split_pipes(t_list **list)
 			n_pipes = get_pipe_nbr(tmp_word, i);
 			if (len > 0 && n_pipes > 0)
 			{
-				split_pipe(*tmp, i);
+				*tmp = split_pipe(*tmp, i);
 			}
 			if ((*tmp)->next)
 				*tmp = (*tmp)->next;

@@ -25,6 +25,19 @@ int get_pipe_index(char *line, int i)
 	return (-1);
 }
 
+int	get_end_index(char *line, int i)
+{
+	int	j;
+
+	j = 0;
+	while (line[i])
+	{
+		j++;
+		i++;
+	}
+	return (j);
+}
+
 void	insert_node(t_list **list, char *content)
 {
 	t_list	*new_node;

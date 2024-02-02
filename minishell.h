@@ -132,17 +132,18 @@ void	print_split(char **line_splited);
 void	print_list_splited(t_list **list);
 
 //parse.c
-int			check_closed_quotes(char *line, int q, int i, char in_quot);
-int			check_quotes(char *line, int q, int i);
-char		set_in_quot(char *line, int i);
+int		check_closed_quotes(char *line, int q, int i, char in_quot);
+int		check_quotes(char *line, int q, int i);
+char	set_in_quot(char *line, int i);
 
 //lexer.c
-t_list		**create_line_splited(char *line, t_list **list);
-t_list		**split_pipes(t_list **list);
+t_list	**create_line_splited(char *line, t_list **list);
+t_list	**split_pipes(t_list **list);
 
 //lexer_utils.c
-int			get_pipe_nbr(char *line, int i);
-int			get_pipe_index(char *line, int i);
-void		insert_node(t_list **list, char *content);
+int		get_pipe_nbr(char *line, int i);
+int		get_pipe_index(char *line, int i);
+void	insert_node(t_list **list, char *content);
+int		get_end_index(char *line, int i);
 
 #endif
