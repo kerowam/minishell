@@ -115,28 +115,42 @@ t_list	*split_pipe(t_list *list, int i)
 	int		pipe_index;
 
 	tmp_word = list->content;
-	if (i == 0)
+	while (tmp_word[i])
 	{
-		pipe_index = get_pipe_index(tmp_word, i);
-		if (pipe_index == 0)
-		{
-			list->content = ft_strdup("|");
-			i++;
-		}
-		else
-			tmp_split = ft_substr(tmp_word, 0, pipe_index);
-	}
-	else
-	{
-		if (tmp_word[i] == '|')
-		{
-			insert_node(&list, ft_strdup("|"));
-		}
-		else
+		if (i == 0)
 		{
 			pipe_index = get_pipe_index(tmp_word, i);
-			tmp_split = ft_substr(tmp_word, i, pipe_index);
-			insert_node(&list, tmp_split);
+			if (pipe_index == 0)
+			{
+				list->content = ft_strdup("|");
+				i++;
+			}
+			else
+			{
+				tmp_split = ft_substr(tmp_word, 0, pipe_index);
+				list->content = tmp_split;
+				i = pipe_index;
+			}
+		}
+		else
+		{
+			if (tmp_word[i] == '|')
+			{
+				insert_node(&list, ft_strdup("|"));
+				i++;
+			}
+			else
+			{
+				pipe_index = get_pipe_index(tmp_word, i);
+				if (pipe_index > 0)
+					tmp_split = ft_substr(tmp_word, i, pipe_index);
+				else
+				{
+					
+				}
+				insert_node(&list, tmp_split);
+				i = pipe_index;
+			}
 		}
 	}
 	return (list);
@@ -145,36 +159,37 @@ t_list	*split_pipe(t_list *list, int i)
 t_list	**split_pipes(t_list **list)
 {
 	char	*tmp_word;
-	//char	*tmp_split;
 	int		i;
 	int		len;
 	int		n_pipes;
 	t_list	**tmp;
+	//char	*tmp_split;
 
 	i = 0;
 	len = 0;
-	tmp = list;
-	while (*list)
+	tmp = (t_list **)malloc(sizeof(t_list *));
+	*tmp = *list;
+	while (*tmp)
 	{
-		tmp_word = (*list)->content;
+		tmp_word = (*tmp)->content;
 		if (tmp_word[0] == '\'' || tmp_word[0] == '\"')
 		{
-			*list = (*list)->next;
+			*tmp = (*tmp)->next;
 		}
 		else
 		{
 			len = ft_strlen(tmp_word);
 			n_pipes = get_pipe_nbr(tmp_word, i);
-			if (len > 1 && n_pipes > 0)
+			if (len > 0 && n_pipes > 0)
 			{
-				split_pipe(*list, i);
+				split_pipe(*tmp, i);
 			}
-			if ((*list)->next)
-				*list = (*list)->next;
+			if ((*tmp)->next)
+				*tmp = (*tmp)->next;
 			else
 				break ;
 		}
 	}
-	*list = *tmp;
-	return (list);
+	*tmp = *list;
+	return (tmp);
 }
