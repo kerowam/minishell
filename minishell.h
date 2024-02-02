@@ -138,6 +138,8 @@ char	set_in_quot(char *line, int i);
 
 //lexer.c
 t_list	**create_line_splited(char *line, t_list **list);
+
+//lexer_pipes.c
 t_list	**split_pipes(t_list **list);
 
 //lexer_utils.c

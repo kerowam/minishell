@@ -13,6 +13,7 @@ SRCS = main.c\
 		parse.c\
 		lexer.c\
 		lexer_utils.c\
+		lexer_pipes.c
 
 CC = gcc
 
