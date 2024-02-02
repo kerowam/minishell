@@ -76,10 +76,11 @@ t_list	*split_pipe(t_list *list, int i)
 	return (list);
 }
 
-t_list **handle_quotes(t_list **list)
+/*t_list	**handle_quotes(t_list **list)
 {
-	char *tmp_word;
+	char	*tmp_word;
 
+	tmp_word = (*list)->content;
 	if (tmp_word[0] == '\'' || tmp_word[0] == '\"')
 	{
 		*list = (*list)->next;
@@ -89,9 +90,9 @@ t_list **handle_quotes(t_list **list)
 
 t_list **handle_pipes(t_list **list, int i)
 {
-	char *tmp_word;
-	int len;
-	int n_pipes;
+	char	*tmp_word;
+	int		len;
+	int		n_pipes;
 
 	tmp_word = (*list)->content;
 	len = ft_strlen(tmp_word);
@@ -101,7 +102,7 @@ t_list **handle_pipes(t_list **list, int i)
 		*list = split_pipe(*list, i);
 	}
 	return (list);
-}
+}*/
 
 t_list	**split_pipes(t_list **list)
 {
@@ -112,7 +113,7 @@ t_list	**split_pipes(t_list **list)
 	while (*tmp)
 	{
 		tmp = handle_quotes(tmp);
-		tmp = handle_pipes(tmp, i);
+		tmp = handle_pipes(tmp, 0);
 		if ((*tmp)->next)
 			*tmp = (*tmp)->next;
 		else
