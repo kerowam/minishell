@@ -20,7 +20,7 @@ void	initialize_env(t_data *shell, char **env)
 		if (!shell->temp_env || !temp)
 			return ;
 		add_newenv_back(&shell->env, shell->temp_env, temp);
-		free_temp(temp);
+		//free_temp(temp);
 	}
 	add_oldpwd(shell);
 }

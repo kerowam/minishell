@@ -98,13 +98,13 @@ t_list	**create_line_splited(char *line, t_list **list)
 			//free(tmp_word);
 		}
 		//j++;
-		if (line[i] != '\0')
-			i++;
+		/*if (line[i] != '\0')
+			i++;*/
 	}
 	//first_split[j] = NULL;
 	tmp = list;
 	//free (tmp);
-	free (tmp_word);
+	//free (tmp_word);
 	return (tmp);
 }
 

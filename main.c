@@ -28,7 +28,7 @@ void	initialize_minishell(t_data **shell, char **env)
 		perror("Error al asignar memoria para t_data");
 		exit(EXIT_FAILURE);
 	}
-	//initialize_env(*shell, env);
+	initialize_env(*shell, env);
 }
 
 void	process_builtins(t_data *shell)
@@ -71,6 +71,8 @@ void	start_minishell(t_data *shell)
 		printf("error: malloc\n"); //Hacer función para enviar errores a stderr
 	while (1)
 	{
+		/*if (words_splited)
+			free(words_splited);*/
 		shell->line = readline("Minishell@ ~ ");
 		if (shell->line == NULL)
 			printf("\n");
