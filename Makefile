@@ -16,6 +16,7 @@ SRCS = main.c\
 		lexer_pipes.c\
 		lexer_pipes_utils.c\
 		lexer_redir.c\
+		lexer_redir_utils.c\
 
 CC = gcc
 
