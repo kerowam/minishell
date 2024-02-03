@@ -92,6 +92,7 @@ void	start_minishell(t_data *shell)
 				printf("line = %s\n", line);
 				words_splited = create_line_splited(line, words_splited);
 				words_splited = split_pipes(words_splited);
+				words_splited = split_redirections(words_splited);
 				print_list_splited(words_splited);
 				shell->echo = ft_split(shell->line, ' ');
 				if (shell->echo && shell->echo[0] != NULL)

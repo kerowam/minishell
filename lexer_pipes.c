@@ -19,13 +19,13 @@ int	split_pipe_2(t_list *list, int i, char *tmp_split, char *tmp_word)
 	return (i);
 }
 
-char	*get_tmp_split(int pipe_index, char *tmp_word, int i)
+char	*get_tmp_split(int target_index, char *tmp_word, int i)
 {
 	int		end;
 	char	*tmp_split;
 
-	if (pipe_index > 0)
-		tmp_split = ft_substr(tmp_word, i, pipe_index - i);
+	if (target_index > 0)
+		tmp_split = ft_substr(tmp_word, i, target_index - i);
 	else
 	{
 		end = get_end_index(tmp_word, i);
@@ -64,9 +64,7 @@ t_list	*split_pipe(t_list *list, int i)
 	while (tmp_word[i])
 	{
 		if (i == 0)
-		{
 			i = split_pipe_2(list, i, tmp_split, tmp_word);
-		}
 		else
 		{
 			i = split_pipe_3(list, tmp_word, i);
@@ -91,6 +89,6 @@ t_list	**split_pipes(t_list **list)
 		else
 			break ;
 	}
-	*tmp = *list;
-	return (tmp);
+	free(tmp);
+	return (list);
 }

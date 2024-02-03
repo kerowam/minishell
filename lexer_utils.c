@@ -50,3 +50,18 @@ void	insert_node(t_list **list, char *content)
 	(*list)->next = new_node;
 	new_node->next = tmp;
 }
+
+char *get_tmp_split(int target_index, char *tmp_word, int i)
+{
+	int end;
+	char *tmp_split;
+
+	if (target_index > 0)
+		tmp_split = ft_substr(tmp_word, i, target_index - i);
+	else
+	{
+		end = get_end_index(tmp_word, i);
+		tmp_split = ft_substr(tmp_word, i, end);
+	}
+	return (tmp_split);
+}
