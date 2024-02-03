@@ -8,7 +8,7 @@ int	get_redir_index(char *line, int i)
 			return (i);
 		i++;
 	}
-	return (0);
+	return (-1);
 }
 
 int	split_redirs_3(t_list *list, char *tmp_word, int i)
@@ -76,6 +76,10 @@ int	split_redirs_2(t_list *list, int i, char *tmp_split, char *tmp_word)
 	{
 		redir = tmp_word[i];
 		set_redir(list, redir, tmp_word, i);
+		if (tmp_word[i + 1] == redir)
+			i += 2;
+		else
+			i++;
 	}
 	else
 	{

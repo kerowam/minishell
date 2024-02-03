@@ -19,21 +19,6 @@ int	split_pipe_2(t_list *list, int i, char *tmp_split, char *tmp_word)
 	return (i);
 }
 
-char	*get_tmp_split(int target_index, char *tmp_word, int i)
-{
-	int		end;
-	char	*tmp_split;
-
-	if (target_index > 0)
-		tmp_split = ft_substr(tmp_word, i, target_index - i);
-	else
-	{
-		end = get_end_index(tmp_word, i);
-		tmp_split = ft_substr(tmp_word, i, end);
-	}
-	return (tmp_split);
-}
-
 int	split_pipe_3(t_list *list, char *tmp_word, int i)
 {
 	char	*tmp_split;
