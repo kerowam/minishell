@@ -1,30 +1,26 @@
 #include "minishell.h"
 
-t_list	**handle_quotes(t_list **list)
+int	get_pipe_nbr(char *line, int i)
 {
-	char	*tmp_word;
+	int		pipe_nbr;
 
-	tmp_word = (*list)->content;
-	if (tmp_word[0] == '\'' || tmp_word[0] == '\"')
+	pipe_nbr = 0;
+	while (line[i])
 	{
-		if ((*list)->next)
-			*list = (*list)->next;
+		if (line[i] == '|')
+			pipe_nbr++;
+		i++;
 	}
-	return (list);
+	return (pipe_nbr);
 }
 
-t_list	**handle_pipes(t_list **list, int i)
+int	get_pipe_index(char *line, int i)
 {
-	char	*tmp_word;
-	int		len;
-	int		n_pipes;
-
-	tmp_word = (*list)->content;
-	len = ft_strlen(tmp_word);
-	n_pipes = get_pipe_nbr(tmp_word, i);
-	if (len > 0 && n_pipes > 0)
+	while (line[i])
 	{
-		*list = split_pipe(*list, i);
+		if (line[i] == '|')
+			return (i);
+		i++;
 	}
-	return (list);
+	return (-1);
 }

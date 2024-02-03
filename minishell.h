@@ -142,19 +142,25 @@ t_list	**create_line_splited(char *line, t_list **list);
 //lexer_pipes.c
 t_list	**split_pipes(t_list **list);
 t_list	*split_pipe(t_list *list, int i);
-
-//lexer_utils.c
-int		get_pipe_nbr(char *line, int i);
-int		get_pipe_index(char *line, int i);
-void	insert_node(t_list **list, char *content);
-int		get_end_index(char *line, int i);
-char *get_tmp_split(int target_index, char *tmp_word, int i);
-
-// lexer_pipes_utils.c
-t_list **handle_quotes(t_list **list);
 t_list	**handle_pipes(t_list **list, int i);
 
+//lexer_utils.c
+void	insert_node(t_list **list, char *content);
+int		get_end_index(char *line, int i);
+char	*get_tmp_split(int target_index, char *tmp_word, int i);
+t_list	**handle_quotes(t_list **list);
+
+// lexer_pipes_utils.c
+int		get_pipe_nbr(char *line, int i);
+int		get_pipe_index(char *line, int i);
+
 //lexer_redir.c
-t_list **split_redirections(t_list **list);
+t_list	**split_redirections(t_list **list);
+
+//lexer_redir_utils.c
+int		get_redir_index(char *line, int i);
+int		insert_redirs(char redir, t_list *list, char *tmp_word, int i);
+void	set_redir(t_list *list, char redir, char *tmp_word, int i);
+int		get_redirection_nbr(char *line, int i);
 
 #endif

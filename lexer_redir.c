@@ -1,16 +1,5 @@
 #include "minishell.h"
 
-int	get_redir_index(char *line, int i)
-{
-	while (line[i])
-	{
-		if (line[i] == '>' || line[i] == '<')
-			return (i);
-		i++;
-	}
-	return (0);
-}
-
 int	split_redirs_3(t_list *list, char *tmp_word, int i)
 {
 	char	*tmp_split;
@@ -20,22 +9,7 @@ int	split_redirs_3(t_list *list, char *tmp_word, int i)
 	if (tmp_word[i] == '>' || tmp_word[i] == '<')
 	{
 		redir = tmp_word[i];
-		if (tmp_word[i + 1] == redir)
-		{
-			if (redir == '>')
-				insert_node(&list, ft_strdup(">>"));
-			else
-				insert_node(&list, ft_strdup("<<"));
-			i += 2;
-		}
-		else
-		{
-			if (redir == '>')
-				insert_node(&list, ft_strdup(">"));
-			else
-				insert_node(&list, ft_strdup("<"));
-			i++;
-		}
+		i = insert_redirs(redir, list, tmp_word, i);
 	}
 	else
 	{
@@ -45,25 +19,6 @@ int	split_redirs_3(t_list *list, char *tmp_word, int i)
 		i = redir_index;
 	}
 	return (i);
-}
-
-
-void	set_redir(t_list *list, char redir, char *tmp_word, int i)
-{
-	if (tmp_word[i + 1] == redir)
-	{
-		if (redir == '>')
-			list->content = ft_strdup(">>");
-		else
-			list->content = ft_strdup("<<");
-	}
-	else
-	{
-		if (redir == '>')
-			list->content = ft_strdup(">");
-		else
-			list->content = ft_strdup("<");
-	}
 }
 
 int	split_redirs_2(t_list *list, int i, char *tmp_split, char *tmp_word)
@@ -76,6 +31,10 @@ int	split_redirs_2(t_list *list, int i, char *tmp_split, char *tmp_word)
 	{
 		redir = tmp_word[i];
 		set_redir(list, redir, tmp_word, i);
+		if (tmp_word[i + 1] == redir)
+			i += 2;
+		else
+			i++;
 	}
 	else
 	{
@@ -93,37 +52,17 @@ t_list	*split_redirection(t_list *list, int i)
 
 	tmp_word = list->content;
 	tmp_split = NULL;
-while (tmp_word[i])
-{
-	if (i == 0)
-		i = split_redirs_2(list, i, tmp_split, tmp_word);
-	else
+	while (tmp_word[i])
 	{
-		i = split_redirs_3(list, tmp_word, i);
-		list = list->next;
-	}
-}
-return (list);
-}
-
-int	get_redirection_nbr(char *line, int i)
-{
-	int		redirection_nbr;
-	char	redir;
-
-	redirection_nbr = 0;
-	while (line[i])
-	{
-		if (line[i] == '>' || line[i] == '<')
+		if (i == 0)
+			i = split_redirs_2(list, i, tmp_split, tmp_word);
+		else
 		{
-			redirection_nbr++;
-			redir = line[i];
-			if (line[i + 1] == redir)
-				i++;
+			i = split_redirs_3(list, tmp_word, i);
+			list = list->next;
 		}
-		i++;
 	}
-	return (redirection_nbr);
+	return (list);
 }
 
 t_list	**handle_redirections(t_list **list, int i)

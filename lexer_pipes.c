@@ -19,21 +19,6 @@ int	split_pipe_2(t_list *list, int i, char *tmp_split, char *tmp_word)
 	return (i);
 }
 
-char	*get_tmp_split(int target_index, char *tmp_word, int i)
-{
-	int		end;
-	char	*tmp_split;
-
-	if (target_index > 0)
-		tmp_split = ft_substr(tmp_word, i, target_index - i);
-	else
-	{
-		end = get_end_index(tmp_word, i);
-		tmp_split = ft_substr(tmp_word, i, end);
-	}
-	return (tmp_split);
-}
-
 int	split_pipe_3(t_list *list, char *tmp_word, int i)
 {
 	char	*tmp_split;
@@ -70,6 +55,22 @@ t_list	*split_pipe(t_list *list, int i)
 			i = split_pipe_3(list, tmp_word, i);
 			list = list->next;
 		}
+	}
+	return (list);
+}
+
+t_list	**handle_pipes(t_list **list, int i)
+{
+	char	*tmp_word;
+	int		len;
+	int		n_pipes;
+
+	tmp_word = (*list)->content;
+	len = ft_strlen(tmp_word);
+	n_pipes = get_pipe_nbr(tmp_word, i);
+	if (len > 0 && n_pipes > 0)
+	{
+		*list = split_pipe(*list, i);
 	}
 	return (list);
 }
