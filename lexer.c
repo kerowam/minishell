@@ -60,3 +60,5 @@ t_list	**create_line_splited(char *line, t_list **list)
 	tmp = list;
 	return (tmp);
 }
+
+

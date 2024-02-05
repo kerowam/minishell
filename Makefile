@@ -18,6 +18,7 @@ SRCS = main.c\
 		lexer_redir.c\
 		lexer_redir_utils.c\
 		expander.c\
+		expander_utils.c\
 
 CC = gcc
 

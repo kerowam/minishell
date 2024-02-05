@@ -166,4 +166,8 @@ int		get_redirection_nbr(char *line, int i);
 //expander.c
 t_list	**expander(t_env *env, t_list **line_splited);
 
+//expander_utils.c
+int		get_len_word(char *str, int i);
+char	*set_key(char *str, int i);
+
 #endif

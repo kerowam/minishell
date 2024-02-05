@@ -89,8 +89,9 @@ void	start_minishell(t_data *shell)
 			if (shell->line && *shell->line)
 			{
 				line = ft_strdup(shell->line);
-				printf("line = %s\n", line);
+				//printf("line = %s\n", line);
 				words_splited = create_line_splited(line, words_splited);
+				free(line);
 				words_splited = split_pipes(words_splited);
 				words_splited = split_redirections(words_splited);
 				words_splited = expander(shell->env, words_splited);

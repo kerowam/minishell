@@ -1,18 +1,5 @@
 #include "minishell.h"
 
-int	get_len_word(char *str, int i)
-{
-	int	len;
-
-	len = 0;
-	while (str[i] != ' ' && str[i])
-	{
-		i++;
-		len++;
-	}
-	return (len);
-}
-
 char	*get_expanded_value(t_env *env, char *key)
 {
 	char	*value;
@@ -25,8 +12,8 @@ char	*get_expanded_value(t_env *env, char *key)
 	while (tmp->name)
 	{
 		name = ft_strdup(tmp->name);
-		printf("name: %s\n", name);
-		printf("key: %s\n", key);
+		//printf("name: %s\n", name);
+		//printf("key: %s\n", key);
 		if (*key == *name)
 		{
 			value = ft_strdup(tmp->value);
@@ -38,28 +25,47 @@ char	*get_expanded_value(t_env *env, char *key)
 		else
 			break ;
 	}
-	value = ft_strdup(""); //Comprobar que así funciona o buscar alternativa.
+	value = ft_strdup("");
 	return (value);
-	//return (NULL);
 }
 
-char	*set_key(char *str, int i)
+char	*expand_value(char *str, int i, t_env *env, char *end_str)
 {
-	size_t	len;
+	char	*value;
 	char	*tmp;
 
-	len = get_len_word(str, i);
-	tmp = ft_substr(str, i, len);
-	return (tmp);
+	tmp = set_key(str, i);
+	value = get_expanded_value(env, tmp);
+	if (!end_str)
+		end_str = ft_strdup(value);
+	else
+		end_str = ft_strjoin(end_str, value);
+	free(tmp);
+	free(value);
+	return (end_str);
+}
+
+char	*join_expand(char *str, int i, char *end_str)
+{
+	char	*tmp;
+	int		start;
+
+	start = i;
+	while (str[i] && str[i] != '$')
+		i++;
+	tmp = ft_substr(str, start, i - start);
+	if (!end_str)
+		end_str = ft_strdup(tmp);
+	else
+		end_str = ft_strjoin(end_str, tmp);
+	free(tmp);
+	return (end_str);
 }
 
 char	*expand(char *str, t_env *env)
 {
 	int		i;
-	char	*tmp;
-	char	*value;
 	char	*end_str;
-	int		start;
 
 	i = 0;
 	end_str = NULL;
@@ -68,29 +74,15 @@ char	*expand(char *str, t_env *env)
 		if (str[i] == '$')
 		{
 			i++;
-			tmp = set_key(str, i);
-			value = get_expanded_value(env, tmp);
-			if (!end_str)
-				end_str = ft_strdup(value);
-			else
-				end_str = ft_strjoin(end_str, value);
-			free(tmp);
-			free(value);
+			end_str = expand_value(str, i, env, end_str);
 			while (str[i] && str[i] != '$' && str[i] != ' ' && str[i] != '\"')
 				i++;
 		}
 		else
 		{
-			start = i;
+			end_str = join_expand(str, i, end_str);
 			while (str[i] && str[i] != '$')
 				i++;
-			tmp = ft_substr(str, start, i - start);
-			if (!end_str)
-				end_str = ft_strdup(tmp);
-			else
-				end_str = ft_strjoin(end_str, tmp);
-			free(tmp);
-			//i++;
 		}
 	}
 	return (end_str);
@@ -109,22 +101,14 @@ t_list	**expander(t_env *env, t_list **line_splited)
 	while (*tmp_list)
 	{
 		tmp_str = (*tmp_list)->content;
-		if (tmp_str[0] == '\'' || ft_strchr(tmp_str, '$') == 0)
-		{
-			if ((*tmp_list)->next)
-				*tmp_list = (*tmp_list)->next;
-			else
-				break ;
-		}
+		if (tmp_str[0] != '\'' && ft_strchr(tmp_str, '$') != 0)
+			(*tmp_list)->content = expand(tmp_str, tmp_env);
+		if ((*tmp_list)->next)
+			*tmp_list = (*tmp_list)->next;
 		else
-		{
-			if (ft_strchr(tmp_str, '$') != 0)
-				(*tmp_list)->content = expand(tmp_str, tmp_env);
-			if ((*tmp_list)->next)
-				*tmp_list = (*tmp_list)->next;
-			else
-				break ;
-		}
+			break ;
 	}
+	free (tmp_env);
+	free (tmp_list);
 	return (line_splited);
 }
