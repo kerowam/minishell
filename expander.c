@@ -38,9 +38,9 @@ char	*get_expanded_value(t_env *env, char *key)
 		else
 			break ;
 	}
-	//value = ft_strdup(""); //Comprobar que así funciona o buscar alternativa.
-	//return (value);
-	return (NULL);
+	value = ft_strdup(""); //Comprobar que así funciona o buscar alternativa.
+	return (value);
+	//return (NULL);
 }
 
 char	*set_key(char *str, int i)
@@ -76,7 +76,7 @@ char	*expand(char *str, t_env *env)
 				end_str = ft_strjoin(end_str, value);
 			free(tmp);
 			free(value);
-			while (str[i] && str[i] != '$' && str[i] != ' ')
+			while (str[i] && str[i] != '$' && str[i] != ' ' && str[i] != '\"')
 				i++;
 		}
 		else
@@ -90,7 +90,7 @@ char	*expand(char *str, t_env *env)
 			else
 				end_str = ft_strjoin(end_str, tmp);
 			free(tmp);
-			i++;
+			//i++;
 		}
 	}
 	return (end_str);
