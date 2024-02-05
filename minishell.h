@@ -148,7 +148,6 @@ t_list	**handle_pipes(t_list **list, int i);
 void	insert_node(t_list **list, char *content);
 int		get_end_index(char *line, int i);
 char	*get_tmp_split(int target_index, char *tmp_word, int i);
-t_list	**handle_quotes(t_list **list);
 
 // lexer_pipes_utils.c
 int		get_pipe_nbr(char *line, int i);

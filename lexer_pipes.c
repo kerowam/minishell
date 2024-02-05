@@ -78,13 +78,15 @@ t_list	**handle_pipes(t_list **list, int i)
 t_list	**split_pipes(t_list **list)
 {
 	t_list	**tmp;
+	char	*tmp_word;
 
 	tmp = (t_list **)malloc(sizeof(t_list *));
 	*tmp = *list;
 	while (*tmp)
 	{
-		tmp = handle_quotes(tmp);
-		tmp = handle_pipes(tmp, 0);
+		tmp_word = (*tmp)->content;
+		if (tmp_word[0] != '\'' && tmp_word[0] != '\"')
+			tmp = handle_pipes(tmp, 0);
 		if ((*tmp)->next)
 			*tmp = (*tmp)->next;
 		else
