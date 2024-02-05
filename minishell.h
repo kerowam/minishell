@@ -163,4 +163,7 @@ int		insert_redirs(char redir, t_list *list, char *tmp_word, int i);
 void	set_redir(t_list *list, char redir, char *tmp_word, int i);
 int		get_redirection_nbr(char *line, int i);
 
+//expander.c
+t_list	**expander(t_env *env, t_list **line_splited);
+
 #endif
