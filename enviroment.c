@@ -4,24 +4,32 @@ void	initialize_env(t_data *shell, char **env)
 {
 	char	**temp;
 
+	shell->del = 0;
 	shell->env = ft_calloc(1, sizeof(t_env));
 	temp = ft_split(env[shell->del], '=');
-	if (!shell->env || !temp)
+	if (!shell->env || !temp || !temp[0] || !temp[1])
+	{
+		//free_temp(temp);
 		return ;
+	}
 	shell->env->name = ft_strdup(temp[0]);
 	shell->env->value = ft_strjoin("=", temp[1]);
 	shell->env->index = 0;
 	shell->env->next = NULL;
-	free_temp(temp);
-	while (env[++shell->del])
+	//free_temp(temp);
+	while (env[shell->del++])
 	{
 		shell->temp_env = ft_calloc(1, sizeof(t_env));
 		temp = ft_split(env[shell->del], '=');
-		if (!shell->temp_env || !temp)
+		if (!shell->temp_env || !temp || !temp[0] || !temp[1])
+		{
+			//free_temp(temp);
 			return ;
+		}
 		add_newenv_back(&shell->env, shell->temp_env, temp);
 		//free_temp(temp);
 	}
+	printf("check\n");
 	add_oldpwd(shell);
 }
 

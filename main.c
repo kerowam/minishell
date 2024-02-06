@@ -41,7 +41,7 @@ void	process_builtins(t_data *shell)
 	}
 	if (ft_strncmp(shell->line, "env\0", 4) == 0
 		|| ft_strncmp(shell->line, "ENV\0", 4) == 0)
-		env_command(shell);
+		env_command(shell->echo, shell);
 	if (ft_strncmp(shell->line, "pwd\0", 4) == 0
 		|| ft_strncmp(shell->line, "PWD\0", 4) == 0)
 		pwd_command(shell);
@@ -73,6 +73,11 @@ void	start_minishell(t_data *shell)
 	{
 		/*if (words_splited)
 			free(words_splited);*/
+		/*if (shell->line)
+		{
+			free(shell->line);
+			shell->line = NULL;
+		}*/
 		shell->line = readline("Minishell@ ~ ");
 		if (shell->line == NULL)
 			printf("\n");
@@ -89,7 +94,7 @@ void	start_minishell(t_data *shell)
 			if (shell->line && *shell->line)
 			{
 				line = ft_strdup(shell->line);
-				//printf("line = %s\n", line);
+				printf("line = %s\n", line);
 				words_splited = create_line_splited(line, words_splited);
 				free(line);
 				words_splited = split_pipes(words_splited);

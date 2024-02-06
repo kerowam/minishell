@@ -1,11 +1,17 @@
 #include "minishell.h"
 
-void	env_command(t_data *shell)
+void	env_command(char **cmd, t_data *shell)
 {
 	t_env	*current_env;
 
 	current_env = shell->env;
-	while (current_env != NULL)
+	if (cmd[1])
+	{
+		printf("\033[0;33mconchita: env: \033[0m\n");
+		printf("\033[0;33mNo arguments supported\n\033[0m\n");
+		return ;
+	}
+	while (current_env)
 	{
 		printf("%s%s\n", current_env->name, current_env->value);
 		current_env = current_env->next;

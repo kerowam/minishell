@@ -75,7 +75,7 @@ typedef struct	s_job
 }				t_job;
 
 //builtins.c
-void	env_command(t_data *shell);
+void	env_command(char **cmd, t_data *shell);
 void	pwd_command(t_data *shell);
 void	echo_command(char **str, int exists);
 void	unset_command(t_data *shell, char *name);
