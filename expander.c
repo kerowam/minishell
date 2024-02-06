@@ -12,9 +12,7 @@ char	*get_expanded_value(t_env *env, char *key)
 	while (tmp->name)
 	{
 		name = ft_strdup(tmp->name);
-		//printf("name: %s\n", name);
-		//printf("key: %s\n", key);
-		if (*key == *name)
+		if (ft_strncmp(key, name, ft_strlen(name)) == 0)
 		{
 			value = ft_strdup(tmp->value);
 			return (value);
