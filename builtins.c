@@ -4,13 +4,13 @@ void	env_command(char **cmd, t_data *shell)
 {
 	t_env	*current_env;
 
+	current_env = shell->env;
 	if (cmd[1])
 	{
 		printf("\033[0;33mconchita: env: \033[0m\n");
 		printf("\033[0;33mNo arguments supported\n\033[0m\n");
 		return ;
 	}
-	current_env = shell->env;
 	while (current_env)
 	{
 		if (current_env->value[0])

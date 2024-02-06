@@ -26,6 +26,7 @@ void	initialize_minishell(t_data **shell, char **env)
 		perror("Error al asignar memoria para t_data");
 		exit(EXIT_FAILURE);
 	}
+	printf("Ha alojado memoria para shell\n");
 	initialize_env(*shell, env);
 }
 
@@ -82,9 +83,12 @@ int	main(int argc, char **argv, char **env)
 {
 	t_data	*shell;
 
+	printf("Inicio del programa\n");
 	(void)argv;
 	atexit(ft_leaks);
+	printf("PRUEBA\n");
 	initialize_minishell(&shell, env);
+	printf("PRUEBA 1");
 	shell->line = NULL;
 	if (argc == 1)
 	{
@@ -93,6 +97,7 @@ int	main(int argc, char **argv, char **env)
 	}
 	free(shell);
 	clear_history();
+	printf("Fin del programa\n");
 	return (EXIT_SUCCESS);
 }
 
@@ -100,3 +105,61 @@ void	ft_leaks(void)
 {
 	system("leaks -q minishell");
 }
+
+/*void	start_minishell(t_data *shell)
+{
+	int			q;
+	t_list		**words_splited;
+	//int			len;
+	char		*line;
+
+	words_splited = (t_list **)malloc(sizeof(t_list *));
+	if (!words_splited)
+		printf("error: malloc\n"); //Hacer función para enviar errores a stderr
+	while (1)
+	{
+		shell->line = readline("Minishell@ ~ ");
+		if (shell->line == NULL)
+			printf("\n");
+		else
+		{
+			printf("Ha entrado en else\n");
+			q = check_quotes(shell->line, 0, 0);
+			printf("Ha chequeado las quotes\n");
+			if (q % 2 != 0)
+			{
+				printf("error: dequoted line\n");
+				free(shell->line);
+				//start_minishell(shell); //Hay que buscar otra solución
+				shell->line = readline("Minishell@ ~ ");
+			}
+			printf("Ha salido de la comprobacion de q\n");
+			if (shell->line && *shell->line)
+			{
+				printf("Ha entrado en shell->line\n");
+				line = ft_strdup(shell->line);
+				printf("Ha añadido shell->line a line\n");
+				//printf("line = %s\n", line);
+				words_splited = create_line_splited(line, words_splited);
+				printf("Ha creado la linea spliteada\n");
+				free(line);
+				words_splited = split_pipes(words_splited);
+				words_splited = split_redirections(words_splited);
+				words_splited = expander(shell->env, words_splited);
+				//words_splited = test_quot_cleaner(words_splited);
+				print_list_splited(words_splited);
+				shell->echo = ft_split(shell->line, ' ');
+				if (shell->echo && shell->echo[0] != NULL)
+				{
+					if (*shell->line)
+						add_history(shell->line);
+					process_builtins(shell);
+					free_echo(shell->echo);
+					free(shell->line);
+				}
+				else
+					free(shell->line);
+			}
+		}
+	}
+}*/
