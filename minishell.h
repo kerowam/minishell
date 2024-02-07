@@ -50,29 +50,35 @@ typedef struct s_data
 }				t_data;
 
 //Para
-typedef struct	s_process
+/*typedef struct	s_process
 {
-	struct	t_process	*next;
-	char				**argv;//Así o solo con 1 *???
-	pid_t				pid;
+	//struct	t_process	*next;
+	t_list				*flags;
+	t_list				*argv;
+	//char				**argv;//Así o solo con 1 *???
+	//pid_t				pid;
 	char				token;//?????
 	int					completed;//?????
 	int					stopped;//?????
 	int					status;//????
-}				t_process;
+}				t_process;*/
 
 //Cada trabajo representa un proceso (Todo lo que hay dentro de un pipe)
-typedef struct	s_job
+typedef struct	s_process
 {
-	struct t_job	*next_job;
-	char			*command;
-	t_process		*first_process;
-	pid_t			pid_group;//???
-	int				infile;
-	int				outfile;
-	int				stderr;
+	struct t_process	*next_process;
+	char				*command;
+	t_list				*flags;
+	t_list				*argv;
+	pid_t				pid;//???
+	int					infile;
+	int					outfile;
+	int					stderr;
+	int					completed;//????
+	int					stopped;//????
+	int					status;
 
-}				t_job;
+}				t_process;
 
 //builtins.c
 void	env_command(char **cmd, t_data *shell);
@@ -139,7 +145,7 @@ char	set_in_quot(char *line, int i);
 //lexer.c
 t_list	**create_line_splited(char *line, t_list **list);
 //en prueba
-char	*clean_unprint_quotes(char *str);
+char	*rm_unprint_quotes(char *str);
 t_list	**test_quot_cleaner(t_list **list);
 
 //lexer_pipes.c

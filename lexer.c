@@ -61,7 +61,7 @@ t_list	**create_line_splited(char *line, t_list **list)
 	return (tmp);
 }
 
-char	*clean_unprint_quotes(char *str)
+char	*rm_unprint_quotes(char *str)
 {
 	if (str[0] == '\'' || str[0] == '\"')
 		str = ft_substr(str, 1, ft_strlen(str) - 2);
@@ -81,7 +81,7 @@ t_list	**test_quot_cleaner(t_list **list)
 		tmp_word = (*tmp)->content;
 
 		if (tmp_word[0] == '\'' || tmp_word[0] == '\"')
-			(*tmp)->content = clean_unprint_quotes(tmp_word);
+			(*tmp)->content = rm_unprint_quotes(tmp_word);
 		if ((*tmp)->next)
 			*tmp = (*tmp)->next;
 		else
