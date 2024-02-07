@@ -70,7 +70,7 @@ typedef struct	s_process
 	char				*command;
 	t_list				*flags;
 	t_list				*argv;
-	pid_t				pid;//???
+	pid_t				pid;
 	int					infile;
 	int					outfile;
 	int					stderr;
