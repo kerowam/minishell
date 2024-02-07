@@ -69,7 +69,9 @@ char	*expand(char *str, t_env *env)
 	end_str = NULL;
 	while (str[i])
 	{
-		if (str[i] == '$')
+		//if (str[i] == '\'')
+			i = search_end_quoted_string(str[i], str, i + 1); SIN TERMINAR
+		else if (str[i] == '$')
 		{
 			i++;
 			end_str = expand_value(str, i, env, end_str);
@@ -86,7 +88,7 @@ char	*expand(char *str, t_env *env)
 	return (end_str);
 }
 
-t_list	**expander(t_env *env, t_list **line_splited)
+void	expander(t_env *env, t_list **line_splited)
 {
 	t_env	*tmp_env;
 	t_list	**tmp_list;
@@ -99,7 +101,7 @@ t_list	**expander(t_env *env, t_list **line_splited)
 	while (*tmp_list)
 	{
 		tmp_str = (*tmp_list)->content;
-		if (tmp_str[0] != '\'' && ft_strchr(tmp_str, '$') != 0)
+		if (ft_strchr(tmp_str, '$') != 0)
 			(*tmp_list)->content = expand(tmp_str, tmp_env);
 		if ((*tmp_list)->next)
 			*tmp_list = (*tmp_list)->next;
@@ -108,5 +110,5 @@ t_list	**expander(t_env *env, t_list **line_splited)
 	}
 	free (tmp_env);
 	free (tmp_list);
-	return (line_splited);
+	//return (line_splited);
 }

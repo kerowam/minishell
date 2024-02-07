@@ -99,7 +99,7 @@ void	start_minishell(t_data *shell)
 				free(line);
 				split_pipes(words_splited);
 				split_redirections(words_splited);
-				//words_splited = expander(shell->env, words_splited);
+				//expander(shell->env, words_splited);
 				//words_splited = test_quot_cleaner(words_splited);
 				print_list_splited(words_splited);
 				shell->echo = ft_split(shell->line, ' ');

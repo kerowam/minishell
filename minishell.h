@@ -70,10 +70,12 @@ typedef struct	s_process
 	char				*command;
 	t_list				*flags;
 	t_list				*argv;
-	pid_t				pid;
-	int					infile;
-	int					outfile;
-	int					stderr;
+	pid_t				pid;//
+	char				*infile;
+	int					infile;//
+	char				*outfile;
+	int					outfile;//
+	int					stderr;//??
 	int					completed;//????
 	int					stopped;//????
 	int					status;
@@ -173,7 +175,7 @@ void	set_redir(t_list *list, char redir, char *tmp_word, int i);
 int		get_redirection_nbr(char *line, int i);
 
 //expander.c
-t_list	**expander(t_env *env, t_list **line_splited);
+void	expander(t_env *env, t_list **line_splited);
 
 //expander_utils.c
 int		get_len_word(char *str, int i);
