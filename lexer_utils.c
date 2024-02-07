@@ -41,15 +41,10 @@ char	*get_tmp_split(int target_index, char *tmp_word, int i)
 	return (tmp_split);
 }
 
-t_list	**handle_quotes(t_list **list)
+int	search_end_quoted_string(char q, char *line, int i)
 {
-	char	*tmp_word;
-
-	tmp_word = (*list)->content;
-	if (tmp_word[0] == '\'' || tmp_word[0] == '\"')
-	{
-		if ((*list)->next)
-			*list = (*list)->next;
-	}
-	return (list);
+	while (line[i] != q)
+		i++;
+	i++;
+	return (i);
 }
