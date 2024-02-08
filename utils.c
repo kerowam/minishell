@@ -1,19 +1,19 @@
+
 #include "minishell.h"
 
-void	free_temp(char **temp)
+void	free_temp(t_data *shell)
 {
-	int	i;
-
-	i = 0;
-	if (temp)
-	{
-		while (temp[i])
-		{
-			free(temp[i]);
-			i++;
-		}
-		free(temp);
-	}
+    if (shell->temp)
+    {
+        int i = 0;
+        while (shell->temp[i])
+        {
+            free(shell->temp[i]);
+            i++;
+        }
+        free(shell->temp);
+        shell->temp = NULL;
+    }
 }
 
 void	free_echo(char **str)
@@ -44,15 +44,31 @@ void	env_add_back(t_env **root, t_env *new)
 	ptr->next = new;
 }
 
-t_env	*ft_new_env_node(char *name, char *value)
-{
-	t_env	*env;
 
-	env = malloc(sizeof(t_env));
-	if (!env)
-		return (NULL);
-	env->name = ft_strdup(name);
-	env->value = ft_strjoin("=", value);
-	env->next = NULL;
-	return (env);
+// Para comprobar lo que se aloja en la linea dividida
+void	print_split(char **line_splited)
+{
+	int	i;
+
+	i = 0;
+	while (line_splited[i] != NULL)
+	{
+		printf("line_splited[%d] = %s\n", i, line_splited[i]);
+		i++;
+	}
+}
+
+void	print_list_splited(t_list **list)
+{
+	t_list	*tmp;
+	int		i;
+
+	tmp = *list;
+	i = 0;
+	while (tmp)
+	{
+		printf("list[%d] = %s\n", i, tmp->content);
+		tmp = tmp->next;
+		i++;
+	}
 }

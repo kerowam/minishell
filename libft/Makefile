@@ -1,6 +1,10 @@
 NAME = libft.a
 
-SOURCE = ft_isalpha.c\
+HEADERS = -I ./includes
+
+FLAGS	= -g -Wall -Wextra -Werror
+
+SRCS = ft_isalpha.c\
 	ft_isdigit.c\
 	ft_isalnum.c\
 	ft_isascii.c\
@@ -35,9 +39,18 @@ SOURCE = ft_isalpha.c\
 	ft_putendl_fd.c\
 	ft_putnbr_fd.c\
 	get_next_line_utils.c\
-	get_next_line.c
+	get_next_line.c\
+	ft_lstnew_bonus.c\
+	ft_lstadd_front_bonus.c\
+	ft_lstsize_bonus.c\
+	ft_lstlast_bonus.c\
+	ft_lstadd_back_bonus.c\
+	ft_lstdelone_bonus.c\
+	ft_lstclear_bonus.c\
+	ft_lstiter_bonus.c\
+	ft_lstmap_bonus.c
 
-SOURCE_BONUS = ft_lstnew_bonus.c\
+SRCS_BONUS = ft_lstnew_bonus.c\
 				ft_lstadd_front_bonus.c\
 				ft_lstsize_bonus.c\
 				ft_lstlast_bonus.c\
@@ -47,31 +60,30 @@ SOURCE_BONUS = ft_lstnew_bonus.c\
 				ft_lstiter_bonus.c\
 				ft_lstmap_bonus.c
 
-OBJ = $(SOURCE:.c=.o)
+OBJS	= ${SRCS:.c=.o}
 
-OBJ_BONUS = $(SOURCE_BONUS:.c=.o)
+OBJS_BONUS = ${SRCS_BONUS:.c=.o}
 
-CC = gcc
+all: ${NAME}
 
-CFLAGS = -Wall -Werror -Wextra
+bonus: ${NAME_BONUS}
 
-LIB = ar rcs
+${NAME}: ${OBJS}
+	@ar rc ${NAME} ${OBJS}
+	@ranlib ${NAME}
 
-all: $(NAME)
+${NAME_BONUS}: ${OBJS_BONUS}
+	@${CC} ${FLAGS} ${OBJS_BONUS} ${HEADERS} -o ${NAME_BONUS}
 
-$(NAME): $(OBJ)
-	$(LIB) $(NAME) $(OBJ)
+%.o: %.c
+	@$(CC) $(CFLAGS) -o $@ -c $< $(HEADERS) && printf "Compiling: $(notdir $<)\n"
 
 clean:
-	rm -f $(OBJ) $(OBJ_BONUS)
+	@rm -rf $(OBJS) $(OBJS_BONUS)
 
 fclean: clean
-	rm -f $(NAME)
+	@rm -rf $(NAME) $(NAME_BONUS)
 
 re: fclean all
 
-bonus:
-	$(CC) $(CFLAGS) -c $(SOURCE_BONUS)
-	$(LIB) $(NAME) $(OBJ_BONUS)
-
-.PHONY: re all clean fclean bonus
+.PHONY: all, clean, fclean, re, bonus

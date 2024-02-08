@@ -1,3 +1,4 @@
+
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -12,11 +13,17 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 
-# define RESET			"\x1B[0m"
-# define BOLD_MAGENTA	"\x1B[1;35m"
-# define LIGHT_CYAN		"\x1B[96m"
-# define BOLD_WHITE		"\x1B[1;37m"
-# define BOLD_BLUE		"\x1B[1;34m"
+# define RESET		"\x1B[0m"
+# define RED		"\x1B[31m"
+# define GREEN		"\x1B[32m"
+# define YELLOW		"\x1B[33m"
+# define BLUE		"\x1B[34m"
+# define MAGENTA	"\x1B[35m"
+# define CYAN		"\x1B[36m"
+# define WHITE		"\x1B[37m"
+
+# define Q		'\''
+# define D_Q	'\"'
 
 typedef struct s_env
 {
@@ -42,6 +49,38 @@ typedef struct s_data
 	t_env	*temp_export;
 	char	**temp;
 }				t_data;
+
+//Para
+/*typedef struct	s_process
+{
+	//struct	t_process	*next;
+	t_list				*flags;
+	t_list				*argv;
+	//char				**argv;//Así o solo con 1 *???
+	//pid_t				pid;
+	char				token;//?????
+	int					c stopped;//?????
+	int					status;//????
+}				t_process;*/
+
+//Cada trabajo representa un proceso (Todo lo que hay dentro de un pipe)
+typedef struct s_process
+{
+	struct s_process	*next_process;
+	char				*command;
+	t_list				*flags;
+	t_list				*argv;
+	pid_t				pid;//
+	char				*infile;
+	int					inf;//
+	char				*outfile;
+	int					outf;//
+	int					stderr;//??
+	int					completed;//????
+	int					stopped;//????
+	int					status;
+
+}				t_process;
 
 //builtins.c
 void	env_command(char **cmd, t_data *shell);
@@ -86,8 +125,53 @@ int		main(int argc, char **argv, char **env);
 void	ft_leaks(void);
 
 //utils.c
-void	free_temp(char **temp);
+void	free_temp(t_data *shell);
 void	free_echo(char **str);
 void	env_add_back(t_env **root, t_env *new);
+//solo para pruebas
+void	print_split(char **line_splited);
+void	print_list_splited(t_list **list);
+
+//parse.c
+int		check_closed_quotes(char *line, int q, int i, char in_quot);
+int		check_quotes(char *line, int q, int i);
+char	set_in_quot(char *line, int i);
+
+//lexer.c
+void	create_line_splited(char *line, t_list **list);
+//en prueba
+char	*rm_unprint_quotes(char *str);
+t_list	**test_quot_cleaner(t_list **list);
+
+//lexer_pipes.c
+void	split_pipes(t_list **list);
+void	split_pipe(t_list *list, int i);
+void	handle_pipes(t_list **list, int i);
+
+//lexer_utils.c
+void	insert_node(t_list **list, char *content);
+int		get_end_index(char *line, int i);
+char	*get_tmp_split(int target_index, char *tmp_word, int i);
+int		search_end_quoted_string(char q, char *line, int i);
+
+// lexer_pipes_utils.c
+int		get_pipe_nbr(char *line, int i);
+int		get_pipe_index(char *line, int i);
+
+//lexer_redir.c
+void	split_redirections(t_list **list);
+
+//lexer_redir_utils.c
+int		get_redir_index(char *line, int i);
+int		insert_redirs(char redir, t_list *list, char *tmp_word, int i);
+void	set_redir(t_list *list, char redir, char *tmp_word, int i);
+int		get_redirection_nbr(char *line, int i);
+
+//expander.c
+void	expander(t_env *env, t_list **line_splited);
+
+//expander_utils.c
+int		get_len_word(char *str, int i);
+char	*set_key(char *str, int i);
 
 #endif

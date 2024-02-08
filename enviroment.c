@@ -38,7 +38,6 @@ void	add_newenv_back(t_env **first, t_env *new, char **temp)
 	if (temp != NULL)
 	{
 		new->name = ft_strdup(temp[0]);
-		free(temp[1]);
 		new->value = ft_strdup(temp[1]);
 		new->index = 0;
 		new->next = NULL;
