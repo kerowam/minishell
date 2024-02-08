@@ -69,8 +69,8 @@ char	*expand(char *str, t_env *env)
 	end_str = NULL;
 	while (str[i])
 	{
-		//if (str[i] == '\'')
-			i = search_end_quoted_string(str[i], str, i + 1); SIN TERMINAR
+		if (str[i] == '\'')
+			i = search_end_quoted_string(str[i], str, i + 1); //SIN TERMINAR
 		else if (str[i] == '$')
 		{
 			i++;

@@ -13,36 +13,49 @@ void	initialize_env(t_data *shell, char **env)
 		return ;
 	}
 	shell->env->name = ft_strdup(temp[0]);
-	shell->env->value = ft_strjoin("=", temp[1]);
+	//printf("Ha asignado el nombre\n");
+	shell->env->value = ft_strdup(temp[1]);
+	//printf("Ha asignado valor\n");
 	shell->env->index = 0;
+	//printf("Ha asignado el indice\n");
 	shell->env->next = NULL;
+	//printf("Ha asignado el siguiente nodo\n");
 	//free_temp(temp);
+	//printf("Ha liberado temp\n");
 	while (env[shell->del++])
 	{
+		//printf("Ha entrado en el bucle\n");
 		shell->temp_env = ft_calloc(1, sizeof(t_env));
-		temp = ft_split(env[shell->del], '=');
+		//printf("Ha alojado memoria para shell->temp_env\n");
+		//if (ft_strchr(env[shell->del], '='))
+		if (env[shell->del])
+			temp = ft_split(env[shell->del], '=');
+		//printf("Ha dividido temp con split\n");
 		if (!shell->temp_env || !temp || !temp[0] || !temp[1])
 		{
 			//free_temp(temp);
 			return ;
 		}
+		//printf("Ha coprobado si fallan\n");
 		add_newenv_back(&shell->env, shell->temp_env, temp);
+		//printf("Ha añadido la nueva variable\n");
 		//free_temp(temp);
+		//printf("Ha liberado temp\n");
 	}
-	printf("check\n");
 	add_oldpwd(shell);
+	//printf("Ha salido de initialize_env");
 }
 
 void	add_newenv_back(t_env **first, t_env *new, char **temp)
 {
 	t_env	*first_node;
 
-	if (new == NULL)
+	if (new == NULL || temp == NULL)
 		return ;
 	if (temp != NULL)
 	{
 		new->name = ft_strdup(temp[0]);
-		new->value = ft_strjoin("=", temp[1]);
+		new->value = ft_strdup(temp[1]);
 		new->index = 0;
 		new->next = NULL;
 	}
@@ -83,7 +96,7 @@ void	add_oldpwd(t_data *shell)
 	}
 }
 
-char	*ft_get_env_name(char *fullenv)
+char	*obtain_env_name(char *fullenv)
 {
 	int	i;
 
@@ -93,7 +106,7 @@ char	*ft_get_env_name(char *fullenv)
 	return (ft_substr(fullenv, 0, i));
 }
 
-char	*ft_get_env_value(char *fullenv)
+char	*obtain_env_value(char *fullenv)
 {
 	int	i;
 
