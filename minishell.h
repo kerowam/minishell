@@ -148,7 +148,7 @@ char	set_in_quot(char *line, int i);
 void	create_line_splited(char *line, t_list **list);
 //en prueba
 char	*rm_unprint_quotes(char *str);
-t_list	**test_quot_cleaner(t_list **list);
+void	quot_cleaner(t_list **list);
 
 //lexer_pipes.c
 void	split_pipes(t_list **list);
