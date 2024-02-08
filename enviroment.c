@@ -2,50 +2,31 @@
 
 void	initialize_env(t_data *shell, char **env)
 {
-	char	**temp;
-
 	shell->del = 0;
-	printf("Ha entrado a initialize_env\n");
 	shell->env = ft_calloc(1, sizeof(t_env));
-	printf("Ha alojado memoria para shell->env\n");
-	temp = ft_split(env[shell->del], '=');
-	printf("Ha separado temp con split\n");
-	if (!shell->env || !temp || !temp[0] || !temp[1])
-	{
-		free_temp(temp);
+	shell->temp = ft_split(env[shell->del], '=');
+	if (!shell->env || !shell->temp || !shell->temp[0] || !shell->temp[1])
 		return ;
-	}
-	printf("Ha comprobado si ambos anteriores dan error\n");
-	shell->env->name = ft_strdup(temp[0]);
-	printf("Ha asignado el nombre\n");
-	shell->env->value = ft_strjoin("=", temp[1]);
-	printf("Ha asignado valor\n");
+	free(shell->temp[0]);
+	shell->env->name = ft_strdup(shell->temp[0]);
+	free(shell->temp[1]);
+	shell->env->value = ft_strdup(shell->temp[1]);
 	shell->env->index = 0;
-	printf("Ha asignado el indice\n");
 	shell->env->next = NULL;
-	printf("Ha asignado el siguiente nodo\n");
-	free_temp(temp);
-	printf("Ha liberado temp\n");
+	free(shell->temp);
 	while (env[shell->del++])
 	{
-		printf("Ha entrado en el bucle\n");
 		shell->temp_env = ft_calloc(1, sizeof(t_env));
-		printf("Ha alojado memoria para shell->temp_env\n");
-		temp = ft_split(env[shell->del], '=');
-		printf("Ha dividido temp con split\n");
-		if (!shell->temp_env || !temp || !temp[0] || !temp[1])
-		{
-			free_temp(temp);
+		if (env[shell->del])
+			shell->temp = ft_split(env[shell->del], '=');
+		if (!shell->temp_env || !shell->temp
+			|| !shell->temp[0] || !shell->temp[1])
 			return ;
-		}
-		printf("Ha coprobado si fallan\n");
-		add_newenv_back(&shell->env, shell->temp_env, temp);
-		printf("Ha añadido la nueva variable\n");
-		free_temp(temp);
-		printf("Ha liberado temp\n");
+		add_newenv_back(&shell->env, shell->temp_env, shell->temp);
+		free(shell->temp[0]);
+		free(shell->temp);
 	}
 	add_oldpwd(shell);
-	printf("Ha salido de initialize_env");
 }
 
 void	add_newenv_back(t_env **first, t_env *new, char **temp)
@@ -57,7 +38,8 @@ void	add_newenv_back(t_env **first, t_env *new, char **temp)
 	if (temp != NULL)
 	{
 		new->name = ft_strdup(temp[0]);
-		new->value = ft_strjoin("=", temp[1]);
+		free(temp[1]);
+		new->value = ft_strdup(temp[1]);
 		new->index = 0;
 		new->next = NULL;
 	}

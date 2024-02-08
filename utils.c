@@ -43,3 +43,16 @@ void	env_add_back(t_env **root, t_env *new)
 		ptr = ptr->next;
 	ptr->next = new;
 }
+
+t_env	*ft_new_env_node(char *name, char *value)
+{
+	t_env	*env;
+
+	env = malloc(sizeof(t_env));
+	if (!env)
+		return (NULL);
+	env->name = ft_strdup(name);
+	env->value = ft_strjoin("=", value);
+	env->next = NULL;
+	return (env);
+}

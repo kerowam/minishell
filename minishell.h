@@ -40,6 +40,7 @@ typedef struct s_data
 	t_env	*temp_env;
 	t_env	*export;
 	t_env	*temp_export;
+	char	**temp;
 }				t_data;
 
 //builtins.c
