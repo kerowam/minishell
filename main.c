@@ -87,9 +87,10 @@ void	start_minishell(t_data *shell)
 			if (q % 2 != 0)
 			{
 				printf("error: dequoted line\n");
-				free(shell->line);
+				//free(shell->line);
 				//start_minishell(shell); //Hay que buscar otra solución
-				shell->line = readline("Minishell@ ~ ");
+				rl_replace_line("Minishell@ ~ ", 1);
+				//shell->line = readline("Minishell@ ~ ");
 			}
 			if (shell->line && *shell->line)
 			{
