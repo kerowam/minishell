@@ -50,29 +50,37 @@ typedef struct s_data
 }				t_data;
 
 //Para
-typedef struct	s_process
+/*typedef struct	s_process
 {
-	struct	t_process	*next;
-	char				**argv;//Así o solo con 1 *???
-	pid_t				pid;
+	//struct	t_process	*next;
+	t_list				*flags;
+	t_list				*argv;
+	//char				**argv;//Así o solo con 1 *???
+	//pid_t				pid;
 	char				token;//?????
 	int					completed;//?????
 	int					stopped;//?????
 	int					status;//????
-}				t_process;
+}				t_process;*/
 
 //Cada trabajo representa un proceso (Todo lo que hay dentro de un pipe)
-typedef struct	s_job
+typedef struct	s_process
 {
-	struct t_job	*next_job;
-	char			*command;
-	t_process		*first_process;
-	pid_t			pid_group;//???
-	int				infile;
-	int				outfile;
-	int				stderr;
+	struct t_process	*next_process;
+	char				*command;
+	t_list				*flags;
+	t_list				*argv;
+	pid_t				pid;//
+	char				*infile;
+	int					inf;//
+	char				*outfile;
+	int					outf;//
+	int					stderr;//??
+	int					completed;//????
+	int					stopped;//????
+	int					status;
 
-}				t_job;
+}				t_process;
 
 //builtins.c
 void	env_command(char **cmd, t_data *shell);
@@ -98,15 +106,15 @@ int		handle_directory(t_data *shell, char **str);
 void	initialize_env(t_data *shell, char **env);
 void	add_newenv_back(t_env **first, t_env *new, char **temp);
 void	add_oldpwd(t_data *shell);
-char	*ft_get_env_name(char *fullenv);
-char	*ft_get_env_value(char *fullenv);
+char	*obtain_env_name(char *fullenv);
+char	*obtain_env_value(char *fullenv);
 
 //export_utils.c
-void	ft_non_arg_export(t_data *shell);
-void	save_variable(char *variable, t_data *shell);
-bool	input_checker(char *arg, char *cmd);
-int		check_variable(char *name, char *value, t_data *shell);
-t_env	*ft_new_env_node(char *name, char *value);
+void	only_export(t_data *shell);
+void	create_variable(char *variable, t_data *shell);
+bool	check_args(char *arg, char *cmd);
+int		check_if_exists(char *name, char *value, t_data *shell);
+t_env	*new_node(char *name, char *value);
 
 //export_utils.c
 void	ft_non_arg_export(t_data *shell);
@@ -137,27 +145,28 @@ int		check_quotes(char *line, int q, int i);
 char	set_in_quot(char *line, int i);
 
 //lexer.c
-t_list	**create_line_splited(char *line, t_list **list);
+void	create_line_splited(char *line, t_list **list);
 //en prueba
-char	*clean_unprint_quotes(char *str);
-t_list	**test_quot_cleaner(t_list **list);
+char	*rm_unprint_quotes(char *str);
+void	quot_cleaner(t_list **list);
 
 //lexer_pipes.c
-t_list	**split_pipes(t_list **list);
-t_list	*split_pipe(t_list *list, int i);
-t_list	**handle_pipes(t_list **list, int i);
+void	split_pipes(t_list **list);
+void	split_pipe(t_list *list, int i);
+void	handle_pipes(t_list **list, int i);
 
 //lexer_utils.c
 void	insert_node(t_list **list, char *content);
 int		get_end_index(char *line, int i);
 char	*get_tmp_split(int target_index, char *tmp_word, int i);
+int		search_end_quoted_string(char q, char *line, int i);
 
 // lexer_pipes_utils.c
 int		get_pipe_nbr(char *line, int i);
 int		get_pipe_index(char *line, int i);
 
 //lexer_redir.c
-t_list	**split_redirections(t_list **list);
+void	split_redirections(t_list **list);
 
 //lexer_redir_utils.c
 int		get_redir_index(char *line, int i);
@@ -166,7 +175,7 @@ void	set_redir(t_list *list, char redir, char *tmp_word, int i);
 int		get_redirection_nbr(char *line, int i);
 
 //expander.c
-t_list	**expander(t_env *env, t_list **line_splited);
+void	expander(t_env *env, t_list **line_splited);
 
 //expander_utils.c
 int		get_len_word(char *str, int i);
