@@ -75,6 +75,8 @@ typedef struct	s_process
 	int					inf;//
 	char				*outfile;
 	int					outf;//
+	char				*outfile_append;
+	t_list				*here_doc;
 	int					stderr;//??
 	int					completed;//????
 	int					stopped;//????
@@ -139,16 +141,14 @@ void	env_add_back(t_env **root, t_env *new);
 void	print_split(char **line_splited);
 void	print_list_splited(t_list **list);
 
-//parse.c
+//quotes.c
 int		check_closed_quotes(char *line, int q, int i, char in_quot);
 int		check_quotes(char *line, int q, int i);
 char	set_in_quot(char *line, int i);
 
 //lexer.c
 void	create_line_splited(char *line, t_list **list);
-//en prueba
-char	*rm_unprint_quotes(char *str);
-void	quot_cleaner(t_list **list);
+void	lexer(t_data *shell, t_list **words_splited);
 
 //lexer_pipes.c
 void	split_pipes(t_list **list);
@@ -180,5 +180,11 @@ void	expander(t_env *env, t_list **line_splited);
 //expander_utils.c
 int		get_len_word(char *str, int i);
 char	*set_key(char *str, int i);
+
+//quote_cleaner.c
+void	quot_cleaner(t_list **list);
+char	*add_quot_substr(int start, int i, char *str, char *end_str);
+char	*add_substr(int start, int i, char *str, char *end_str);
+void	clean_str_quot(char *str, t_list **list);
 
 #endif

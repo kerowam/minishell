@@ -10,7 +10,7 @@ SRCS = main.c\
 		cd_utils.c\
 		cd.c\
 		export_utils.c\
-		parse.c\
+		parser.c\
 		lexer.c\
 		lexer_utils.c\
 		lexer_pipes.c\
@@ -19,6 +19,8 @@ SRCS = main.c\
 		lexer_redir_utils.c\
 		expander.c\
 		expander_utils.c\
+		quotes.c\
+		quote_cleaner.c\
 
 CC = gcc
 
@@ -28,6 +30,8 @@ all: ${LIBFT}/libft.a $(NAME)
 
 $(NAME): $(OBJS)
 	@$(CC) -g $(CFLAGS) $(SRCS) ${LIBFT}/libft.a -o $(NAME) -lreadline
+	
+#gcc -L/usr/local/opt/readline/lib -I/usr/local/opt/readline/include -lreadline main.c -o main
 
 %.o: %.c
 	@$(CC) $(CFLAGS) -o $@ -c $< $(HEADERS) && printf "Compiling: $(notdir $<)\n"

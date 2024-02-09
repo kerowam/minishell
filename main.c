@@ -63,10 +63,10 @@ void	start_minishell(t_data *shell)
 {
 	int			q;
 	t_list		**words_splited;
-	//int			len;
-	char		*line;
+	t_process	**process;
 
 	words_splited = (t_list **)malloc(sizeof(t_list *));
+	process = (t_process **)malloc(sizeof(t_process *));
 	if (!words_splited)
 		printf("error: malloc\n"); //Hacer función para enviar errores a stderr
 	while (1)
@@ -87,21 +87,14 @@ void	start_minishell(t_data *shell)
 			if (q % 2 != 0)
 			{
 				printf("error: dequoted line\n");
-				//free(shell->line);
+				free(shell->line);
 				//start_minishell(shell); //Hay que buscar otra solución
-				rl_replace_line("Minishell@ ~ ", 1);
-				//shell->line = readline("Minishell@ ~ ");
+				//rl_replace_line("Minishell@ ~ ", 1);
+				shell->line = readline("Minishell@ ~ ");
 			}
 			if (shell->line && *shell->line)
 			{
-				line = ft_strdup(shell->line);
-				printf("line = %s\n", line);
-				create_line_splited(line, words_splited);
-				free(line);
-				split_pipes(words_splited);
-				split_redirections(words_splited);
-				expander(shell->env, words_splited);
-				quot_cleaner(words_splited);
+				lexer(shell, words_splited);
 				print_list_splited(words_splited);
 				shell->echo = ft_split(shell->line, ' ');
 				if (shell->echo && shell->echo[0] != NULL)
