@@ -19,6 +19,8 @@ SRCS = main.c\
 		lexer_redir_utils.c\
 		expander.c\
 		expander_utils.c\
+		executor.c\
+
 
 COMPILATION_DONE = no
 

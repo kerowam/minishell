@@ -108,7 +108,6 @@ void	start_minishell(t_data *shell)
 					if (*shell->line)
 						add_history(shell->line);
 					process_builtins(shell);
-					parse_commands(words_splited);
 					free_echo(shell->echo);
 					free(shell->line);
 				}
@@ -121,7 +120,7 @@ void	start_minishell(t_data *shell)
 
 int	main(int argc, char **argv, char **env)
 {
-	t_data	*shell;
+	t_data		*shell;
 
 	(void)argv;
 	atexit(ft_leaks);
@@ -141,7 +140,6 @@ void	ft_leaks(void)
 {
 	system("leaks -q minishell");
 }
-
 
 /*
 void	run_shell(char **env)

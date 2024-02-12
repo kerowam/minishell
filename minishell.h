@@ -70,14 +70,16 @@ typedef struct s_process
 	char				*command;
 	t_list				*flags;
 	t_list				*argv;
-	pid_t				pid;//
+	pid_t				pid;
 	char				*infile;
-	int					inf;//
+	int					inf;
 	char				*outfile;
-	int					outf;//
-	int					stderr;//??
-	int					completed;//????
-	int					stopped;//????
+	int					outf;
+	char				*outfile_append;
+	t_list				*here_doc;
+	int					stderr;
+	int					completed;
+	int					stopped;
 	int					status;
 
 }				t_process;
@@ -173,5 +175,15 @@ void	expander(t_env *env, t_list **line_splited);
 //expander_utils.c
 int		get_len_word(char *str, int i);
 char	*set_key(char *str, int i);
+
+//executor.c
+void	execute_processes(t_process *process);
+char	**convert_args_list_to_array(t_list *argv_list);
+int		ft_lstsize(t_list *lst);
+bool	execute_builtin(t_process *process);
+
+//signals.c
+void	signals_handler(int sign);
+void	setup_signal_handlers(void);
 
 #endif
