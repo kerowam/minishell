@@ -1,7 +1,5 @@
 #include "minishell.h"
 
-
-//Para comprobar si las comillas están cerradas
 int	check_closed_quotes(char *line, int q, int i, char in_quot);
 
 char	set_in_quot(char *line, int i)
@@ -57,3 +55,5 @@ int	check_closed_quotes(char *line, int q, int i, char in_quot)
 	}
 	return (q);
 }
+
+

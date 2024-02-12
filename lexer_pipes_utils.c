@@ -7,9 +7,15 @@ int	get_pipe_nbr(char *line, int i)
 	pipe_nbr = 0;
 	while (line[i])
 	{
-		if (line[i] == '|')
+		if (line[i] == '\'' || line[i] == '\"')
+			i = search_end_quoted_string(line[i], line, i + 1);
+		else if (line[i] != '\'' && line[i] != '\"' && line[i] != '|')
+			i++;
+		else if (line[i] == '|')
+		{
 			pipe_nbr++;
-		i++;
+			i++;
+		}
 	}
 	return (pipe_nbr);
 }
@@ -18,9 +24,12 @@ int	get_pipe_index(char *line, int i)
 {
 	while (line[i])
 	{
-		if (line[i] == '|')
+		if (line[i] == '\'' || line[i] == '\"')
+			i = search_end_quoted_string(line[i], line, i + 1);
+		else if (line[i] != '\'' && line [i] != '\"' && line[i] != '|')
+			i++;
+		else if (line[i] == '|')
 			return (i);
-		i++;
 	}
 	return (-1);
 }

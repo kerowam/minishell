@@ -45,7 +45,7 @@ int	split_redirs_2(t_list *list, int i, char *tmp_split, char *tmp_word)
 	return (i);
 }
 
-t_list	*split_redirection(t_list *list, int i)
+void	split_redirection(t_list *list, int i)
 {
 	char	*tmp_word;
 	char	*tmp_split;
@@ -62,10 +62,9 @@ t_list	*split_redirection(t_list *list, int i)
 			list = list->next;
 		}
 	}
-	return (list);
 }
 
-t_list	**handle_redirections(t_list **list, int i)
+void	handle_redirections(t_list **list, int i)
 {
 	char	*tmp_word;
 	int		len;
@@ -76,12 +75,11 @@ t_list	**handle_redirections(t_list **list, int i)
 	n_redirections = get_redirection_nbr(tmp_word, i);
 	if (len > 0 && n_redirections > 0)
 	{
-		*list = split_redirection(*list, i);
+		split_redirection(*list, i);
 	}
-	return (list);
 }
 
-t_list	**split_redirections(t_list **list)
+void	split_redirections(t_list **list)
 {
 	t_list	**tmp;
 
@@ -89,13 +87,11 @@ t_list	**split_redirections(t_list **list)
 	*tmp = *list;
 	while (*tmp)
 	{
-		tmp = handle_quotes(tmp);
-		tmp = handle_redirections(tmp, 0);
+		handle_redirections(tmp, 0);
 		if ((*tmp)->next)
 			*tmp = (*tmp)->next;
 		else
 			break ;
 	}
 	free (tmp);
-	return (list);
 }
