@@ -64,9 +64,9 @@ typedef struct s_data
 }				t_process;*/
 
 //Cada trabajo representa un proceso (Todo lo que hay dentro de un pipe)
-typedef struct	s_process
+typedef struct s_process
 {
-	struct t_process	*next_process;
+	struct s_process	*next_process;
 	char				*command;
 	t_list				*flags;
 	t_list				*argv;
@@ -140,6 +140,7 @@ void	env_add_back(t_env **root, t_env *new);
 //solo para pruebas
 void	print_split(char **line_splited);
 void	print_list_splited(t_list **list);
+void	print_process(t_process *process);
 
 //quotes.c
 int		check_closed_quotes(char *line, int q, int i, char in_quot);
@@ -186,5 +187,8 @@ void	quot_cleaner(t_list **list);
 char	*add_quot_substr(int start, int i, char *str, char *end_str);
 char	*add_substr(int start, int i, char *str, char *end_str);
 void	clean_str_quot(char *str, t_list **list);
+
+//parser.c
+void	parse(t_process *process, t_list **words_splited);
 
 #endif

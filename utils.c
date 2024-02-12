@@ -73,3 +73,25 @@ void	print_list_splited(t_list **list)
 		i++;
 	}
 }
+
+void	print_process(t_process *process)
+{
+	int	i;
+
+	i = 0;
+	while (process)
+	{
+		printf("process[%d]:\n", i);
+		printf("command = %s\n", (*process).command);
+		print_list_splited(&process->flags);
+		print_list_splited(&process->argv);
+		printf("infile = %s\n", process->infile);
+		printf("outfile = %s\n", process->outfile);
+		printf("outfile_append = %s\n", process->outfile_append);
+		print_list_splited(&process->here_doc);
+		if (process->next_process)
+			process = process->next_process;
+		else
+			break ;
+	}
+}
