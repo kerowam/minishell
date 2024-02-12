@@ -137,6 +137,8 @@ void	ft_leaks(void);
 void	free_temp(char **temp);
 void	free_echo(char **str);
 void	env_add_back(t_env **root, t_env *new);
+void	free_list(t_list **list);
+
 //solo para pruebas
 void	print_split(char **line_splited);
 void	print_list_splited(t_list **list);

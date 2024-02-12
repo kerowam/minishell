@@ -45,6 +45,21 @@ void	env_add_back(t_env **root, t_env *new)
 	ptr->next = new;
 }
 
+void	free_list(t_list **list)
+{
+	t_list	*tmp;
+	t_list	*next;
+
+	tmp = *list;
+	while (tmp)
+	{
+		next = tmp->next;
+		free(tmp->content);
+		free(tmp);
+		tmp = next;
+	}
+	*list = NULL;
+}
 
 // Para comprobar lo que se aloja en la linea dividida
 void	print_split(char **line_splited)
@@ -82,7 +97,7 @@ void	print_process(t_process *process)
 	while (process)
 	{
 		printf("process[%d]:\n", i);
-		printf("command = %s\n", (*process).command);
+		printf("command = %s\n", process->command);
 		printf("flags:\n");
 		print_list_splited(&process->flags);
 		printf("argv:\n");

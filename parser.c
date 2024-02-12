@@ -27,16 +27,18 @@ void	init_process(t_process *process)
 
 void	parse(t_process *process, t_list **words_splited)
 {
-	char	*tmp_word;
-	t_list	**tmp;
-	int		file;
+	char		*tmp_word;
+	t_list		**tmp;
+	int			file;
+	t_process	*tmp_process;
 
 	tmp = (t_list **)malloc(sizeof(t_list *));
 	*tmp = *words_splited;
+	tmp_process = process;
 	init_process(process);
 	while (*tmp)
 	{
-		tmp_word = (*tmp)->content;
+		tmp_word = ft_strdup((*tmp)->content);
 		if (ft_strncmp(tmp_word, "<", 2) == 0)
 		{
 			if ((*tmp)->next)
@@ -44,6 +46,8 @@ void	parse(t_process *process, t_list **words_splited)
 			else
 			{
 				perror ("minishell: syntax error near unexpected token `newline'\n");
+				//free (tmp);
+				//free_list (words_splited);
 				//Liberar listas
 				//Gestionar g_status
 				return ;
@@ -53,6 +57,8 @@ void	parse(t_process *process, t_list **words_splited)
 			if (access(tmp_word, F_OK) == -1)
 			{
 				perror("minishell: No such file or directory\n");
+				//free (tmp);
+				//free_list (words_splited);
 				//Liberar listas
 				//Gestionar g_status
 				return ;
@@ -60,11 +66,13 @@ void	parse(t_process *process, t_list **words_splited)
 			else if (access(tmp_word, R_OK) == -1) //Comprobación de permisos. Aquí o en el executor?
 			{
 				perror("minishell: Permission denied\n");
+				//free (tmp);
+				//free_list (words_splited);
 				//Liberar listas
 				//Gestionar g_status
 				return ;
 			}
-			process->infile = ft_strdup(tmp_word);
+			tmp_process->infile = ft_strdup(tmp_word);
 		}
 		else if (ft_strncmp(tmp_word, ">", 2) == 0)
 		{
@@ -73,6 +81,8 @@ void	parse(t_process *process, t_list **words_splited)
 			else
 			{
 				perror ("minishell: syntax error near unexpected token `newline'\n");
+				//free (tmp);
+				//free_list (words_splited);
 				//Liberar listas
 				//Gestionar g_status
 				return ;
@@ -84,6 +94,8 @@ void	parse(t_process *process, t_list **words_splited)
 				if (file < 0)
 				{
 					perror("Error opening file");
+					//free (tmp);
+					//free_list (words_splited);
 					//Liberar listas
 					//Gestionar g_status
 					return ;
@@ -94,18 +106,22 @@ void	parse(t_process *process, t_list **words_splited)
 			else if (access(tmp_word, W_OK) == -1)
 			{
 				perror("minishell: Permission denied\n");
+				//free (*tmp);
+				//free_list (words_splited);
 				//Liberar listas
 				//Gestionar g_status
 				return ;
 			}
-			if (!(process->outfile))
-				process->outfile = ft_strdup(tmp_word);
+			if (!(tmp_process->outfile))
+				tmp_process->outfile = ft_strdup(tmp_word);
 			else
 			{
 				file = open (process->outfile, O_WRONLY, 0644);
 				if (file == -1)
 				{
 					perror ("minishell: Error opening filen\n");
+					//free (tmp);
+					//free_list (words_splited);
 					//Liberar listas
 					//Gestionar g_status
 					return ;
@@ -114,7 +130,7 @@ void	parse(t_process *process, t_list **words_splited)
 				{
 					write (file, "", 1); //Comprobar que funciona
 					close (file);
-					process->outfile = ft_strdup(tmp_word);
+					tmp_process->outfile = ft_strdup(tmp_word);
 				}
 			}
 		}
@@ -125,6 +141,8 @@ void	parse(t_process *process, t_list **words_splited)
 			else
 			{
 				perror("minishell: syntax error near unexpected token `newline'\n");
+				//free (tmp);
+				//free_list (words_splited);
 				//Liberar listas
 				//Gestionar g_status
 				return ;
@@ -136,6 +154,8 @@ void	parse(t_process *process, t_list **words_splited)
 				if (file < 0)
 				{
 					perror("Error opening file");
+					//free (tmp);
+					//free_list (words_splited);
 					//Liberar listas
 					//Gestionar g_status
 					return ;
@@ -146,11 +166,13 @@ void	parse(t_process *process, t_list **words_splited)
 			else if (access(tmp_word, W_OK) == -1)
 			{
 				perror("minishell: Permission denied\n");
+				//free (tmp);
+				//free_list (words_splited);
 				//Liberar listas
 				//Gestionar g_status
 				return ;
 			}
-			process->outfile_append = ft_strdup(tmp_word);
+			tmp_process->outfile_append = ft_strdup(tmp_word);
 		}
 		else if (ft_strncmp(tmp_word, "<<", 3) == 0)
 		{
@@ -159,27 +181,31 @@ void	parse(t_process *process, t_list **words_splited)
 			else
 			{
 				perror("minishell: syntax error near unexpected token `newline'\n");
+				//free (tmp);
+				//free_list (words_splited);
 				//Liberar listas
 				//Gestionar g_status
 				return ;
 			}
 			tmp_word = (*tmp)->content;
 			if (!(process->here_doc))
-				process->here_doc = ft_lstnew(tmp_word);
+				tmp_process->here_doc = ft_lstnew(ft_strdup(tmp_word));
 			else
-				ft_lstadd_back(&process->here_doc, ft_lstnew(tmp_word));
+				ft_lstadd_back(&process->here_doc, ft_lstnew(ft_strdup(tmp_word)));
 		}
 		else if (ft_strncmp(tmp_word, "|", 2) == 0)
 		{
 			//Comprobar que el proceso anterior está completo (tiene commando y es válido)
-			process->next_process = (t_process *)malloc(sizeof(t_process));
-			if (!process->next_process)
+			tmp_process->next_process = (t_process *)malloc(sizeof(t_process));
+			if (!tmp_process->next_process)
 			{
 				perror("Error asinging memory to t_process\n");
+				//free (tmp);
+				//free_list (words_splited);
 				return ;
 			}
-			init_process(process->next_process);
-			process = process->next_process;
+			init_process(tmp_process->next_process);
+			tmp_process = tmp_process->next_process;
 			/*if ((*tmp)->next)
 				(*tmp) = (*tmp)->next;
 			else
@@ -191,26 +217,37 @@ void	parse(t_process *process, t_list **words_splited)
 				return ;
 			}*/
 		}
-		else if (process->command == NULL)
-			process->command = ft_strdup(tmp_word);
+		else if (tmp_process->command == NULL)
+			tmp_process->command = ft_strdup(tmp_word);
 		else if (ft_strncmp(tmp_word, "-", 1) == 0)
 		{
-			if (!(process->flags))
-				process->flags = ft_lstnew(tmp_word);
+			if (!(tmp_process->flags))
+				tmp_process->flags = ft_lstnew(ft_strdup(tmp_word));
 			else
-				ft_lstadd_back(&process->flags, ft_lstnew(tmp_word));
+				ft_lstadd_back(&tmp_process->flags, ft_lstnew(ft_strdup(tmp_word)));
 		}
 		else
 		{
 			if (!(process->argv))
-				process->argv = ft_lstnew(tmp_word);
+				tmp_process->argv = ft_lstnew(ft_strdup(tmp_word));
 			else
-				ft_lstadd_back(&process->argv, ft_lstnew(tmp_word));
+				ft_lstadd_back(&tmp_process->argv, ft_lstnew(ft_strdup(tmp_word)));
 		}
 		if ((*tmp)->next)
+		{
 			(*tmp) = (*tmp)->next;
+			//free (tmp_word);
+		}
 		else
+		{
+			//free (tmp);
+			//free (tmp_word);
+			free_list (words_splited);
 			break ;
+		}
 	}
+	free (tmp);
+	free (tmp_word);
+	free (tmp_process);
 	//Liberar listas
 }
