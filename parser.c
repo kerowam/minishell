@@ -165,7 +165,7 @@ void	parse(t_process *process, t_list **words_splited)
 			}
 			tmp_word = (*tmp)->content;
 			if (!(process->here_doc))
-				ft_lstnew(tmp_word);
+				process->here_doc = ft_lstnew(tmp_word);
 			else
 				ft_lstadd_back(&process->here_doc, ft_lstnew(tmp_word));
 		}
@@ -180,9 +180,26 @@ void	parse(t_process *process, t_list **words_splited)
 			}
 			init_process(process->next_process);
 			process = process->next_process;
+			/*if ((*tmp)->next)
+				(*tmp) = (*tmp)->next;
+			else
+			{
+				printf("minishell: nothing after pipe\n");
+				//Implementar espera pare el resto del input
+				//Liberar listas
+				//Gestionar g_status
+				return ;
+			}*/
 		}
 		else if (process->command == NULL)
 			process->command = ft_strdup(tmp_word);
+		else if (ft_strncmp(tmp_word, "-", 1) == 0)
+		{
+			if (!(process->flags))
+				process->flags = ft_lstnew(tmp_word);
+			else
+				ft_lstadd_back(&process->flags, ft_lstnew(tmp_word));
+		}
 		else
 		{
 			if (!(process->argv))
@@ -190,7 +207,10 @@ void	parse(t_process *process, t_list **words_splited)
 			else
 				ft_lstadd_back(&process->argv, ft_lstnew(tmp_word));
 		}
-		(*tmp) = (*tmp)->next;
+		if ((*tmp)->next)
+			(*tmp) = (*tmp)->next;
+		else
+			break ;
 	}
 	//Liberar listas
 }
