@@ -98,8 +98,6 @@ void	print_process(t_process *process)
 	{
 		printf("process[%d]:\n", i);
 		printf("command = %s\n", process->command);
-		printf("flags:\n");
-		print_list_splited(&process->flags);
 		printf("argv:\n");
 		print_list_splited(&process->argv);
 		printf("infile = %s\n", process->infile);
