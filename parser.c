@@ -25,6 +25,47 @@ void	init_process(t_process *process)
 	process->status = 0;
 }
 
+int	ft_lstsize(t_list *lst)
+{
+	int		i;
+	t_list	*tmp;
+
+	i = 0;
+	tmp = lst;
+	while (tmp)
+	{
+		i++;
+		tmp = tmp->next;
+	}
+	return (i);
+}
+
+char	**list_to_array(t_list *list)
+{
+	char	**array;
+	int		i;
+	t_list	*tmp;
+
+	i = ft_lstsize(list);
+	tmp = list;
+	array = (char **)malloc(sizeof(char *) * (i + 1));
+	if (!array)
+	{
+		perror("Error asinging memory to array\n");
+		return (NULL);
+	}
+	i = 0;
+	tmp = list;
+	while (tmp)
+	{
+		array[i] = ft_strdup(tmp->content);
+		i++;
+		tmp = tmp->next;
+	}
+	array[i] = NULL;
+	return (array);
+}
+
 void	parse(t_process *process, t_list **words_splited)
 {
 	char		*tmp_word;
@@ -219,13 +260,6 @@ void	parse(t_process *process, t_list **words_splited)
 		}
 		else if (tmp_process->command == NULL)
 			tmp_process->command = ft_strdup(tmp_word);
-		else if (ft_strncmp(tmp_word, "-", 1) == 0)
-		{
-			if (!(tmp_process->flags))
-				tmp_process->flags = ft_lstnew(ft_strdup(tmp_word));
-			else
-				ft_lstadd_back(&tmp_process->flags, ft_lstnew(ft_strdup(tmp_word)));
-		}
 		else
 		{
 			if (!(process->argv))
@@ -246,6 +280,7 @@ void	parse(t_process *process, t_list **words_splited)
 			break ;
 		}
 	}
+	process->args = list_to_array(process->argv);
 	free (tmp);
 	free (tmp_word);
 	free (tmp_process);
