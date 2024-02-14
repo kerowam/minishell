@@ -68,8 +68,9 @@ typedef struct s_process
 {
 	struct s_process	*next_process;
 	char				*command;
-	t_list				*flags;
+	//t_list				*flags;
 	t_list				*argv;
+	char				**args;
 	pid_t				pid;//
 	char				*infile;
 	int					inf;//
