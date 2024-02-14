@@ -93,7 +93,7 @@ void	parse(t_process *process, t_list **words_splited)
 				//Gestionar g_status
 				return ;
 			}
-			tmp_word = (*tmp)->content;
+			tmp_word = ft_strdup((*tmp)->content);
 			//Comprobar si existe el archivo.
 			if (access(tmp_word, F_OK) == -1)
 			{
@@ -128,7 +128,7 @@ void	parse(t_process *process, t_list **words_splited)
 				//Gestionar g_status
 				return ;
 			}
-			tmp_word = (*tmp)->content;
+			tmp_word = ft_strdup((*tmp)->content);
 			if (access(tmp_word, F_OK) == -1)
 			{
 				file = open (tmp_word, O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);
@@ -228,15 +228,16 @@ void	parse(t_process *process, t_list **words_splited)
 				//Gestionar g_status
 				return ;
 			}
-			tmp_word = (*tmp)->content;
-			if (!(process->here_doc))
+			tmp_word = ft_strdup((*tmp)->content);
+			if (!(tmp_process->here_doc))
 				tmp_process->here_doc = ft_lstnew(ft_strdup(tmp_word));
 			else
-				ft_lstadd_back(&process->here_doc, ft_lstnew(ft_strdup(tmp_word)));
+				ft_lstadd_back(&tmp_process->here_doc, ft_lstnew(ft_strdup(tmp_word)));
 		}
 		else if (ft_strncmp(tmp_word, "|", 2) == 0)
 		{
 			//Comprobar que el proceso anterior está completo (tiene commando y es válido)
+			tmp_process->args = list_to_array(process->argv);
 			next_process = (t_process *)malloc(sizeof(t_process));
 			if (!next_process)
 			{
@@ -277,13 +278,13 @@ void	parse(t_process *process, t_list **words_splited)
 		{
 			//free (tmp);
 			//free (tmp_word);
+			tmp_process->args = list_to_array(tmp_process->argv);
+			free (tmp_word);
+			free (tmp);
 			free_list (words_splited);
-			break ;
+			return ;
 		}
 	}
-	process->args = list_to_array(process->argv);
-	free (tmp);
-	free (tmp_word);
-	free (tmp_process);
+	//free (tmp_process);
 	//Liberar listas
 }

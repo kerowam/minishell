@@ -105,7 +105,8 @@ void	print_process(t_process *process)
 		printf("outfile_append = %s\n", process->outfile_append);
 		printf("here_doc:\n");
 		print_list_splited(&process->here_doc);
-		print_split(process->args);
+		if (process->args)
+			print_split(process->args);
 		if (process->next_process)
 		{
 			process = process->next_process;
