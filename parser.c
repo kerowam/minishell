@@ -10,7 +10,6 @@ void	init_process(t_process *process)
 	}*/
 	process->next_process = NULL;
 	process->command = NULL;
-	process->flags = NULL;
 	process->argv = NULL;
 	process->pid = 0;
 	process->infile = NULL;
@@ -72,6 +71,7 @@ void	parse(t_process *process, t_list **words_splited)
 	t_list		**tmp;
 	int			file;
 	t_process	*tmp_process;
+	t_process	*next_process;
 
 	tmp = (t_list **)malloc(sizeof(t_list *));
 	*tmp = *words_splited;
@@ -157,7 +157,7 @@ void	parse(t_process *process, t_list **words_splited)
 				tmp_process->outfile = ft_strdup(tmp_word);
 			else
 			{
-				file = open (process->outfile, O_WRONLY, 0644);
+				file = open (tmp_process->outfile, O_WRONLY, 0644);
 				if (file == -1)
 				{
 					perror ("minishell: Error opening filen\n");
@@ -237,15 +237,16 @@ void	parse(t_process *process, t_list **words_splited)
 		else if (ft_strncmp(tmp_word, "|", 2) == 0)
 		{
 			//Comprobar que el proceso anterior está completo (tiene commando y es válido)
-			tmp_process->next_process = (t_process *)malloc(sizeof(t_process));
-			if (!tmp_process->next_process)
+			next_process = (t_process *)malloc(sizeof(t_process));
+			if (!next_process)
 			{
 				perror("Error asinging memory to t_process\n");
 				//free (tmp);
 				//free_list (words_splited);
 				return ;
 			}
-			init_process(tmp_process->next_process);
+			init_process(next_process);
+			tmp_process->next_process = next_process;
 			tmp_process = tmp_process->next_process;
 			/*if ((*tmp)->next)
 				(*tmp) = (*tmp)->next;
@@ -262,7 +263,7 @@ void	parse(t_process *process, t_list **words_splited)
 			tmp_process->command = ft_strdup(tmp_word);
 		else
 		{
-			if (!(process->argv))
+			if (!(tmp_process->argv))
 				tmp_process->argv = ft_lstnew(ft_strdup(tmp_word));
 			else
 				ft_lstadd_back(&tmp_process->argv, ft_lstnew(ft_strdup(tmp_word)));
