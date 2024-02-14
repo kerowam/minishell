@@ -65,11 +65,164 @@ char	**list_to_array(t_list *list)
 	return (array);
 }
 
+int	check_redir(char *tmp_word)
+{
+	if (ft_strncmp(tmp_word, "|", 2) == 0
+		|| ft_strncmp(tmp_word, ">", 2) == 0
+		|| ft_strncmp(tmp_word, ">>", 3) == 0
+		|| ft_strncmp(tmp_word, "<<", 3) == 0
+		|| ft_strncmp(tmp_word, "<", 2) == 0)
+	{
+		if (ft_strncmp(tmp_word, "|", 2) == 0)
+			perror("minishell: syntax error near unexpected token `|'\n");
+		else if (ft_strncmp(tmp_word, ">", 2) == 0)
+			perror("minishell: syntax error near unexpected token `>'\n");
+		else if (ft_strncmp(tmp_word, ">>", 3) == 0)
+			perror("minishell: syntax error near unexpected token `>>'\n");
+		else if (ft_strncmp(tmp_word, "<<", 3) == 0)
+			perror("minishell: syntax error near unexpected token `<<'\n");
+		else if (ft_strncmp(tmp_word, "<", 2) == 0)
+			perror("minishell: syntax error near unexpected token `<'\n");
+		//free (tmp);
+		//free_list (words_splited);
+		//Liberar listas
+		//Gestionar g_status
+		return (1);
+	}
+	return (0);
+}
+
+void	check_pipe(char *tmp_word)
+{
+	if (ft_strncmp(tmp_word, "|", 2) == 0)
+	{
+		perror("minishell: syntax error near unexpected token `|'\n");
+		//free (tmp);
+		//free_list (words_splited);
+		//Liberar listas
+		//Gestionar g_status
+	}
+	return ;
+}
+
+void	check_infile(char *tmp_word, t_process *tmp_process)
+{
+	if (access(tmp_word, F_OK) == -1)
+	{
+		perror("minishell: No such file or directory\n");
+		//free (tmp);
+		//free_list (words_splited);
+		//Liberar listas
+		//Gestionar g_status
+		//return ;
+		//break ;
+	}
+	else if (access(tmp_word, R_OK) == -1) //Comprobación de permisos. Aquí o en el executor?
+	{
+		perror("minishell: Permission denied\n");
+		//free (tmp);
+		//free_list (words_splited);
+		//Liberar listas
+		//Gestionar g_status
+		//return ;
+		//break ;
+	}
+	else
+		tmp_process->infile = ft_strdup(tmp_word);
+}
+
+void	check_outfile(char *tmp_word, t_process *tmp_process)
+{
+	int	file;
+	
+	if (access(tmp_word, F_OK) == -1)
+	{
+		file = open (tmp_word, O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);
+		if (file < 0)
+		{
+			perror("Error opening file");
+			//free (tmp);
+			//free_list (words_splited);
+			//Liberar listas
+			//Gestionar g_status
+			//return ;
+			//break ;
+		}
+		else
+			close (file);
+	}
+	else if (access(tmp_word, W_OK) == -1)
+	{
+		perror("minishell: Permission denied\n");
+		//free (*tmp);
+		//free_list (words_splited);
+		//Liberar listas
+		//Gestionar g_status
+		//return ;
+		//break ;
+	}
+	if (!(tmp_process->outfile))
+		tmp_process->outfile = ft_strdup(tmp_word);
+	else
+	{
+		file = open (tmp_process->outfile, O_WRONLY, 0644);
+		if (file == -1)
+		{
+			perror ("minishell: Error opening filen\n");
+			//free (tmp);
+			//free_list (words_splited);
+			//Liberar listas
+			//Gestionar g_status
+			//return ;
+			//break ;
+		}
+		else
+		{
+			write (file, "", 1); //Comprobar que funciona
+			close (file);
+			tmp_process->outfile = ft_strdup(tmp_word);
+		}
+	}
+}
+
+void	check_outfile_append(char *tmp_word, t_process *tmp_process)
+{
+	int	file;
+
+	if (access(tmp_word, F_OK) == -1)
+	{
+		file = open (tmp_word, O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);
+		if (file < 0)
+		{
+			perror("Error opening file");
+			//free (tmp);
+			//free_list (words_splited);
+			//Liberar listas
+			//Gestionar g_status
+			//return ;
+			//break ;
+		}
+		else
+			close (file);
+	}
+	else if (access(tmp_word, W_OK) == -1)
+	{
+		perror("minishell: Permission denied\n");
+		//free (tmp);
+		//free_list (words_splited);
+		//Liberar listas
+		//Gestionar g_status
+		//return ;
+		//break ;
+	}
+	tmp_process->outfile_append = ft_strdup(tmp_word);
+}
+
 void	parse(t_process *process, t_list **words_splited)
 {
 	char		*tmp_word;
 	t_list		**tmp;
-	int			file;
+	//int			file;
 	t_process	*tmp_process;
 	t_process	*next_process;
 
@@ -94,26 +247,8 @@ void	parse(t_process *process, t_list **words_splited)
 				return ;
 			}
 			tmp_word = ft_strdup((*tmp)->content);
-			//Comprobar si existe el archivo.
-			if (access(tmp_word, F_OK) == -1)
-			{
-				perror("minishell: No such file or directory\n");
-				//free (tmp);
-				//free_list (words_splited);
-				//Liberar listas
-				//Gestionar g_status
-				return ;
-			}
-			else if (access(tmp_word, R_OK) == -1) //Comprobación de permisos. Aquí o en el executor?
-			{
-				perror("minishell: Permission denied\n");
-				//free (tmp);
-				//free_list (words_splited);
-				//Liberar listas
-				//Gestionar g_status
-				return ;
-			}
-			tmp_process->infile = ft_strdup(tmp_word);
+			if (check_redir(tmp_word) == 0)
+				check_infile(tmp_word, tmp_process);
 		}
 		else if (ft_strncmp(tmp_word, ">", 2) == 0)
 		{
@@ -129,51 +264,8 @@ void	parse(t_process *process, t_list **words_splited)
 				return ;
 			}
 			tmp_word = ft_strdup((*tmp)->content);
-			if (access(tmp_word, F_OK) == -1)
-			{
-				file = open (tmp_word, O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);
-				if (file < 0)
-				{
-					perror("Error opening file");
-					//free (tmp);
-					//free_list (words_splited);
-					//Liberar listas
-					//Gestionar g_status
-					return ;
-				}
-				else
-					close (file);
-			}
-			else if (access(tmp_word, W_OK) == -1)
-			{
-				perror("minishell: Permission denied\n");
-				//free (*tmp);
-				//free_list (words_splited);
-				//Liberar listas
-				//Gestionar g_status
-				return ;
-			}
-			if (!(tmp_process->outfile))
-				tmp_process->outfile = ft_strdup(tmp_word);
-			else
-			{
-				file = open (tmp_process->outfile, O_WRONLY, 0644);
-				if (file == -1)
-				{
-					perror ("minishell: Error opening filen\n");
-					//free (tmp);
-					//free_list (words_splited);
-					//Liberar listas
-					//Gestionar g_status
-					return ;
-				}
-				else
-				{
-					write (file, "", 1); //Comprobar que funciona
-					close (file);
-					tmp_process->outfile = ft_strdup(tmp_word);
-				}
-			}
+			if (check_redir(tmp_word) == 0)
+				check_outfile(tmp_word, tmp_process);
 		}
 		else if (ft_strncmp(tmp_word, ">>", 3) == 0)
 		{
@@ -189,31 +281,8 @@ void	parse(t_process *process, t_list **words_splited)
 				return ;
 			}
 			tmp_word = (*tmp)->content;
-			if (access(tmp_word, F_OK) == -1)
-			{
-				file = open (tmp_word, O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);
-				if (file < 0)
-				{
-					perror("Error opening file");
-					//free (tmp);
-					//free_list (words_splited);
-					//Liberar listas
-					//Gestionar g_status
-					return ;
-				}
-				else
-					close (file);
-			}
-			else if (access(tmp_word, W_OK) == -1)
-			{
-				perror("minishell: Permission denied\n");
-				//free (tmp);
-				//free_list (words_splited);
-				//Liberar listas
-				//Gestionar g_status
-				return ;
-			}
-			tmp_process->outfile_append = ft_strdup(tmp_word);
+			if (check_redir(tmp_word) == 0)
+				check_outfile_append(tmp_word, tmp_process);
 		}
 		else if (ft_strncmp(tmp_word, "<<", 3) == 0)
 		{
@@ -229,10 +298,13 @@ void	parse(t_process *process, t_list **words_splited)
 				return ;
 			}
 			tmp_word = ft_strdup((*tmp)->content);
-			if (!(tmp_process->here_doc))
-				tmp_process->here_doc = ft_lstnew(ft_strdup(tmp_word));
-			else
-				ft_lstadd_back(&tmp_process->here_doc, ft_lstnew(ft_strdup(tmp_word)));
+			if (check_redir(tmp_word) == 0)
+			{
+				if (!(tmp_process->here_doc))
+					tmp_process->here_doc = ft_lstnew(ft_strdup(tmp_word));
+				else
+					ft_lstadd_back(&tmp_process->here_doc, ft_lstnew(ft_strdup(tmp_word)));
+			}
 		}
 		else if (ft_strncmp(tmp_word, "|", 2) == 0)
 		{
@@ -249,6 +321,8 @@ void	parse(t_process *process, t_list **words_splited)
 			init_process(next_process);
 			tmp_process->next_process = next_process;
 			tmp_process = tmp_process->next_process;
+			tmp_word = ft_strdup((*tmp)->next->content);
+			check_pipe(tmp_word);
 			/*if ((*tmp)->next)
 				(*tmp) = (*tmp)->next;
 			else
