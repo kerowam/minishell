@@ -47,7 +47,6 @@ typedef struct s_data
 	t_env	*temp_env;
 	t_env	*export;
 	t_env	*temp_export;
-	char	**temp;
 }				t_data;
 
 //Para
@@ -59,7 +58,8 @@ typedef struct s_data
 	//char				**argv;//Así o solo con 1 *???
 	//pid_t				pid;
 	char				token;//?????
-	int					c stopped;//?????
+	int					completed;//?????
+	int					stopped;//?????
 	int					status;//????
 }				t_process;*/
 
@@ -68,20 +68,21 @@ typedef struct s_process
 {
 	struct s_process	*next_process;
 	char				*command;
-	t_list				*flags;
+	//t_list				*flags;
 	t_list				*argv;
-	pid_t				pid;
+	char				**args;
+	pid_t				pid;//
 	char				*infile;
-	int					inf;
+	int					inf;//
 	char				*outfile;
-	int					outf;
+	int					outf;//
 	char				*outfile_append;
 	t_list				*here_doc;
-	int					stderr;
-	int					completed;
-	int					stopped;
+	int					stderr;//??
+	int					completed;//????
+	int					stopped;//????
 	int					status;
-
+	char				**env;
 }				t_process;
 
 //builtins.c
@@ -120,30 +121,30 @@ t_env	*new_node(char *name, char *value);
 
 //main.c
 void	initialize_minishell(t_data **shell, char **env);
-void	process_builtins(t_data *shell);
-void	start_minishell(t_data *shell);
+void	start_minishell(t_data *shell, char **env);
 void	ft_header(void);
 int		main(int argc, char **argv, char **env);
 void	ft_leaks(void);
 
 //utils.c
-void	free_temp(t_data *shell);
+void	free_temp(char **temp);
 void	free_echo(char **str);
 void	env_add_back(t_env **root, t_env *new);
+void	free_list(t_list **list);
+
 //solo para pruebas
 void	print_split(char **line_splited);
 void	print_list_splited(t_list **list);
+void	print_process(t_process *process);
 
-//parse.c
+//quotes.c
 int		check_closed_quotes(char *line, int q, int i, char in_quot);
 int		check_quotes(char *line, int q, int i);
 char	set_in_quot(char *line, int i);
 
 //lexer.c
 void	create_line_splited(char *line, t_list **list);
-//en prueba
-char	*rm_unprint_quotes(char *str);
-t_list	**test_quot_cleaner(t_list **list);
+void	lexer(t_data *shell, t_list **words_splited);
 
 //lexer_pipes.c
 void	split_pipes(t_list **list);
@@ -176,14 +177,20 @@ void	expander(t_env *env, t_list **line_splited);
 int		get_len_word(char *str, int i);
 char	*set_key(char *str, int i);
 
-//executor.c
-void	execute_processes(t_process *process);
-char	**convert_args_list_to_array(t_list *argv_list);
-int		ft_lstsize(t_list *lst);
-bool	execute_builtin(t_process *process);
+//quote_cleaner.c
+void	quot_cleaner(t_list **list);
+char	*add_quot_substr(int start, int i, char *str, char *end_str);
+char	*add_substr(int start, int i, char *str, char *end_str);
+void	clean_str_quot(char *str, t_list **list);
 
-//signals.c
-void	signals_handler(int sign);
-void	setup_signal_handlers(void);
+//parser.c
+void	parse(t_process *process, t_list **words_splited);
+
+//executor.c
+int		find_path(t_process *process, char **env);
+int		main_executor(t_data *shell, char **env, t_process *process);
+void	execute_builtin(t_process *process, t_data *shell);
+bool	is_builtin(t_process *process, t_data *shell);
+char 	*pathcat(char *dir, char *file);
 
 #endif

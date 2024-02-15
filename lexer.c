@@ -35,32 +35,17 @@ void	create_line_splited(char *line, t_list **list)
 	}
 }
 
-char	*rm_unprint_quotes(char *str)
+void	lexer(t_data *shell, t_list **words_splited)
 {
-	if (str[0] == '\'' || str[0] == '\"')
-		str = ft_substr(str, 1, ft_strlen(str) - 2);
-	return (str);
-}
+	char	*line;
 
-//Función de prueba. Quital o adaptar
-t_list	**test_quot_cleaner(t_list **list)
-{
-	t_list	**tmp;
-	char	*tmp_word;
-
-	tmp = (t_list **)malloc(sizeof(t_list *));
-	*tmp = *list;
-	while (*tmp)
-	{
-		tmp_word = (*tmp)->content;
-
-		if (tmp_word[0] == '\'' || tmp_word[0] == '\"')
-			(*tmp)->content = rm_unprint_quotes(tmp_word);
-		if ((*tmp)->next)
-			*tmp = (*tmp)->next;
-		else
-			break ;
-	}
-	free (tmp);
-	return (list);
+	line = ft_strdup(shell->line);
+	printf("line = %s\n", line);
+	create_line_splited(line, words_splited);
+	free(line);
+	split_pipes(words_splited);
+	split_redirections(words_splited);
+	expander(shell->env, words_splited);
+	quot_cleaner(words_splited);
+	return ;
 }

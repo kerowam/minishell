@@ -1,113 +1,85 @@
 #include "minishell.h"
 
-void	execute_processes(t_process *process)
+int	find_path(t_process *process, char **env)
 {
-	t_process	*current_process;
-	char		**args;
+	int	i;
 
-	current_process = process;
-	while (current_process != NULL)
+	i = 0;
+	while (ft_strncmp(env[i], "PATH", 4) != 0)
+		i++;
+	env[i] += 5;
+	process->env = ft_split(env[i], ':');
+	if (process->env == NULL)
 	{
-		if (!execute_builtin(current_process))
-		{
-			process->pid = fork();
-			if (process->pid == -1)
-			{
-				perror("fork");
-				exit(EXIT_FAILURE);
-			}
-			if (process->pid == 0)
-			{
-				// Proceso hijo, ejecucion del comando
-				// Redirecciones, execve, etc)
-				if (current_process->infile != NULL)
-				{
-					current_process->inf = open(current_process->infile,
-							O_RDONLY);
-					if (current_process->inf == -1)
-					{
-						perror("open");
-						exit(EXIT_FAILURE);
-					}
-					dup2(current_process->inf, STDIN_FILENO);
-					close(current_process->inf);
-				}
-				if (current_process->outfile != NULL)
-				{
-					current_process->outf = open(current_process->outfile,
-							O_WRONLY | O_CREAT | O_TRUNC, 0644);
-					if (current_process->outf == -1)
-					{
-						perror("open");
-						exit(EXIT_FAILURE);
-					}
-					dup2(current_process->outf, STDOUT_FILENO);
-					close(current_process->outf);
-				}
-				args = convert_args_list_to_array(current_process->argv);
-				execvp(current_process->command, args);
-				perror("execvp");
-				free(args);
-				exit(EXIT_FAILURE);
-			}
-			else
-			{
-				waitpid(process->pid, &process->status, 0);
-				// Manejar estado proceso hijo (status)
-				// Salida, señales, etc)
-			}
-		}
-		current_process = current_process->next_process;
+		free(process->env);
+		perror("Error de split");
+		return (EXIT_FAILURE);
 	}
-	while (process != NULL)
+	/*printf("Path encontrado: %s\n", env[i]);
+	printf("Resultados de ft_split:\n");
+	int j = 0;
+	while (process->env[j] != NULL)
 	{
-		waitpid(process->pid, &process->status, 0);
-		process = process->next_process;
-	}
+		printf("%d: %s\n", j, process->env[j]);
+		j++;
+	}*/
+	return (EXIT_SUCCESS);
 }
 
-char	**convert_args_list_to_array(t_list *argv_list)
+int	check_command_access(t_process *process)
 {
-	char	**argv_array;
 	int		i;
+	char	*full_path;
+	char	*temp;
 
-	argv_array = malloc((ft_lstsize(argv_list) == 1) * sizeof(char *));
-	if (!argv_array)
-	{
-		perror("malloc");
-		exit(EXIT_FAILURE);
-	}
 	i = 0;
-	while (argv_list != NULL)
+	while (process->env[i] != NULL)
 	{
-		argv_array[i] = argv_list->content;
-		argv_list = argv_list->next;
+		temp = ft_strjoin(process->env[i], "/");
+		printf("Temp: %s\n", temp);
+		full_path = ft_strjoin(temp, process->command);
+		printf("Full Path: %s\n", full_path);
+		free(temp);
+		/*if (full_path != NULL && access(full_path, F_OK | X_OK) != -1)
+		{
+			free(process->command);
+			process->command = full_path;
+			return (1);
+		}
+		else
+		{
+   			perror("Access Error");
+   			free(full_path);
+		}*/
 		i++;
 	}
-	argv_array[i] = NULL;
-	return (argv_array);
+	return (0);
 }
 
-int	ft_lstsize(t_list *lst)
+int	main_executor(t_data *shell, char **env, t_process *process)
 {
-	int	size;
-
-	size = 0;
-	while (lst != NULL)
+	if (!process)
+		exit(EXIT_FAILURE);
+	if (is_builtin(process, shell))
+		execute_builtin(process, shell);
+	else if (!is_builtin(process, shell))
 	{
-		size++;
-		lst = lst->next;
+		printf("Comando: %s\n", process->command);
+		find_path(process, env);
+		if (check_command_access(process))
+			printf("Command path: %s\n", process->command);
+		/*else
+			printf("Command not accessible\n");*/
+		return (EXIT_SUCCESS);
 	}
-	return (size);
+	exit(EXIT_FAILURE);
 }
 
-bool	execute_builtin(t_process *process)
-{
-	t_data	*shell;
+//***PARTE DE BUILTINS***//
 
+void	execute_builtin(t_process *process, t_data *shell)
+{
 	(void)process;
-	shell = NULL;
-	shell->echo = ft_split(shell->line, ' ');
 	if (ft_strncmp(shell->line, "exit\0", 5) == 0
 		|| ft_strncmp(shell->line, "EXIT\0", 5) == 0)
 	{
@@ -116,39 +88,42 @@ bool	execute_builtin(t_process *process)
 	}
 	if (ft_strncmp(shell->line, "env\0", 4) == 0
 		|| ft_strncmp(shell->line, "ENV\0", 4) == 0)
-	{
 		env_command(shell->echo, shell);
-		return (true);
-	}
 	if (ft_strncmp(shell->line, "pwd\0", 4) == 0
 		|| ft_strncmp(shell->line, "PWD\0", 4) == 0)
-	{
 		pwd_command(shell);
-		return (true);
-	}
 	if (ft_strncmp(shell->echo[0], "echo\0", 5) == 0
 		|| ft_strncmp(shell->echo[0], "ECHO\0", 5) == 0)
-	{
 		echo_command(shell->echo, 0);
-		return (true);
-	}
 	if (ft_strncmp(shell->line, "unset\0", 6) == 0
 		|| ft_strncmp(shell->line, "UNSET\0", 6) == 0)
-	{
 		unset_command(shell, shell->echo[1]);
-		return (true);
-	}
 	if (ft_strncmp(*shell->echo, "cd\0", 3) == 0
 		|| ft_strncmp(shell->line, "CD\0", 3) == 0)
-	{
 		cd_command(shell->echo, shell);
-		return (true);
-	}
 	if (ft_strncmp(shell->echo[0], "export\0", 7) == 0
 		|| ft_strncmp(shell->echo[0], "EXPORT\0", 7) == 0)
-	{
 		export_command(shell->echo, shell);
+}
+
+bool	is_builtin(t_process *process, t_data *shell)
+{
+	(void)process;
+	if (ft_strncmp(shell->line, "exit\0", 5) == 0
+		|| ft_strncmp(shell->line, "EXIT\0", 5) == 0
+		|| ft_strncmp(shell->line, "env\0", 4) == 0
+		|| ft_strncmp(shell->line, "ENV\0", 4) == 0
+		|| ft_strncmp(shell->line, "pwd\0", 4) == 0
+		|| ft_strncmp(shell->line, "PWD\0", 4) == 0
+		|| ft_strncmp(shell->echo[0], "echo\0", 5) == 0
+		|| ft_strncmp(shell->echo[0], "ECHO\0", 5) == 0
+		|| ft_strncmp(shell->line, "unset\0", 6) == 0
+		|| ft_strncmp(shell->line, "UNSET\0", 6) == 0
+		|| ft_strncmp(*shell->echo, "cd\0", 3) == 0
+		|| ft_strncmp(*shell->echo, "CD\0", 3) == 0
+		|| ft_strncmp(shell->echo[0], "export\0", 7) == 0
+		|| ft_strncmp(shell->echo[0], "EXPORT\0", 7) == 0)
 		return (true);
-	}
-	return (false);
+	else
+		return (false);
 }

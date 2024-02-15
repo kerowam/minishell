@@ -1,10 +1,6 @@
 NAME = libft.a
 
-HEADERS = -I ./includes
-
-FLAGS	= -g -Wall -Wextra -Werror
-
-SRCS = ft_isalpha.c\
+SOURCE = ft_isalpha.c\
 	ft_isdigit.c\
 	ft_isalnum.c\
 	ft_isascii.c\
@@ -50,7 +46,7 @@ SRCS = ft_isalpha.c\
 	ft_lstiter_bonus.c\
 	ft_lstmap_bonus.c
 
-SRCS_BONUS = ft_lstnew_bonus.c\
+SOURCE_BONUS = ft_lstnew_bonus.c\
 				ft_lstadd_front_bonus.c\
 				ft_lstsize_bonus.c\
 				ft_lstlast_bonus.c\
@@ -60,30 +56,31 @@ SRCS_BONUS = ft_lstnew_bonus.c\
 				ft_lstiter_bonus.c\
 				ft_lstmap_bonus.c
 
-OBJS	= ${SRCS:.c=.o}
+OBJ = $(SOURCE:.c=.o)
 
-OBJS_BONUS = ${SRCS_BONUS:.c=.o}
+OBJ_BONUS = $(SOURCE_BONUS:.c=.o)
 
-all: ${NAME}
+CC = gcc
 
-bonus: ${NAME_BONUS}
+CFLAGS = -Wall -Werror -Wextra
 
-${NAME}: ${OBJS}
-	@ar rc ${NAME} ${OBJS}
-	@ranlib ${NAME}
+LIB = ar rcs
 
-${NAME_BONUS}: ${OBJS_BONUS}
-	@${CC} ${FLAGS} ${OBJS_BONUS} ${HEADERS} -o ${NAME_BONUS}
+all: $(NAME)
 
-%.o: %.c
-	@$(CC) $(CFLAGS) -o $@ -c $< $(HEADERS) && printf "Compiling: $(notdir $<)\n"
+$(NAME): $(OBJ)
+	$(LIB) $(NAME) $(OBJ)
 
 clean:
-	@rm -rf $(OBJS) $(OBJS_BONUS)
+	rm -f $(OBJ) $(OBJ_BONUS)
 
 fclean: clean
-	@rm -rf $(NAME) $(NAME_BONUS)
+	rm -f $(NAME)
 
 re: fclean all
 
-.PHONY: all, clean, fclean, re, bonus
+bonus:
+	$(CC) $(CFLAGS) -c $(SOURCE_BONUS)
+	$(LIB) $(NAME) $(OBJ_BONUS)
+
+.PHONY: re all clean fclean bonus

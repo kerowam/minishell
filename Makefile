@@ -10,7 +10,7 @@ SRCS = main.c\
 		cd_utils.c\
 		cd.c\
 		export_utils.c\
-		parse.c\
+		parser.c\
 		lexer.c\
 		lexer_utils.c\
 		lexer_pipes.c\
@@ -19,20 +19,20 @@ SRCS = main.c\
 		lexer_redir_utils.c\
 		expander.c\
 		expander_utils.c\
-		executor.c\
-
-
-COMPILATION_DONE = no
+		quotes.c\
+		quote_cleaner.c\
+		executor.c
 
 CC = gcc
 
 OBJS = ${SRCS:.c=.o}
 
-all: ${LIBFT}/libft.a $(NAME) message
+all: ${LIBFT}/libft.a $(NAME)
 
 $(NAME): $(OBJS)
 	@$(CC) -g $(CFLAGS) $(SRCS) ${LIBFT}/libft.a -o $(NAME) -lreadline
-	@$(eval COMPILATION_DONE = yes)
+	
+#gcc -L/usr/local/opt/readline/lib -I/usr/local/opt/readline/include -lreadline main.c -o main
 
 %.o: %.c
 	@$(CC) $(CFLAGS) -o $@ -c $< $(HEADERS) && printf "Compiling: $(notdir $<)\n"
@@ -49,14 +49,5 @@ fclean: clean
 	@${MAKE} -C ${LIBFT} fclean
 
 re: fclean all
-
-message:
-	@if [ "$(COMPILATION_DONE)" = "yes" ]; \
-	then \
-		echo "\033[92mCompilation completed successfully! 🚀\033[0m"; \
-	else \
-		echo "\033[93mNothing to be done. $(NAME) is up-to-date.\033[0m"; \
-	fi
-
 
 .PHONY: all, clean, fclean, re
