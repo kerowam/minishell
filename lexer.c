@@ -40,7 +40,7 @@ void	lexer(t_data *shell, t_list **words_splited)
 	char	*line;
 
 	line = ft_strdup(shell->line);
-	printf("line = %s\n", line);
+	//printf("line = %s\n", line);
 	create_line_splited(line, words_splited);
 	free(line);
 	split_pipes(words_splited);

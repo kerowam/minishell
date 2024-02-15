@@ -84,6 +84,11 @@ void	split_redirections(t_list **list)
 	t_list	**tmp;
 
 	tmp = (t_list **)malloc(sizeof(t_list *));
+	if (!tmp)
+	{
+		put_error(MEMPROBLEM, 1);
+		return ;
+	}
 	*tmp = *list;
 	while (*tmp)
 	{

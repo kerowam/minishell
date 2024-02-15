@@ -25,8 +25,8 @@ void	initialize_minishell(t_data **shell, char **env)
 	*shell = (t_data *)malloc(sizeof(t_data));
 	if (!*shell)
 	{
-		perror("Error al asignar memoria para t_data");
-		exit(EXIT_FAILURE);
+		put_error(MEMPROBLEM, 1); //exit status 1???
+		exit(EXIT_FAILURE); //Debe terminar el programa, o comenzar de nuevo?
 	}
 	initialize_env(*shell, env);
 }
@@ -37,7 +37,8 @@ void	process_builtins(t_data *shell)
 		|| ft_strncmp(shell->line, "EXIT\0", 5) == 0)
 	{
 		free(shell->line);
-		exit(EXIT_FAILURE);
+		//Liberar variables
+		exit(EXIT_SUCCESS); //He cambiado el exit status
 	}
 	if (ft_strncmp(shell->line, "env\0", 4) == 0
 		|| ft_strncmp(shell->line, "ENV\0", 4) == 0)
@@ -68,7 +69,7 @@ void	start_minishell(t_data *shell)
 	words_splited = (t_list **)malloc(sizeof(t_list *));
 	process = (t_process *)malloc(sizeof(t_process));
 	if (!words_splited)
-		printf("error: malloc\n"); //Hacer función para enviar errores a stderr
+		put_error(MEMPROBLEM, 1);
 	while (1)
 	{
 		/*if (words_splited)
@@ -86,7 +87,7 @@ void	start_minishell(t_data *shell)
 			q = check_quotes(shell->line, 0, 0);
 			if (q % 2 != 0)
 			{
-				printf("error: dequoted line\n");
+				put_error(DEQUOTE, 1);
 				free(shell->line);
 				//start_minishell(shell); //Hay que buscar otra solución
 				//rl_replace_line("Minishell@ ~ ", 1);
@@ -98,7 +99,7 @@ void	start_minishell(t_data *shell)
 				//print_list_splited(words_splited);
 				parse(process, words_splited);
 				free_list(words_splited);
-				print_process(process);
+				//print_process(process);
 				shell->echo = ft_split(shell->line, ' ');
 				if (shell->echo && shell->echo[0] != NULL)
 				{

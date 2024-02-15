@@ -50,7 +50,7 @@ char	**list_to_array(t_list *list)
 	array = (char **)malloc(sizeof(char *) * (i + 1));
 	if (!array)
 	{
-		perror("Error asinging memory to array\n");
+		put_error(MEMPROBLEM, 1); //exit status 1???
 		return (NULL);
 	}
 	i = 0;
@@ -73,16 +73,7 @@ int	check_redir(char *tmp_word)
 		|| ft_strncmp(tmp_word, "<<", 3) == 0
 		|| ft_strncmp(tmp_word, "<", 2) == 0)
 	{
-		if (ft_strncmp(tmp_word, "|", 2) == 0)
-			perror("minishell: syntax error near unexpected token `|'\n");
-		else if (ft_strncmp(tmp_word, ">", 2) == 0)
-			perror("minishell: syntax error near unexpected token `>'\n");
-		else if (ft_strncmp(tmp_word, ">>", 3) == 0)
-			perror("minishell: syntax error near unexpected token `>>'\n");
-		else if (ft_strncmp(tmp_word, "<<", 3) == 0)
-			perror("minishell: syntax error near unexpected token `<<'\n");
-		else if (ft_strncmp(tmp_word, "<", 2) == 0)
-			perror("minishell: syntax error near unexpected token `<'\n");
+		put_error(UNEXPECTEDTOKEN, 258);
 		//free (tmp);
 		//free_list (words_splited);
 		//Liberar listas
@@ -96,7 +87,7 @@ void	check_pipe(char *tmp_word)
 {
 	if (ft_strncmp(tmp_word, "|", 2) == 0)
 	{
-		perror("minishell: syntax error near unexpected token `|'\n");
+		put_error(UNEXPECTEDTOKEN, 258);
 		//free (tmp);
 		//free_list (words_splited);
 		//Liberar listas
@@ -109,7 +100,7 @@ void	check_infile(char *tmp_word, t_process *tmp_process)
 {
 	if (access(tmp_word, F_OK) == -1)
 	{
-		perror("minishell: No such file or directory\n");
+		put_error(NOTFILEORDIR, 1);
 		//free (tmp);
 		//free_list (words_splited);
 		//Liberar listas
@@ -119,7 +110,7 @@ void	check_infile(char *tmp_word, t_process *tmp_process)
 	}
 	else if (access(tmp_word, R_OK) == -1) //Comprobación de permisos. Aquí o en el executor?
 	{
-		perror("minishell: Permission denied\n");
+		put_error(NOTPERMISSION, 1);
 		//free (tmp);
 		//free_list (words_splited);
 		//Liberar listas
@@ -140,7 +131,7 @@ void	check_outfile(char *tmp_word, t_process *tmp_process)
 		file = open (tmp_word, O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);
 		if (file < 0)
 		{
-			perror("Error opening file");
+			put_error(OPENERROR, 1); //exit status 1???
 			//free (tmp);
 			//free_list (words_splited);
 			//Liberar listas
@@ -153,7 +144,7 @@ void	check_outfile(char *tmp_word, t_process *tmp_process)
 	}
 	else if (access(tmp_word, W_OK) == -1)
 	{
-		perror("minishell: Permission denied\n");
+		put_error(NOTPERMISSION, 1);
 		//free (*tmp);
 		//free_list (words_splited);
 		//Liberar listas
@@ -168,7 +159,7 @@ void	check_outfile(char *tmp_word, t_process *tmp_process)
 		file = open (tmp_process->outfile, O_WRONLY, 0644);
 		if (file == -1)
 		{
-			perror ("minishell: Error opening filen\n");
+			put_error(OPENERROR, 1); //exit status 1???
 			//free (tmp);
 			//free_list (words_splited);
 			//Liberar listas
@@ -194,7 +185,7 @@ void	check_outfile_append(char *tmp_word, t_process *tmp_process)
 		file = open (tmp_word, O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);
 		if (file < 0)
 		{
-			perror("Error opening file");
+			put_error(OPENERROR, 1); //exit status 1???
 			//free (tmp);
 			//free_list (words_splited);
 			//Liberar listas
@@ -207,7 +198,7 @@ void	check_outfile_append(char *tmp_word, t_process *tmp_process)
 	}
 	else if (access(tmp_word, W_OK) == -1)
 	{
-		perror("minishell: Permission denied\n");
+		put_error(NOTPERMISSION, 1);
 		//free (tmp);
 		//free_list (words_splited);
 		//Liberar listas
@@ -239,7 +230,7 @@ void	parse(t_process *process, t_list **words_splited)
 				(*tmp) = (*tmp)->next;
 			else
 			{
-				perror ("minishell: syntax error near unexpected token `newline'\n");
+				put_error(UNEXPECTEDTOKEN, 258);
 				//free (tmp);
 				//free_list (words_splited);
 				//Liberar listas
@@ -256,7 +247,7 @@ void	parse(t_process *process, t_list **words_splited)
 				(*tmp) = (*tmp)->next;
 			else
 			{
-				perror ("minishell: syntax error near unexpected token `newline'\n");
+				put_error(UNEXPECTEDTOKEN, 258);
 				//free (tmp);
 				//free_list (words_splited);
 				//Liberar listas
@@ -273,7 +264,7 @@ void	parse(t_process *process, t_list **words_splited)
 				(*tmp) = (*tmp)->next;
 			else
 			{
-				perror("minishell: syntax error near unexpected token `newline'\n");
+				put_error(UNEXPECTEDTOKEN, 258);
 				//free (tmp);
 				//free_list (words_splited);
 				//Liberar listas
@@ -290,7 +281,7 @@ void	parse(t_process *process, t_list **words_splited)
 				(*tmp) = (*tmp)->next;
 			else
 			{
-				perror("minishell: syntax error near unexpected token `newline'\n");
+				put_error(UNEXPECTEDTOKEN, 258);
 				//free (tmp);
 				//free_list (words_splited);
 				//Liberar listas
@@ -313,7 +304,7 @@ void	parse(t_process *process, t_list **words_splited)
 			next_process = (t_process *)malloc(sizeof(t_process));
 			if (!next_process)
 			{
-				perror("Error asinging memory to t_process\n");
+				put_error(MEMPROBLEM, 1); //exit status 1???
 				//free (tmp);
 				//free_list (words_splited);
 				return ;

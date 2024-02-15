@@ -25,6 +25,8 @@
 # define Q		'\''
 # define D_Q	'\"'
 
+int	g_exit_status;//Variable global para el status de salida. ¿Con o sin extern?
+
 typedef struct s_env
 {
 	char			*name;
@@ -68,7 +70,6 @@ typedef struct s_process
 {
 	struct s_process	*next_process;
 	char				*command;
-	//t_list				*flags;
 	t_list				*argv;
 	char				**args;
 	pid_t				pid;//
@@ -84,6 +85,22 @@ typedef struct s_process
 	int					status;
 
 }				t_process;
+
+enum	e_error
+{
+	DEQUOTE = 1, //g_exit_status = 1?
+	NOTFILEORDIR = 2, //g_exit_status = 1
+	NOTPERMISSION = 3, //g_exit_status = 1
+	NOTCOMMAND = 4, //g_exit_status = 127
+	DUPERROR = 5, //g_exit_status = 1 Por si falla dup2??
+	FORKERROR = 6, //g_exit_status = 1 Por si falla fork
+	PIPEERROR = 7, //g_exit_status = 1 Por si falla pipe
+	UNEXPECTEDTOKEN = 8, //g_exit_status = 258
+	MEMPROBLEM = 9, //g_exit_status = ? Por si falla malloc
+	ISDIR = 10, //g_exit_status = 126
+	NOTDIR = 11, //g_exit_status = 1
+	OPENERROR = 12 //g_exit_status = 1? Por si falla open (fd < 0)
+};
 
 //builtins.c
 void	env_command(char **cmd, t_data *shell);
@@ -193,5 +210,9 @@ void	clean_str_quot(char *str, t_list **list);
 
 //parser.c
 void	parse(t_process *process, t_list **words_splited);
+
+//error.c
+void	put_error(int error_tipe, int error_code);
+
 
 #endif
