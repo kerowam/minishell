@@ -1,7 +1,7 @@
 
 #include "minishell.h"
 
-void	ft_header(void)
+/*void	ft_header(void)
 {
 	printf("\n");
 	printf("               ╔╗ ╔╦═══╗ \n");
@@ -17,7 +17,7 @@ void	ft_header(void)
 	printf("   ║║║║║╠╣╠╣║ ║║╠╣╠╣╚═╝║║ ║║╚══╣╚═╝║╚═╝║ \n");
 	printf("   ╚╝╚╝╚╩══╩╝ ╚═╩══╩═══╩╝ ╚╩═══╩═══╩═══╝ \n");
 	printf("\n");
-}
+}*/
 
 void	initialize_minishell(t_data **shell, char **env)
 {
@@ -38,7 +38,7 @@ void	process_builtins(t_data *shell)
 	{
 		free(shell->line);
 		//Liberar variables
-		exit(EXIT_SUCCESS); //He cambiado el exit status
+		exit (g_exit_status); //He cambiado el exit status
 	}
 	if (ft_strncmp(shell->line, "env\0", 4) == 0
 		|| ft_strncmp(shell->line, "ENV\0", 4) == 0)
@@ -91,6 +91,7 @@ void	start_minishell(t_data *shell)
 				free(shell->line);
 				//start_minishell(shell); //Hay que buscar otra solución
 				//rl_replace_line("Minishell@ ~ ", 1);
+				//break ;
 				shell->line = readline("Minishell@ ~ ");
 			}
 			if (shell->line && *shell->line)
@@ -108,6 +109,8 @@ void	start_minishell(t_data *shell)
 					process_builtins(shell);
 					free_echo(shell->echo);
 					free(shell->line);
+					//exit (g_exit_status);
+					break ;
 				}
 				else
 					free(shell->line);
@@ -126,12 +129,12 @@ int	main(int argc, char **argv, char **env)
 	shell->line = NULL;
 	if (argc == 1)
 	{
-		ft_header();
+		//ft_header();
 		start_minishell(shell);
 	}
 	free(shell);
 	clear_history();
-	return (EXIT_SUCCESS);
+	exit (g_exit_status); //He cambiado EXIT_SUCCESS por g_exit_status y return por exit
 }
 
 void	ft_leaks(void)
