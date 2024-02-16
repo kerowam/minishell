@@ -44,6 +44,7 @@ typedef struct s_data
 	int		del; //delimitador para variables
 	int		f_pipe;
 	t_env	*env;
+	char	**temp;
 	t_env	*temp_env;
 	t_env	*export;
 	t_env	*temp_export;
@@ -107,8 +108,10 @@ void	cd_command(char **str, t_data *shell);
 int		handle_directory(t_data *shell, char **str);
 
 //enviroment.c
+void	free_split(char **tmp);
 void	initialize_env(t_data *shell, char **env);
 void	add_newenv_back(t_env **first, t_env *new, char **temp);
+void	add_path(t_data *shell);
 void	add_oldpwd(t_data *shell);
 char	*obtain_env_name(char *fullenv);
 char	*obtain_env_value(char *fullenv);
@@ -132,6 +135,7 @@ void	free_temp(char **temp);
 void	free_echo(char **str);
 void	env_add_back(t_env **root, t_env *new);
 void	free_list(t_list **list);
+void 	free_env_list(t_env *env);
 
 //solo para pruebas
 void	print_split(char **line_splited);
@@ -192,5 +196,6 @@ int		find_path(t_process *process, char **env);
 int		main_executor(t_data *shell, char **env, t_process *process);
 void	execute_builtin(t_process *process, t_data *shell);
 bool	is_builtin(t_process *process, t_data *shell);
+void 	free_string_array(char **array);
 
 #endif

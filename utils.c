@@ -116,3 +116,15 @@ void	print_process(t_process *process)
 			break ;
 	}
 }
+
+void free_env_list(t_env *env)
+{
+	while (env != NULL)
+	{
+		t_env *temp = env;
+		env = env->next;
+		free(temp->name);
+		free(temp->value);
+		free(temp);
+	}
+}

@@ -2,26 +2,26 @@
 
 int	find_path(t_process *process, char **env)
 {
-	int		i;
-	int		j;
+	int	i;
+	int	j;
 
 	i = 0;
 	while (env[i] != NULL)
 	{
 		if (ft_strncmp(env[i], "PATH", 4) == 0)
 		{
-			process->path_env = ft_strdup(env[i] + 5);
-			if (!process->path_env || !*process->path_env)
+			free(process->path_env);
+			free_string_array(process->env);
+			process->path_env = strdup(env[i] + 5);
+			if (!process->path_env)
 			{
-				free(process->path_env);
+				perror("Error al duplicar la cadena");
 				return (EXIT_FAILURE);
 			}
 			process->env = ft_split(process->path_env, ':');
-			free(process->path_env);
-			if (process->env == NULL)
+			if (!process->env)
 			{
-				perror("Error de split");
-				free(process->path_env);
+				perror("Error al dividir la cadena");
 				return (EXIT_FAILURE);
 			}
 			j = 0;
@@ -136,4 +136,20 @@ bool	is_builtin(t_process *process, t_data *shell)
 		return (true);
 	else
 		return (false);
+}
+
+///***LIBERACION***///
+void	free_string_array(char **array)
+{
+	int	i;
+
+	if (!array)
+		return ;
+	i = 0;
+	while (array[i])
+	{
+		free(array[i]);
+		i++;
+	}
+	free(array);
 }

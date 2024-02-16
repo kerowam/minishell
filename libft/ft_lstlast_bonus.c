@@ -14,12 +14,13 @@
 
 t_list	*ft_lstlast(t_list *lst)
 {
-	t_list	*copy;
-
 	if (!lst)
-		return (0);
-	copy = lst;
-	while (copy->next)
-		copy = copy->next;
-	return (copy);
+		return (NULL);
+	while (lst)
+	{
+		if (lst->next == NULL)
+			return (lst);
+		lst = lst->next;
+	}	
+	return (lst);
 }

@@ -7,14 +7,18 @@ void	env_command(char **cmd, t_data *shell)
 	current_env = shell->env;
 	if (cmd[1])
 	{
-		printf("\033[0;33mconchita: env: \033[0m\n");
 		printf("\033[0;33mNo arguments supported\n\033[0m\n");
 		return ;
 	}
+
 	while (current_env)
 	{
 		if (current_env->value[0])
 			printf("%s=%s\n", current_env->name, current_env->value);
+
+		if (strcmp(current_env->name, "MallocNanoZone") == 0)
+			add_path(shell);
+
 		current_env = current_env->next;
 	}
 }

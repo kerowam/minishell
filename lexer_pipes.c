@@ -64,7 +64,11 @@ void	handle_pipes(t_list **list, int i)
 	int		len;
 	int		n_pipes;
 
+	if (list == NULL || *list == NULL || (*list)->content == NULL)
+		return ;
 	tmp_word = (*list)->content;
+	if (tmp_word == NULL)
+		return ;
 	len = ft_strlen(tmp_word);
 	n_pipes = get_pipe_nbr(tmp_word, i);
 	if (len > 0 && n_pipes > 0)

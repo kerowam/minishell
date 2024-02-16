@@ -21,7 +21,6 @@ void	ft_header(void)
 
 void	initialize_minishell(t_data **shell, char **env)
 {
-	(void)env;
 	*shell = (t_data *)malloc(sizeof(t_data));
 	if (!*shell)
 	{
@@ -43,6 +42,7 @@ void	start_minishell(t_data *shell, char **env)
 		printf("error: malloc\n"); //Hacer función para enviar errores a stderr
 	while (1)
 	{
+		
 		/*if (words_splited)
 			free(words_splited);*/
 		/*if (shell->line)
@@ -96,6 +96,7 @@ int	main(int argc, char **argv, char **env)
 
 	(void)argv;
 	atexit(ft_leaks);
+	shell = NULL;
 	initialize_minishell(&shell, env);
 	shell->line = NULL;
 	if (argc == 1)

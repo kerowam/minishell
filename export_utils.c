@@ -9,7 +9,7 @@ void	only_export(t_data *shell)
 	current = shell->env;
 	while (current)
 	{
-		printf("declare -x %s%s\n", current->name, current->value);
+		printf("declare -x \"%s%s\"\n", current->name, current->value);
 		current = current->next;
 	}
 }
