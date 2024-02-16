@@ -2,28 +2,39 @@
 
 int	find_path(t_process *process, char **env)
 {
-	int	i;
+	int		i;
+	int		j;
 
 	i = 0;
-	while (ft_strncmp(env[i], "PATH", 4) != 0)
+	while (env[i] != NULL)
+	{
+		if (ft_strncmp(env[i], "PATH", 4) == 0)
+		{
+			process->path_env = ft_strdup(env[i] + 5);
+			if (!process->path_env || !*process->path_env)
+			{
+				free(process->path_env);
+				return (EXIT_FAILURE);
+			}
+			process->env = ft_split(process->path_env, ':');
+			free(process->path_env);
+			if (process->env == NULL)
+			{
+				perror("Error de split");
+				free(process->path_env);
+				return (EXIT_FAILURE);
+			}
+			j = 0;
+			while (process->env[j] != NULL)
+			{
+				printf("Resultados de ft_split: %d: %s\n", j, process->env[j]);
+				j++;
+			}
+			return (EXIT_SUCCESS);
+		}
 		i++;
-	env[i] += 5;
-	process->env = ft_split(env[i], ':');
-	if (process->env == NULL)
-	{
-		free(process->env);
-		perror("Error de split");
-		return (EXIT_FAILURE);
 	}
-	/*printf("Path encontrado: %s\n", env[i]);
-	printf("Resultados de ft_split:\n");
-	int j = 0;
-	while (process->env[j] != NULL)
-	{
-		printf("%d: %s\n", j, process->env[j]);
-		j++;
-	}*/
-	return (EXIT_SUCCESS);
+	return (EXIT_FAILURE);
 }
 
 int	check_command_access(t_process *process)
@@ -33,7 +44,7 @@ int	check_command_access(t_process *process)
 	char	*temp;
 
 	i = 0;
-	while (process->env[i] != NULL)
+	while (process->env[++i] != NULL)
 	{
 		temp = ft_strjoin(process->env[i], "/");
 		printf("Temp: %s\n", temp);
@@ -51,7 +62,7 @@ int	check_command_access(t_process *process)
    			perror("Access Error");
    			free(full_path);
 		}*/
-		i++;
+		free(full_path);
 	}
 	return (0);
 }
@@ -64,7 +75,6 @@ int	main_executor(t_data *shell, char **env, t_process *process)
 		execute_builtin(process, shell);
 	else if (!is_builtin(process, shell))
 	{
-		printf("Comando: %s\n", process->command);
 		find_path(process, env);
 		if (check_command_access(process))
 			printf("Command path: %s\n", process->command);

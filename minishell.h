@@ -83,6 +83,7 @@ typedef struct s_process
 	int					stopped;//????
 	int					status;
 	char				**env;
+	char				*path_env;
 }				t_process;
 
 //builtins.c
@@ -191,6 +192,5 @@ int		find_path(t_process *process, char **env);
 int		main_executor(t_data *shell, char **env, t_process *process);
 void	execute_builtin(t_process *process, t_data *shell);
 bool	is_builtin(t_process *process, t_data *shell);
-char 	*pathcat(char *dir, char *file);
 
 #endif
