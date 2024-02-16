@@ -25,6 +25,8 @@
 # define Q		'\''
 # define D_Q	'\"'
 
+int		g_exit_status;
+
 typedef struct s_env
 {
 	char			*name;
@@ -87,6 +89,22 @@ typedef struct s_process
 	char				*path_env;
 }				t_process;
 
+enum	e_error
+{
+	DEQUOTE = 1, //g_exit_status = 1?
+	NOTFILEORDIR = 2, //g_exit_status = 1
+	NOTPERMISSION = 3, //g_exit_status = 1
+	NOTCOMMAND = 4, //g_exit_status = 127
+	DUPERROR = 5, //g_exit_status = 1 Por si falla dup2??
+	FORKERROR = 6, //g_exit_status = 1 Por si falla fork
+	PIPEERROR = 7, //g_exit_status = 1 Por si falla pipe
+	UNEXPECTEDTOKEN = 8, //g_exit_status = 258
+	MEMPROBLEM = 9, //g_exit_status = ? Por si falla malloc
+	ISDIR = 10, //g_exit_status = 126
+	NOTDIR = 11, //g_exit_status = 1
+	OPENERROR = 12 //g_exit_status = 1? Por si falla open (fd < 0)
+};
+
 //builtins.c
 void	env_command(char **cmd, t_data *shell);
 void	pwd_command(t_data *shell);
@@ -108,13 +126,10 @@ void	cd_command(char **str, t_data *shell);
 int		handle_directory(t_data *shell, char **str);
 
 //enviroment.c
-void	free_split(char **tmp);
 void	initialize_env(t_data *shell, char **env);
 void	add_newenv_back(t_env **first, t_env *new, char **temp);
 void	add_path(t_data *shell);
 void	add_oldpwd(t_data *shell);
-char	*obtain_env_name(char *fullenv);
-char	*obtain_env_value(char *fullenv);
 
 //export_utils.c
 void	only_export(t_data *shell);
@@ -135,7 +150,7 @@ void	free_temp(char **temp);
 void	free_echo(char **str);
 void	env_add_back(t_env **root, t_env *new);
 void	free_list(t_list **list);
-void 	free_env_list(t_env *env);
+void	free_env_list(t_env *env);
 
 //solo para pruebas
 void	print_split(char **line_splited);
@@ -196,6 +211,13 @@ int		find_path(t_process *process, char **env);
 int		main_executor(t_data *shell, char **env, t_process *process);
 void	execute_builtin(t_process *process, t_data *shell);
 bool	is_builtin(t_process *process, t_data *shell);
-void 	free_string_array(char **array);
+void	free_string_array(char **array);
+
+//utils2.c
+void	print_list_splited(t_list **list);
+void	print_process(t_process *process);
+void	free_env_list(t_env *env);
+char	*obtain_env_name(char *fullenv);
+char	*obtain_env_value(char *fullenv);
 
 #endif

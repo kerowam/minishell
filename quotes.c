@@ -55,5 +55,3 @@ int	check_closed_quotes(char *line, int q, int i, char in_quot)
 	}
 	return (q);
 }
-
-

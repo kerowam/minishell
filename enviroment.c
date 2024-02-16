@@ -24,7 +24,7 @@ void	initialize_env(t_data *shell, char **env)
 			return ;
 		add_newenv_back(&shell->env, shell->temp_env, shell->temp);
 		free(shell->temp[0]);
-		free(shell->temp);
+		//free(shell->temp);
 	}
 	add_oldpwd(shell);
 	add_path(shell);
@@ -105,24 +105,4 @@ void	add_oldpwd(t_data *shell)
 		new->next = NULL;
 		add_newenv_back(&shell->env, new, NULL);
 	}
-}
-
-char	*obtain_env_name(char *fullenv)
-{
-	int	i;
-
-	i = 0;
-	while (fullenv[i] && fullenv[i] != '=' && fullenv[i] != ' ')
-		i++;
-	return (ft_substr(fullenv, 0, i));
-}
-
-char	*obtain_env_value(char *fullenv)
-{
-	int	i;
-
-	i = 0;
-	while (fullenv[i] && fullenv[i] != '=' && fullenv[i] != ' ')
-		i++;
-	return (ft_substr(fullenv, i + 1, ft_strlen(fullenv) - i));
 }

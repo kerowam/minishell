@@ -1,15 +1,20 @@
 #include "minishell.h"
 
-#include "minishell.h"
-
 void	only_export(t_data *shell)
 {
 	t_env	*current;
+	int		i;
+	char	*miau;
 
+	i = 0;
 	current = shell->env;
+	miau = getenv("PATH");
 	while (current)
 	{
-		printf("declare -x \"%s%s\"\n", current->name, current->value);
+		printf("declare -x \"%s=%s\"\n", current->name, current->value);
+		if (ft_strncmp(current->name, "MallocNanoZone",
+				ft_strlen("MallocNanoZone")) == 0)
+			printf("declare -x \"PATH=%s\"\n", miau);
 		current = current->next;
 	}
 }
