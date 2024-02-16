@@ -18,7 +18,7 @@
 	printf("   ╚╝╚╝╚╩══╩╝ ╚═╩══╩═══╩╝ ╚╩═══╩═══╩═══╝ \n");
 	printf("\n");
 }*/
-
+/*
 void	initialize_minishell(t_data **shell, char **env)
 {
 	(void)env;
@@ -71,7 +71,7 @@ void	start_minishell(t_data *shell)
 	if (!words_splited)
 		put_error(MEMPROBLEM, 1);
 	while (1)
-	{
+	{*/
 		/*if (words_splited)
 			free(words_splited);*/
 		/*if (shell->line)
@@ -79,7 +79,7 @@ void	start_minishell(t_data *shell)
 			free(shell->line);
 			shell->line = NULL;
 		}*/
-		shell->line = readline("Minishell@ ~ ");
+		/*shell->line = readline("Minishell@ ~ ");
 		if (shell->line == NULL)
 			printf("\n");
 		else
@@ -117,6 +117,77 @@ void	start_minishell(t_data *shell)
 			}
 		}
 	}
+}*/
+
+void	initialize_minishell(t_data **shell, char **env)
+{
+	*shell = (t_data *)malloc(sizeof(t_data));
+	if (!*shell)
+	{
+		perror("Error al asignar memoria para t_data");
+		exit(EXIT_FAILURE);
+	}
+	initialize_env(*shell, env);
+}
+
+void	start_minishell(t_data *shell, char **env)
+{
+	int			q;
+	t_list		**words_splited;
+	t_process	*process;
+
+	words_splited = (t_list **)malloc(sizeof(t_list *));
+	process = (t_process *)malloc(sizeof(t_process));
+	if (!words_splited)
+		printf("error: malloc\n"); //Hacer función para enviar errores a stderr
+	while (1)
+	{
+		
+		/*if (words_splited)
+			free(words_splited);*/
+		/*if (shell->line)
+		{
+			free(shell->line);
+			shell->line = NULL;
+		}*/
+		shell->line = readline("Minishell@ ~ ");
+		if (shell->line == NULL)
+			printf("\n");
+		else
+		{
+			q = check_quotes(shell->line, 0, 0);
+			if (q % 2 != 0)
+			{
+				printf("error: dequoted line\n");
+				free(shell->line);
+				//start_minishell(shell); //Hay que buscar otra solución
+				//rl_replace_line("Minishell@ ~ ", 1);
+				shell->line = readline("Minishell@ ~ ");
+			}
+			if (shell->line && *shell->line)
+			{
+				lexer(shell, words_splited);
+				//print_list_splited(words_splited);
+				parse(process, words_splited);
+				free_list(words_splited);
+				print_process(process);
+				shell->echo = ft_split(shell->line, ' ');
+				if (shell->echo && shell->echo[0] != NULL)
+				{
+					if (*shell->line)
+						add_history(shell->line);
+					if (is_builtin(process, shell))
+						execute_builtin(process, shell);
+					if (!is_builtin(process, shell))
+						main_executor(shell, env, process);
+					free_echo(shell->echo);
+					free(shell->line);
+				}
+				else
+					free(shell->line);
+			}
+		}
+	}
 }
 
 int	main(int argc, char **argv, char **env)
@@ -125,6 +196,7 @@ int	main(int argc, char **argv, char **env)
 
 	(void)argv;
 	atexit(ft_leaks);
+	shell = NULL;
 	initialize_minishell(&shell, env);
 	shell->line = NULL;
 	if (argc == 1)

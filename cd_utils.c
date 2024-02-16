@@ -12,7 +12,7 @@ void	update_pwd(t_data *shell)
 		{
 			free(prov->value);
 			getcwd(dir, sizeof(dir));
-			prov->value = ft_strjoin("=", dir);
+			prov->value = ft_strdup(dir);
 			if (!prov->value)
 				return ;
 			break ;
@@ -33,7 +33,7 @@ void	update_oldpwd(t_data *shell)
 		{
 			free(prov->value);
 			getcwd(dir, sizeof(dir));
-			prov->value = ft_strjoin("=", dir);
+			prov->value = ft_strdup(dir);
 			if (!prov->value)
 				return ;
 			break ;
@@ -52,7 +52,7 @@ void	update_oldpwd_again(t_data *shell, char *pwd)
 		if (ft_strncmp(prov->name, "OLDPWD", 6) == 0)
 		{
 			free(prov->value);
-			prov->value = ft_strjoin("=", pwd);
+			prov->value = ft_strdup(pwd);
 			if (!prov->value)
 				return ;
 			break ;
