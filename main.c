@@ -202,7 +202,7 @@ int	main(int argc, char **argv, char **env)
 	if (argc == 1)
 	{
 		//ft_header();
-		start_minishell(shell);
+		start_minishell(shell, env);
 	}
 	free(shell);
 	clear_history();

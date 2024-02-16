@@ -21,7 +21,7 @@ SRCS = main.c\
 		expander_utils.c\
 		quotes.c\
 		quote_cleaner.c\
-		error.c
+		error.c\
 		executor.c\
 		utils2.c
 
