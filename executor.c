@@ -27,7 +27,7 @@ int	find_path(t_process *process, char **env)
 			j = 0;
 			while (process->env[j] != NULL)
 			{
-				printf("Resultados de ft_split: %d: %s\n", j, process->env[j]);
+				//printf("Resultados de ft_split: %d: %s\n", j, process->env[j]);
 				j++;
 			}
 			return (EXIT_SUCCESS);
@@ -47,9 +47,9 @@ int	check_command_access(t_process *process)
 	while (process->env[++i] != NULL)
 	{
 		temp = ft_strjoin(process->env[i], "/");
-		printf("Temp: %s\n", temp);
+		//printf("Temp: %s\n", temp);
 		full_path = ft_strjoin(temp, process->command);
-		printf("Full Path: %s\n", full_path);
+		//printf("Full Path: %s\n", full_path);
 		free(temp);
 		/*if (full_path != NULL && access(full_path, F_OK | X_OK) != -1)
 		{
@@ -94,7 +94,12 @@ void	execute_builtin(t_process *process, t_data *shell)
 		|| ft_strncmp(shell->line, "EXIT\0", 5) == 0)
 	{
 		free(shell->line);
-		exit(EXIT_FAILURE);
+		//free_process(process);
+		//free_env_list(shell->env);
+		//free(shell);
+		//free_string_array(shell->echo);
+		//free_echo(shell->echo);
+		exit(EXIT_FAILURE); //FAILURE???
 	}
 	if (ft_strncmp(shell->line, "env\0", 4) == 0
 		|| ft_strncmp(shell->line, "ENV\0", 4) == 0)

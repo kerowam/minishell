@@ -43,20 +43,6 @@ void	print_process(t_process *process)
 	}
 }
 
-void	free_env_list(t_env *env)
-{
-	t_env	*temp;
-
-	while (env != NULL)
-	{
-		temp = env;
-		env = env->next;
-		free(temp->name);
-		free(temp->value);
-		free(temp);
-	}
-}
-
 char	*obtain_env_name(char *fullenv)
 {
 	int	i;

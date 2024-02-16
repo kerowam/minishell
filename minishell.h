@@ -23,6 +23,7 @@
 # define WHITE		"\x1B[37m"
 
 int		g_exit_status;
+
 typedef struct s_env
 {
 	char			*name;
@@ -127,11 +128,7 @@ int		main(int argc, char **argv, char **env);
 void	ft_leaks(void);
 
 //utils.c
-void	free_temp(char **temp);
-void	free_echo(char **str);
 void	env_add_back(t_env **root, t_env *new);
-void	free_list(t_list **list);
-void	free_env_list(t_env *env);
 
 //solo para pruebas
 void	print_split(char **line_splited);
@@ -197,11 +194,17 @@ void	free_string_array(char **array);
 //utils2.c
 void	print_list_splited(t_list **list);
 void	print_process(t_process *process);
-void	free_env_list(t_env *env);
 char	*obtain_env_name(char *fullenv);
 char	*obtain_env_value(char *fullenv);
 
 //error.c
 void	put_error(int error_tipe, int error_code);
+
+//free.c
+void	free_temp(char **temp);
+void	free_echo(char **str);
+void	free_list(t_list **list);
+void	free_env_list(t_env *env);
+void	free_process(t_process *process);
 
 #endif
