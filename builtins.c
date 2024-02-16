@@ -1,13 +1,21 @@
 #include "minishell.h"
 
-void	env_command(t_data *shell)
+void	env_command(char **cmd, t_data *shell)
 {
 	t_env	*current_env;
 
 	current_env = shell->env;
-	while (current_env != NULL)
+	if (cmd[1])
 	{
-		printf("%s%s\n", current_env->name, current_env->value);
+		printf("\033[0;33mNo arguments supported\n\033[0m\n");
+		return ;
+	}
+	while (current_env)
+	{
+		if (current_env->value[0])
+			printf("%s=%s\n", current_env->name, current_env->value);
+		if (strcmp(current_env->name, "MallocNanoZone") == 0)
+			add_path(shell);
 		current_env = current_env->next;
 	}
 }
@@ -50,30 +58,30 @@ void	echo_command(char **str, int exists)
 
 void	unset_command(t_data *shell, char *name)
 {
-	t_env	*aux;
-	t_env	*delete;
-	t_env	*previous;
+	t_env	*prov;
+	t_env	*del;
+	t_env	*prev;
 
 	if (!name)
 		return ;
-	aux = shell->env;
-	previous = NULL;
-	while (aux)
+	prov = shell->env;
+	prev = NULL;
+	while (prov)
 	{
-		if (ft_strncmp(aux->name, name, ft_strlen(name)))
+		if (!ft_strncmp(prov->name, name, ft_strlen(name)))
 		{
-			delete = aux;
-			if (previous)
-				previous->next = aux->next;
+			del = prov;
+			if (prev)
+				prev->next = prov->next;
 			else
-				shell->env = aux->next;
-			free(delete->name);
-			free(delete->value);
-			free(delete);
+				shell->env = prov->next;
+			free(del->name);
+			free(del->value);
+			free(del);
 			break ;
 		}
-		previous = aux;
-		aux = aux->next;
+		prev = prov;
+		prov = prov->next;
 	}
 }
 
@@ -83,13 +91,13 @@ void	export_command(char **cmd, t_data *shell)
 
 	i = 1;
 	if (!cmd[1])
-		ft_non_arg_export(shell);
+		only_export(shell);
 	else
 	{
 		while (cmd[i])
 		{
-			if (input_checker(cmd[i], cmd[0]))
-				save_variable(cmd[i], shell);
+			if (check_args(cmd[i], cmd[0]))
+				create_variable(cmd[i], shell);
 			i++;
 		}
 	}

@@ -1,45 +1,51 @@
 #include "minishell.h"
 
-void	ft_non_arg_export(t_data *shell)
+void	only_export(t_data *shell)
 {
 	t_env	*current;
+	int		i;
+	char	*miau;
 
+	i = 0;
 	current = shell->env;
+	miau = getenv("PATH");
 	while (current)
 	{
-		printf("declare -x %s%s\n", current->name, current->value);
+		printf("declare -x \"%s=%s\"\n", current->name, current->value);
+		if (ft_strncmp(current->name, "MallocNanoZone",
+				ft_strlen("MallocNanoZone")) == 0)
+			printf("declare -x \"PATH=%s\"\n", miau);
 		current = current->next;
 	}
 }
 
-void	save_variable(char *variable, t_data *shell)
+void	create_variable(char *variable, t_data *shell)
 {
 	t_env	*new_env;
 	char	*name;
 	char	*value;
 
-	name = ft_get_env_name(variable);
-	value = ft_get_env_value(variable);
-	if (!check_variable(name, value, shell))
+	name = obtain_env_name(variable);
+	value = obtain_env_value(variable);
+	if (!check_if_exists(name, value, shell))
 	{
-		new_env = ft_new_env_node(name, value);
+		new_env = new_node(name, value);
 		env_add_back(&shell->env, new_env);
 	}
-	free(name);
 	free(value);
 }
 
-bool	input_checker(char *arg, char *cmd)
+bool	check_args(char *arg, char *cmd)
 {
 	int		i;
 	char	*name;
 
 	(void)cmd;
 	i = 0;
-	name = ft_get_env_name(arg);
+	name = obtain_env_name(arg);
 	if (ft_isdigit(name[i]))
 	{
-		printf("\033[0;33m`%s': is not a valid identifier\n\033[0m", name);
+		printf("%s: is not a valid identifier\n", name);
 		return (free(name), false);
 	}
 	while (name[i])
@@ -48,14 +54,14 @@ bool	input_checker(char *arg, char *cmd)
 			i++;
 		else
 		{
-			printf("\033[0;33m`%s': not a valid identifier\n\033[0m", name);
+			printf("%s: not a valid identifier\n", name);
 			return (free(name), false);
 		}
 	}
 	return (free(name), true);
 }
 
-int	check_variable(char *name, char *value, t_data *shell)
+int	check_if_exists(char *name, char *value, t_data *shell)
 {
 	t_env	*ptr;
 
@@ -71,10 +77,11 @@ int	check_variable(char *name, char *value, t_data *shell)
 		}
 		ptr = ptr->next;
 	}
+	free(name);
 	return (0);
 }
 
-t_env	*ft_new_env_node(char *name, char *value)
+t_env	*new_node(char *name, char *value)
 {
 	t_env	*env;
 

@@ -2,39 +2,45 @@
 
 void	initialize_env(t_data *shell, char **env)
 {
-	char	**temp;
-
+	shell->del = 0;
 	shell->env = ft_calloc(1, sizeof(t_env));
-	temp = ft_split(env[shell->del], '=');
-	if (!shell->env || !temp)
+	shell->temp = ft_split(env[shell->del], '=');
+	if (!shell->env || !shell->temp || !shell->temp[0] || !shell->temp[1])
 		return ;
-	shell->env->name = ft_strdup(temp[0]);
-	shell->env->value = ft_strjoin("=", temp[1]);
+	free(shell->temp[0]);
+	shell->env->name = ft_strdup(shell->temp[0]);
+	free(shell->temp[1]);
+	shell->env->value = ft_strdup(shell->temp[1]);
 	shell->env->index = 0;
 	shell->env->next = NULL;
-	free_temp(temp);
-	while (env[++shell->del])
+	free(shell->temp);
+	while (env[shell->del++])
 	{
 		shell->temp_env = ft_calloc(1, sizeof(t_env));
-		temp = ft_split(env[shell->del], '=');
-		if (!shell->temp_env || !temp)
+		if (env[shell->del])
+			shell->temp = ft_split(env[shell->del], '=');
+		if (!shell->temp_env || !shell->temp
+			|| !shell->temp[0] || !shell->temp[1])
 			return ;
-		add_newenv_back(&shell->env, shell->temp_env, temp);
-		free_temp(temp);
+		add_newenv_back(&shell->env, shell->temp_env, shell->temp);
+		free(shell->temp[0]);
+		//free(shell->temp);
 	}
 	add_oldpwd(shell);
+	add_path(shell);
 }
 
 void	add_newenv_back(t_env **first, t_env *new, char **temp)
 {
 	t_env	*first_node;
 
-	if (new == NULL)
+	if (new == NULL || temp == NULL)
 		return ;
 	if (temp != NULL)
 	{
 		new->name = ft_strdup(temp[0]);
-		new->value = ft_strjoin("=", temp[1]);
+		free(temp[1]);
+		new->value = ft_strdup(temp[1]);
 		new->index = 0;
 		new->next = NULL;
 	}
@@ -47,6 +53,32 @@ void	add_newenv_back(t_env **first, t_env *new, char **temp)
 	while (first_node->next != NULL)
 		first_node = first_node->next;
 	first_node->next = new;
+}
+
+void	add_path(t_data *shell)
+{
+	char	*current_path;
+	t_env	*new;
+	t_env	*aux;
+
+	current_path = getenv("PATH");
+	if (current_path != NULL)
+	{
+		printf("PATH=%s\n", current_path);
+		aux = shell->env;
+		while (aux)
+		{
+			if (!ft_strncmp(aux->name, "PATH", ft_strlen("PATH")))
+				return ;
+			aux = aux->next;
+		}
+		new = ft_calloc(1, sizeof(t_env));
+		new->name = ft_strdup("PATH");
+		new->value = ft_strjoin("=", current_path);
+		new->next = NULL;
+		add_newenv_back(&shell->env, new, NULL);
+		env_command(shell->echo, shell);
+	}
 }
 
 void	add_oldpwd(t_data *shell)
@@ -73,24 +105,4 @@ void	add_oldpwd(t_data *shell)
 		new->next = NULL;
 		add_newenv_back(&shell->env, new, NULL);
 	}
-}
-
-char	*ft_get_env_name(char *fullenv)
-{
-	int	i;
-
-	i = 0;
-	while (fullenv[i] && fullenv[i] != '=' && fullenv[i] != ' ')
-		i++;
-	return (ft_substr(fullenv, 0, i));
-}
-
-char	*ft_get_env_value(char *fullenv)
-{
-	int	i;
-
-	i = 0;
-	while (fullenv[i] && fullenv[i] != '=' && fullenv[i] != ' ')
-		i++;
-	return (ft_substr(fullenv, i + 1, ft_strlen(fullenv) - i));
 }
