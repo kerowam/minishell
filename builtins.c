@@ -54,6 +54,7 @@ void	echo_command(char **str, int exists)
 	}
 	if (exists == 0)
 		printf("\n");
+	//g_exit_status = 0;
 }
 
 void	unset_command(t_data *shell, char *name)

@@ -73,13 +73,20 @@ void	free_process(t_process *process)
 	while (tmp)
 	{
 		next = tmp->next_process;
-		free(tmp->command);
-		free_list(&tmp->argv);
-		free(tmp->infile);
-		free(tmp->outfile);
-		free(tmp->outfile_append);
-		free_list(&tmp->here_doc);
-		free(tmp->args);
+		if (tmp->command)
+			free(tmp->command);
+		if (tmp->argv)
+			free_list(&tmp->argv);
+		if (tmp->infile)
+			free(tmp->infile);
+		if (tmp->outfile)
+			free(tmp->outfile);
+		if (tmp->outfile_append)
+			free(tmp->outfile_append);
+		if (tmp->here_doc)
+			free_list(&tmp->here_doc);
+		if (tmp->args)
+			free_echo(tmp->args);
 		free(tmp);
 		tmp = next;
 	}

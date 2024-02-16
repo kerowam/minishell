@@ -2,12 +2,6 @@
 
 void	init_process(t_process *process)
 {
-	/*process = (struct t_process *)malloc(sizeof(t_process));
-	if (!process)
-	{
-		perror("Error asinging memory to t_process\n");
-		return ;
-	}*/
 	process->next_process = NULL;
 	process->command = NULL;
 	process->argv = NULL;

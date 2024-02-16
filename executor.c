@@ -98,8 +98,8 @@ void	execute_builtin(t_process *process, t_data *shell)
 		//free_env_list(shell->env);
 		//free(shell);
 		//free_string_array(shell->echo);
-		//free_echo(shell->echo);
-		exit(EXIT_FAILURE); //FAILURE???
+		free_echo(shell->echo);
+		exit(g_exit_status); //FAILURE???
 	}
 	if (ft_strncmp(shell->line, "env\0", 4) == 0
 		|| ft_strncmp(shell->line, "ENV\0", 4) == 0)
