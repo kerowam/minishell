@@ -42,9 +42,14 @@ void	free_list(t_list **list)
 	tmp = *list;
 	while (tmp)
 	{
-		next = tmp->next;
-		free(tmp->content);
-		free(tmp);
+		if (tmp->next)
+			next = tmp->next;
+		else
+			next = NULL;
+		if (*tmp->content)
+			free(tmp->content);
+		if (tmp)
+			free(tmp);
 		tmp = next;
 	}
 	*list = NULL;
