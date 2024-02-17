@@ -89,7 +89,9 @@ t_env	*new_node(char *name, char *value)
 	if (!env)
 		return (NULL);
 	env->name = ft_strdup(name);
+	printf("13.new_node env->name pointer = %p\n", env->name);
 	env->value = ft_strjoin("=", value);
+	printf("14.new_node env->value pointer = %p\n", env->value);
 	env->next = NULL;
 	return (env);
 }

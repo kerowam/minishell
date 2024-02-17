@@ -136,12 +136,14 @@ void	start_minishell(t_data *shell, char **env)
 	t_list		**words_splited;
 	t_process	*process;
 
-	words_splited = (t_list **)malloc(sizeof(t_list *));
-	process = (t_process *)malloc(sizeof(t_process));
-	if (!words_splited)
-		printf("error: malloc\n"); //Hacer función para enviar errores a stderr
 	while (1)
 	{
+	words_splited = (t_list **)malloc(sizeof(t_list *));
+	printf("23.start minishell words_splited pointer = %p\n", words_splited);
+	if (!words_splited)
+		printf("error: malloc\n"); //Hacer función para enviar errores a stderr
+	process = (t_process *)malloc(sizeof(t_process));
+	printf("24.start minishell process pointer = %p\n", process);
 		
 		/*if (words_splited)
 			free(words_splited);*/
@@ -182,7 +184,8 @@ void	start_minishell(t_data *shell, char **env)
 						main_executor(shell, env, process);
 					free_echo(shell->echo);
 					free(shell->line);
-					free_process(process);
+					if (process)
+						free_process(process);
 					free(words_splited);
 					//exit (g_exit_status);
 					//break ;

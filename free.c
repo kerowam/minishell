@@ -46,7 +46,7 @@ void	free_list(t_list **list)
 			next = tmp->next;
 		else
 			next = NULL;
-		if (*tmp->content)
+		if (tmp->content)
 			free(tmp->content);
 		if (tmp)
 			free(tmp);
@@ -92,7 +92,8 @@ void	free_process(t_process *process)
 			free_list(&tmp->here_doc);
 		if (tmp->args)
 			free_echo(tmp->args);
-		free(tmp);
+		if (tmp)
+			free(tmp);
 		tmp = next;
 	}
 }

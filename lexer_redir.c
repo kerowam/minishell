@@ -40,6 +40,7 @@ int	split_redirs_2(t_list *list, int i, char *tmp_split, char *tmp_word)
 	{
 		tmp_split = ft_substr(tmp_word, 0, redir_index);
 		list->content = tmp_split;
+		free(tmp_split); // added
 		i = redir_index;
 	}
 	return (i);
@@ -84,6 +85,7 @@ void	split_redirections(t_list **list)
 	t_list	**tmp;
 
 	tmp = (t_list **)malloc(sizeof(t_list *));
+	printf("18.split_redirections tmp pointer = %p\n", tmp);
 	if (!tmp)
 	{
 		put_error(MEMPROBLEM, 1);

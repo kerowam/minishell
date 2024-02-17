@@ -42,6 +42,7 @@ char	**list_to_array(t_list *list)
 	i = ft_lstsize(list);
 	tmp = list;
 	array = (char **)malloc(sizeof(char *) * (i + 1));
+	printf("25.array pointer = %p\n", array);
 	if (!array)
 	{
 		put_error(MEMPROBLEM, 1); //exit status 1???
@@ -52,6 +53,7 @@ char	**list_to_array(t_list *list)
 	while (tmp)
 	{
 		array[i] = ft_strdup(tmp->content);
+		printf("26.array[%d] pointer = %p\n", i, array[i]);
 		i++;
 		tmp = tmp->next;
 	}
@@ -147,7 +149,10 @@ void	check_outfile(char *tmp_word, t_process *tmp_process)
 		//break ;
 	}
 	if (!(tmp_process->outfile))
+	{
 		tmp_process->outfile = ft_strdup(tmp_word);
+		printf("27.tmp_process->outfile pointer = %p\n", tmp_process->outfile);
+	}
 	else
 	{
 		file = open (tmp_process->outfile, O_WRONLY, 0644);
@@ -206,22 +211,30 @@ void	check_outfile_append(char *tmp_word, t_process *tmp_process)
 void	parse(t_process *process, t_list **words_splited)
 {
 	char		*tmp_word;
-	t_list		**tmp;
+	t_list		*tmp = NULL; //cambiado a puntero
 	//int			file;
 	t_process	*tmp_process;
 	t_process	*next_process;
 
-	tmp = (t_list **)malloc(sizeof(t_list *));
-	*tmp = *words_splited;
+	//tmp = (t_list **)malloc(sizeof(t_list *));
+	//printf("28.tmp pointer = %p\n", tmp);
+	/*if (!tmp)
+	{
+		put_error(MEMPROBLEM, 1); //exit status 1???
+		//return ;
+	}*/
+	tmp = *words_splited;
+	printf("29.tmp pointer = %p\n", tmp);
 	tmp_process = process;
 	init_process(process);
-	while (*tmp)
+	while (tmp)
 	{
-		tmp_word = ft_strdup((*tmp)->content);
+		tmp_word = ft_strdup(tmp->content);
+		printf("30.tmp_word pointer = %p\n", tmp_word);
 		if (ft_strncmp(tmp_word, "<", 2) == 0)
 		{
-			if ((*tmp)->next)
-				(*tmp) = (*tmp)->next;
+			if (tmp->next)
+				tmp = tmp->next;
 			else
 			{
 				put_error(UNEXPECTEDTOKEN, 258);
@@ -231,14 +244,17 @@ void	parse(t_process *process, t_list **words_splited)
 				//Gestionar g_status
 				return ;
 			}
-			tmp_word = ft_strdup((*tmp)->content);
+			free (tmp_word);
+			tmp_word = ft_strdup(tmp->content);
+			printf("31.tmp_word pointer = %p\n", tmp_word);
 			if (check_redir(tmp_word) == 0)
 				check_infile(tmp_word, tmp_process);
+			free (tmp_word);
 		}
 		else if (ft_strncmp(tmp_word, ">", 2) == 0)
 		{
-			if ((*tmp)->next)
-				(*tmp) = (*tmp)->next;
+			if (tmp->next)
+				tmp = tmp->next;
 			else
 			{
 				put_error(UNEXPECTEDTOKEN, 258);
@@ -248,14 +264,14 @@ void	parse(t_process *process, t_list **words_splited)
 				//Gestionar g_status
 				return ;
 			}
-			tmp_word = ft_strdup((*tmp)->content);
+			tmp_word = ft_strdup(tmp->content);
 			if (check_redir(tmp_word) == 0)
 				check_outfile(tmp_word, tmp_process);
 		}
 		else if (ft_strncmp(tmp_word, ">>", 3) == 0)
 		{
-			if ((*tmp)->next)
-				(*tmp) = (*tmp)->next;
+			if (tmp->next)
+				tmp = tmp->next;
 			else
 			{
 				put_error(UNEXPECTEDTOKEN, 258);
@@ -265,14 +281,14 @@ void	parse(t_process *process, t_list **words_splited)
 				//Gestionar g_status
 				return ;
 			}
-			tmp_word = (*tmp)->content;
+			tmp_word = tmp->content;
 			if (check_redir(tmp_word) == 0)
 				check_outfile_append(tmp_word, tmp_process);
 		}
 		else if (ft_strncmp(tmp_word, "<<", 3) == 0)
 		{
-			if ((*tmp)->next)
-				(*tmp) = (*tmp)->next;
+			if (tmp->next)
+				tmp = tmp->next;
 			else
 			{
 				put_error(UNEXPECTEDTOKEN, 258);
@@ -282,7 +298,7 @@ void	parse(t_process *process, t_list **words_splited)
 				//Gestionar g_status
 				return ;
 			}
-			tmp_word = ft_strdup((*tmp)->content);
+			tmp_word = ft_strdup(tmp->content);
 			if (check_redir(tmp_word) == 0)
 			{
 				if (!(tmp_process->here_doc))
@@ -295,7 +311,9 @@ void	parse(t_process *process, t_list **words_splited)
 		{
 			//Comprobar que el proceso anterior está completo (tiene commando y es válido)
 			tmp_process->args = list_to_array(process->argv);
+			printf("31.1.tmp_process->args pointer = %p\n", tmp_process->args);
 			next_process = (t_process *)malloc(sizeof(t_process));
+			printf("31.2.next_process pointer = %p\n", next_process);
 			if (!next_process)
 			{
 				put_error(MEMPROBLEM, 1); //exit status 1???
@@ -306,7 +324,7 @@ void	parse(t_process *process, t_list **words_splited)
 			init_process(next_process);
 			tmp_process->next_process = next_process;
 			tmp_process = tmp_process->next_process;
-			tmp_word = ft_strdup((*tmp)->next->content);
+			tmp_word = ft_strdup(tmp->next->content);
 			check_pipe(tmp_word);
 			/*if ((*tmp)->next)
 				(*tmp) = (*tmp)->next;
@@ -328,10 +346,10 @@ void	parse(t_process *process, t_list **words_splited)
 			else
 				ft_lstadd_back(&tmp_process->argv, ft_lstnew(ft_strdup(tmp_word)));
 		}
-		if ((*tmp)->next)
+		if (tmp->next)
 		{
-			(*tmp) = (*tmp)->next;
-			//free (tmp_word);
+			tmp = tmp->next;
+			free (tmp_word);
 		}
 		else
 		{
@@ -339,7 +357,7 @@ void	parse(t_process *process, t_list **words_splited)
 			//free (tmp_word);
 			tmp_process->args = list_to_array(tmp_process->argv);
 			free (tmp_word);
-			free (tmp);
+			//free (tmp);
 			free_list (words_splited);
 			return ;
 		}

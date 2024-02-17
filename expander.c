@@ -15,6 +15,7 @@ char	*get_expanded_value(t_env *env, char *key)
 		if (ft_strncmp(key, name, ft_strlen(name)) == 0)
 		{
 			value = ft_strdup(tmp->value);
+			printf("7.value pointer = %p\n", value);
 			return (value);
 		}
 		free(name);
@@ -24,6 +25,7 @@ char	*get_expanded_value(t_env *env, char *key)
 			break ;
 	}
 	value = ft_strdup("");
+	printf("8.value pointer = %p\n", value);
 	return (value);
 }
 
@@ -38,6 +40,7 @@ char	*expand_value(char *str, int i, t_env *env, char *end_str)
 		end_str = ft_strdup(value);
 	else
 		end_str = ft_strjoin(end_str, value);
+	printf("9.expand value end_str pointer = %p\n", end_str);
 	free(tmp);
 	free(value);
 	return (end_str);
@@ -61,6 +64,7 @@ char	*join_expand(char *str, int i, char *end_str)
 		end_str = ft_strdup(tmp);
 	else
 		end_str = ft_strjoin(end_str, tmp);
+	printf("10.join expand end_str pointer = %p\n", end_str);
 	free(tmp);
 	return (end_str);
 }
@@ -101,8 +105,10 @@ void	expander(t_env *env, t_list **line_splited)
 
 	tmp_env = (t_env *)malloc(sizeof(t_env));
 	*tmp_env = *env;
+	printf("11.tmp_env pointer: %p\n", tmp_env);
 	tmp_list = (t_list **)malloc(sizeof(t_list *));
 	*tmp_list = *line_splited;
+	printf("12.tmp_list pointer: %p\n", tmp_list);
 	while (*tmp_list)
 	{
 		tmp_str = (*tmp_list)->content;

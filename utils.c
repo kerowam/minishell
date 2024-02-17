@@ -18,7 +18,7 @@ void	print_split(char **line_splited)
 	i = 0;
 	while (line_splited[i] != NULL)
 	{
-		printf("line_splited[%d] = %s\n", i, line_splited[i]);
+		printf("36.line_splited[%d] = %s\n", i, line_splited[i]);
 		i++;
 	}
 }

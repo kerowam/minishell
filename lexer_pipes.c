@@ -8,11 +8,13 @@ int	split_pipe_2(t_list *list, int i, char *tmp_split, char *tmp_word)
 	if (pipe_index == 0)
 	{
 		list->content = ft_strdup("|");
+		printf("15.list->content pointer = %p\n", list->content);
 		i++;
 	}
 	else
 	{
 		tmp_split = ft_substr(tmp_word, 0, pipe_index);
+		printf("16.tmp_split pointer = %p\n", tmp_split);
 		list->content = tmp_split;
 		i = pipe_index;
 	}
@@ -79,6 +81,7 @@ void	split_pipes(t_list **list)
 
 	tmp = (t_list **)malloc(sizeof(t_list *));
 	*tmp = *list;
+	printf("17.split_pipes tmp pointer = %p\n", tmp);
 	while (*tmp)
 	{
 		handle_pipes(tmp, 0);

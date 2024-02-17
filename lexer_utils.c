@@ -38,6 +38,7 @@ char	*get_tmp_split(int target_index, char *tmp_word, int i)
 		end = get_end_index(tmp_word, i);
 		tmp_split = ft_substr(tmp_word, i, end);
 	}
+	printf("19.get_tmp_split tmp_split pointer = %p\n", tmp_split);
 	return (tmp_split);
 }
 

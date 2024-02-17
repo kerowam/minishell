@@ -13,6 +13,7 @@ int	find_path(t_process *process, char **env)
 			free(process->path_env);
 			free_string_array(process->env);
 			process->path_env = strdup(env[i] + 5);
+			printf("3.process->path_env pointer: %p\n", process->path_env);
 			if (!process->path_env)
 			{
 				perror("Error al duplicar la cadena");
@@ -47,8 +48,10 @@ int	check_command_access(t_process *process)
 	while (process->env[++i] != NULL)
 	{
 		temp = ft_strjoin(process->env[i], "/");
+		printf("4.temp pointer: %p\n", temp);
 		//printf("Temp: %s\n", temp);
 		full_path = ft_strjoin(temp, process->command);
+		printf("5.full_path pointer: %p\n", full_path);
 		//printf("Full Path: %s\n", full_path);
 		free(temp);
 		/*if (full_path != NULL && access(full_path, F_OK | X_OK) != -1)
@@ -76,8 +79,8 @@ int	main_executor(t_data *shell, char **env, t_process *process)
 	else if (!is_builtin(process, shell))
 	{
 		find_path(process, env);
-		if (check_command_access(process))
-			printf("Command path: %s\n", process->command);
+		/*if (check_command_access(process))
+			printf("Command path: %s\n", process->command);*/
 		/*else
 			printf("Command not accessible\n");*/
 		return (EXIT_SUCCESS);

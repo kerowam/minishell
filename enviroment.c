@@ -74,6 +74,7 @@ void	add_path(t_data *shell)
 		}
 		new = ft_calloc(1, sizeof(t_env));
 		new->name = ft_strdup("PATH");
+		printf("1.add_path new->name pointer = %p\n", new->name);
 		new->value = ft_strjoin("=", current_path);
 		new->next = NULL;
 		add_newenv_back(&shell->env, new, NULL);
@@ -101,6 +102,7 @@ void	add_oldpwd(t_data *shell)
 	{
 		new = ft_calloc(1, sizeof(t_env));
 		new->name = ft_strdup("OLDPWD");
+		printf("2.add oldpath new->name pointer = %p\n", new->name);
 		new->value = ft_strjoin("=", current_dir);
 		new->next = NULL;
 		add_newenv_back(&shell->env, new, NULL);
