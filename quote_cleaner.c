@@ -24,7 +24,8 @@ char	*add_substr(int start, int i, char *str, char *end_str)
 	else
 		end_str = ft_strjoin(end_str, tmp_str);
 	printf("33.add_substr end_str pointer = %p\n", end_str);
-	free(tmp_str);
+	if (tmp_str)
+		free(tmp_str);
 	return (end_str);
 }
 
@@ -55,7 +56,8 @@ void	clean_str_quot(char *str, t_list **list)
 		}
 		printf("34.clean_str_quot end_str pointer = %p\n", end_str);
 	}
-	(*list)->content = end_str;
+	(*list)->content = ft_strdup (end_str);
+	free (end_str);
 }
 
 void	quot_cleaner(t_list **list)
@@ -69,12 +71,14 @@ void	quot_cleaner(t_list **list)
 	printf("35.quot_cleaner *tmp pointer = %p\n", *tmp);
 	while (*tmp)
 	{
-		tmp_word = (*tmp)->content;
+		tmp_word = ft_strdup((*tmp)->content);
 		clean_str_quot(tmp_word, tmp);
+		free (tmp_word);
 		if ((*tmp)->next)
 			*tmp = (*tmp)->next;
 		else
 			break ;
 	}
+	//free (*tmp);
 	free (tmp);
 }

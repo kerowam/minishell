@@ -21,7 +21,7 @@ void	free_echo(char **str)
 	int	i;
 
 	i = 0;
-	if (str != NULL)
+	if (*str != NULL)
 	{
 		while (str[i])
 		{
@@ -29,7 +29,8 @@ void	free_echo(char **str)
 			str[i] = NULL;
 			i++;
 		}
-		free(str);
+		if (str)
+			free(str);
 		str = NULL;
 	}
 }
@@ -38,6 +39,7 @@ void	free_list(t_list **list)
 {
 	t_list	*tmp;
 	t_list	*next;
+	//char	*content;
 
 	tmp = *list;
 	while (tmp)
@@ -46,11 +48,17 @@ void	free_list(t_list **list)
 			next = tmp->next;
 		else
 			next = NULL;
+		//content = ft_strdup(tmp->content);
 		if (tmp->content)
+		{
+			printf("freeing content: %s\n", tmp->content);
+			//getchar();
 			free(tmp->content);
-		if (tmp)
-			free(tmp);
+		}
+		/*if (tmp)
+			free(tmp);*/
 		tmp = next;
+		//free (content);
 	}
 	*list = NULL;
 }

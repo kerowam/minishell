@@ -24,7 +24,7 @@ void	initialize_env(t_data *shell, char **env)
 			return ;
 		add_newenv_back(&shell->env, shell->temp_env, shell->temp);
 		free(shell->temp[0]);
-		//free(shell->temp);
+		free(shell->temp);
 	}
 	add_oldpwd(shell);
 	add_path(shell);

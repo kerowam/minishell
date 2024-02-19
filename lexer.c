@@ -47,10 +47,11 @@ void	create_line_splited(char *line, t_list **list)
 			(*list)->content = ft_strdup(tmp_word);
 		else
 			ft_lstadd_back(list, ft_lstnew(tmp_word));
-		free(tmp_word);
+		free (tmp_word);
 		//free(tmp);
 		}
 	}
+	//free(line);
 	//*list = tmp;
 }
 
@@ -58,11 +59,14 @@ void	lexer(t_data *shell, t_list **words_splited)
 {
 	char	*line;
 
+	line = (char *)malloc(sizeof(char) * (ft_strlen(shell->line) + 1));
 	line = ft_strdup(shell->line);
 	printf("22.lexer line pointer = %p\n", line);
+	printf("22.1 shell->line pointer = %p\n", shell->line);	
 	//printf("line = %s\n", line);
 	create_line_splited(line, words_splited);
 	free(line);
+	//free (&line);
 	split_pipes(words_splited);
 	split_redirections(words_splited);
 	expander(shell->env, words_splited);
