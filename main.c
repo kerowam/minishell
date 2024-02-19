@@ -142,6 +142,8 @@ void	start_minishell(t_data *shell, char **env)
 	printf("23.start minishell words_splited pointer = %p\n", words_splited);
 	if (!words_splited)
 		printf("error: malloc\n"); //Hacer función para enviar errores a stderr
+		//gestionar error.
+	//words_splited = NULL;
 	process = (t_process *)malloc(sizeof(t_process));
 	printf("24.start minishell process pointer = %p\n", process);
 		

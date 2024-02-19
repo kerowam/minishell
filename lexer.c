@@ -12,13 +12,24 @@ static int	len_split(char *line, int i)
 	return (i);
 }
 
+void	init_list(t_list **list)
+{
+	*list = (t_list *)malloc(sizeof(t_list));
+	(*list)->content = NULL;
+	(*list)->next = NULL;
+}
+
 void	create_line_splited(char *line, t_list **list)
 {
 	char	*tmp_word;
 	int		i;
 	int		start;
+	char	*tmp;
 
 	i = 0;
+	//tmp = (t_list *)malloc(sizeof(t_list));
+	//*list = tmp;
+	init_list(list);
 	while (line[i])
 	{
 		if (line[i] == ' ')
@@ -31,13 +42,16 @@ void	create_line_splited(char *line, t_list **list)
 			//printf("20.create_line_splited malloc tmp_word pointer = %p\n", tmp_word);
 			tmp_word = ft_substr(line, start, i - start);
 			printf("21.create_line_splited ft_substr tmp_word pointer = %p\n", tmp_word);
-			if (!(*list) && tmp_word)
-				*list = ft_lstnew(tmp_word);
-			else if ((*list) && tmp_word)
-				ft_lstadd_back(list, ft_lstnew(tmp_word));
-			free(tmp_word);
+			tmp = (*list)->content;
+		if (!tmp)
+			(*list)->content = ft_strdup(tmp_word);
+		else
+			ft_lstadd_back(list, ft_lstnew(tmp_word));
+		free(tmp_word);
+		//free(tmp);
 		}
 	}
+	//*list = tmp;
 }
 
 void	lexer(t_data *shell, t_list **words_splited)
