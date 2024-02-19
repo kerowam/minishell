@@ -13,7 +13,7 @@ char	*get_expanded_value(t_env *env, char *key)
 	{
 		name = ft_strdup(tmp->name);
 		if (ft_strncmp(key, name, ft_strlen(name)) == 0)
-		{
+			{
 			value = ft_strdup(tmp->value);
 			return (value);
 		}

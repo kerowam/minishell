@@ -207,11 +207,16 @@ void	clean_str_quot(char *str, t_list **list);
 void	parse(t_process *process, t_list **words_splited);
 
 //executor.c
-int		find_path(t_process *process, char **env);
 int		main_executor(t_data *shell, char **env, t_process *process);
 void	execute_builtin(t_process *process, t_data *shell);
 bool	is_builtin(t_process *process, t_data *shell);
+
+//executor_utils.c
 void	free_string_array(char **array);
+int		starts_with_dot_slash(char *str);
+int		find_path(t_process *process, char **env);
+void	execute_builtin(t_process *process, t_data *shell);
+bool	is_builtin(t_process *process, t_data *shell);
 
 //utils2.c
 void	print_list_splited(t_list **list);
@@ -219,5 +224,6 @@ void	print_process(t_process *process);
 void	free_env_list(t_env *env);
 char	*obtain_env_name(char *fullenv);
 char	*obtain_env_value(char *fullenv);
+
 
 #endif

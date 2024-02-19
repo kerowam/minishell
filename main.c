@@ -76,6 +76,7 @@ void	start_minishell(t_data *shell, char **env)
 				{
 					if (*shell->line)
 						add_history(shell->line);
+					printf("PRUEBA: %s\n", process->command);
 					if (is_builtin(process, shell))
 						execute_builtin(process, shell);
 					if (!is_builtin(process, shell))
@@ -92,7 +93,7 @@ void	start_minishell(t_data *shell, char **env)
 
 int	main(int argc, char **argv, char **env)
 {
-	t_data	*shell;
+	t_data		*shell;
 
 	(void)argv;
 	atexit(ft_leaks);
@@ -104,6 +105,8 @@ int	main(int argc, char **argv, char **env)
 		ft_header();
 		start_minishell(shell, env);
 	}
+	free(shell->line);
+	free(shell->echo);
 	free(shell);
 	clear_history();
 	return (EXIT_SUCCESS);

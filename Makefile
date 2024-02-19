@@ -22,7 +22,8 @@ SRCS = main.c\
 		quotes.c\
 		quote_cleaner.c\
 		executor.c\
-		utils2.c
+		utils2.c\
+		executor_utils.c
 
 CC = gcc
 
