@@ -22,6 +22,9 @@
 # define CYAN		"\x1B[36m"
 # define WHITE		"\x1B[37m"
 
+# define Q			'\''
+# define DQ			'\"'
+
 int		g_exit_status;
 
 typedef struct s_env
@@ -43,6 +46,7 @@ typedef struct s_data
 	int		del; //delimitador para variables
 	int		f_pipe;
 	t_env	*env;
+	size_t	env_count;
 	char	**temp;
 	t_env	*temp_env;
 	t_env	*export;
@@ -58,9 +62,9 @@ typedef struct s_process
 	char				**args;
 	pid_t				pid;//
 	char				*infile;
-	int					inf;//
+	int					in_fd;//
 	char				*outfile;
-	int					outf;//
+	int					out_fd;//
 	char				*outfile_append;
 	t_list				*here_doc;
 	int					stderr;//??
@@ -69,6 +73,7 @@ typedef struct s_process
 	int					status;
 	char				**env;
 	char				*path_env;
+	int					use_pipe;
 }				t_process;
 
 enum	e_error
@@ -110,8 +115,8 @@ int		handle_directory(t_data *shell, char **str);
 //enviroment.c
 void	initialize_env(t_data *shell, char **env);
 void	add_newenv_back(t_env **first, t_env *new, char **temp);
-void	add_path(t_data *shell);
 void	add_oldpwd(t_data *shell);
+void	add_path_to_env(t_data *shell, char *path);
 
 //export_utils.c
 void	only_export(t_data *shell);
@@ -185,17 +190,26 @@ void	clean_str_quot(char *str, t_list **list);
 void	parse(t_process *process, t_list **words_splited);
 
 //executor.c
-int		find_path(t_process *process, char **env);
+void	handle_redirections_and_pipes(t_process *process);
+void	execute_local_command(t_process *process);
+int		check_command_access(t_process *process);
 int		main_executor(t_data *shell, char **env, t_process *process);
+
+//executor_utils.c
+void	free_string_array(char **array);
+int		starts_with_dot_slash(char *str);
+int		find_path(t_process *process, char **env);
 void	execute_builtin(t_process *process, t_data *shell);
 bool	is_builtin(t_process *process, t_data *shell);
-void	free_string_array(char **array);
 
 //utils2.c
 void	print_list_splited(t_list **list);
 void	print_process(t_process *process);
+void	free_env_list(t_env *env);
 char	*obtain_env_name(char *fullenv);
 char	*obtain_env_value(char *fullenv);
+
+void 	print_environment(t_env *env);
 
 //error.c
 void	put_error(int error_tipe, int error_code);

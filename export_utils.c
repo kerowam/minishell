@@ -3,18 +3,11 @@
 void	only_export(t_data *shell)
 {
 	t_env	*current;
-	int		i;
-	char	*miau;
 
-	i = 0;
 	current = shell->env;
-	miau = getenv("PATH");
 	while (current)
 	{
-		printf("declare -x \"%s=%s\"\n", current->name, current->value);
-		if (ft_strncmp(current->name, "MallocNanoZone",
-				ft_strlen("MallocNanoZone")) == 0)
-			printf("declare -x \"PATH=%s\"\n", miau);
+		printf("declare -x %s%s\n", current->name, current->value);
 		current = current->next;
 	}
 }
@@ -71,7 +64,7 @@ int	check_if_exists(char *name, char *value, t_data *shell)
 		if (!ft_strncmp(ptr->name, name, ft_strlen(name)))
 		{
 			free(ptr->value);
-			ptr->value = ft_strjoin("=", value);
+			ptr->value = ft_strdup(value);
 			free(name);
 			return (1);
 		}

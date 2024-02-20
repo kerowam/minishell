@@ -62,7 +62,7 @@ void	clean_str_quot(char *str, t_list **list)
 
 void	quot_cleaner(t_list **list)
 {
-	t_list	**tmp = NULL;
+	t_list	**tmp;
 	char	*tmp_word;
 
 	tmp = (t_list **)malloc(sizeof(t_list *)); // Comprobar si es necesario malloc

@@ -2,6 +2,11 @@
 
 void	initialize_env(t_data *shell, char **env)
 {
+	char	*miau;
+
+	miau = getenv("PATH");
+	if (!miau)
+		exit(EXIT_FAILURE);
 	shell->del = 0;
 	shell->env = ft_calloc(1, sizeof(t_env));
 	shell->temp = ft_split(env[shell->del], '=');
@@ -14,7 +19,7 @@ void	initialize_env(t_data *shell, char **env)
 	shell->env->index = 0;
 	shell->env->next = NULL;
 	free(shell->temp);
-	while (env[shell->del++])
+	while (env[shell->del++] != NULL)
 	{
 		shell->temp_env = ft_calloc(1, sizeof(t_env));
 		if (env[shell->del])
@@ -22,12 +27,17 @@ void	initialize_env(t_data *shell, char **env)
 		if (!shell->temp_env || !shell->temp
 			|| !shell->temp[0] || !shell->temp[1])
 			return ;
+		if (ft_strncmp(shell->temp[0], "PATH", 4) == 0)
+		{
+			free(shell->temp[1]);
+			free(shell->temp[0]);
+			free(shell->temp);
+			add_path_to_env(shell, miau);
+			continue ;
+		}
 		add_newenv_back(&shell->env, shell->temp_env, shell->temp);
-		free(shell->temp[0]);
-		free(shell->temp);
 	}
-	add_oldpwd(shell);
-	add_path(shell);
+	free(miau);
 }
 
 void	add_newenv_back(t_env **first, t_env *new, char **temp)
@@ -38,11 +48,13 @@ void	add_newenv_back(t_env **first, t_env *new, char **temp)
 		return ;
 	if (temp != NULL)
 	{
+		free(temp[0]);
 		new->name = ft_strdup(temp[0]);
 		free(temp[1]);
 		new->value = ft_strdup(temp[1]);
 		new->index = 0;
 		new->next = NULL;
+		free(temp);
 	}
 	first_node = *first;
 	if (*first == NULL)
@@ -55,31 +67,49 @@ void	add_newenv_back(t_env **first, t_env *new, char **temp)
 	first_node->next = new;
 }
 
-void	add_path(t_data *shell)
+void	add_path_to_env(t_data *shell, char *path)
 {
-	char	*current_path;
 	t_env	*new;
-	t_env	*aux;
+	t_env	*current;
 
-	current_path = getenv("PATH");
-	if (current_path != NULL)
+	new = malloc(sizeof(t_env));
+	if (!new)
 	{
-		printf("PATH=%s\n", current_path);
-		aux = shell->env;
-		while (aux)
-		{
-			if (!ft_strncmp(aux->name, "PATH", ft_strlen("PATH")))
-				return ;
-			aux = aux->next;
-		}
-		new = ft_calloc(1, sizeof(t_env));
-		new->name = ft_strdup("PATH");
-		printf("1.add_path new->name pointer = %p\n", new->name);
-		new->value = ft_strjoin("=", current_path);
-		new->next = NULL;
-		add_newenv_back(&shell->env, new, NULL);
-		env_command(shell->echo, shell);
+		perror("Error al asignar memoria");
+		exit(EXIT_FAILURE);
 	}
+	new->name = strdup("PATH");
+	if (!new->name)
+	{
+		perror("Error al asignar memoria");
+		exit(EXIT_FAILURE);
+	}
+	new->value = strdup(path);
+	if (!new->value)
+	{
+		perror("Error al asignar memoria");
+		exit(EXIT_FAILURE);
+	}
+	new->index = 0;
+	new->next = NULL;
+	current = shell->env;
+	if (current)
+	{
+		if (current->name)
+			free(current->name);
+		if (current->value)
+			free(current->value);
+	}
+	current = shell->env;
+	if (!current)
+		shell->env = new;
+	else
+	{
+		while (current->next)
+			current = current->next;
+		current->next = new;
+	}
+	shell->env_count++;
 }
 
 void	add_oldpwd(t_data *shell)
@@ -102,7 +132,6 @@ void	add_oldpwd(t_data *shell)
 	{
 		new = ft_calloc(1, sizeof(t_env));
 		new->name = ft_strdup("OLDPWD");
-		printf("2.add oldpath new->name pointer = %p\n", new->name);
 		new->value = ft_strjoin("=", current_dir);
 		new->next = NULL;
 		add_newenv_back(&shell->env, new, NULL);

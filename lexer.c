@@ -66,6 +66,7 @@ void	lexer(t_data *shell, t_list **words_splited)
 	//printf("line = %s\n", line);
 	create_line_splited(line, words_splited);
 	free(line);
+	//line = NULL;
 	//free (&line);
 	split_pipes(words_splited);
 	split_redirections(words_splited);

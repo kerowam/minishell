@@ -7,9 +7,9 @@ void	init_process(t_process *process)
 	process->argv = NULL;
 	process->pid = 0;
 	process->infile = NULL;
-	process->inf = 0;
+	process->in_fd = 0;
 	process->outfile = NULL;
-	process->outf = 1;
+	process->out_fd = 1;
 	process->outfile_append = NULL;
 	process->here_doc = NULL;
 	process->stderr = 2;
@@ -251,7 +251,7 @@ void	parse(t_process *process, t_list **words_splited)
 			printf("31.tmp_word pointer = %p\n", tmp_word);
 			if (check_redir(tmp_word) == 0)
 				check_infile(tmp_word, tmp_process);
-			//free (tmp_word);
+			free (tmp_word);
 		}
 		else if (ft_strncmp(tmp_word, ">", 2) == 0)
 		{
@@ -271,7 +271,7 @@ void	parse(t_process *process, t_list **words_splited)
 			tmp_word = ft_strdup(tmp->content);
 			if (check_redir(tmp_word) == 0)
 				check_outfile(tmp_word, tmp_process);
-			//free (tmp_word);
+			free (tmp_word);
 		}
 		else if (ft_strncmp(tmp_word, ">>", 3) == 0)
 		{
@@ -291,7 +291,7 @@ void	parse(t_process *process, t_list **words_splited)
 			tmp_word = tmp->content;
 			if (check_redir(tmp_word) == 0)
 				check_outfile_append(tmp_word, tmp_process);
-			//free (tmp_word);
+			free (tmp_word);
 		}
 		else if (ft_strncmp(tmp_word, "<<", 3) == 0)
 		{
@@ -316,7 +316,8 @@ void	parse(t_process *process, t_list **words_splited)
 				else
 					ft_lstadd_back(&tmp_process->here_doc, ft_lstnew(ft_strdup(tmp_word)));
 			}
-			//free (tmp_word);
+			//if (tmp_word)
+			//	free (tmp_word);
 		}
 		else if (ft_strncmp(tmp_word, "|", 2) == 0)
 		{
@@ -380,8 +381,8 @@ void	parse(t_process *process, t_list **words_splited)
 			return ;
 		}
 	}
-	free_list (&tmp);
-	free (tmp);
+	//free_list (&tmp);
+	//free (tmp);
 	//free (tmp_process);
 	//Liberar listas
 }

@@ -213,6 +213,8 @@ int	main(int argc, char **argv, char **env)
 		//ft_header();
 		start_minishell(shell, env);
 	}
+	free(shell->line);
+	free(shell->echo);
 	free(shell);
 	clear_history();
 	exit (g_exit_status); //He cambiado EXIT_SUCCESS por g_exit_status y return por exit

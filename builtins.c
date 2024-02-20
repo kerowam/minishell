@@ -12,10 +12,8 @@ void	env_command(char **cmd, t_data *shell)
 	}
 	while (current_env)
 	{
-		if (current_env->value[0])
+		if (current_env->value != NULL)
 			printf("%s=%s\n", current_env->name, current_env->value);
-		if (strcmp(current_env->name, "MallocNanoZone") == 0)
-			add_path(shell);
 		current_env = current_env->next;
 	}
 }
@@ -54,7 +52,6 @@ void	echo_command(char **str, int exists)
 	}
 	if (exists == 0)
 		printf("\n");
-	//g_exit_status = 0;
 }
 
 void	unset_command(t_data *shell, char *name)

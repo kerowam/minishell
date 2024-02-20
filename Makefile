@@ -24,7 +24,8 @@ SRCS = main.c\
 		error.c\
 		executor.c\
 		utils2.c\
-		free.c
+		free.c\
+		executor_utils.c
 
 CC = gcc
 

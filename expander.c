@@ -3,10 +3,10 @@
 char	*get_expanded_value(t_env *env, char *key)
 {
 	char	*value;
-	t_env	*tmp = NULL;
+	t_env	*tmp;
 	char	*name;
 
-	//tmp = (t_env *)malloc(sizeof(t_env));
+	tmp = (t_env *)malloc(sizeof(t_env));
 	*tmp = *env;
 	name = NULL;
 	while (tmp->name)
@@ -100,7 +100,7 @@ char	*expand(char *str, t_env *env)
 void	expander(t_env *env, t_list **line_splited)
 {
 	t_env	*tmp_env;
-	t_list	**tmp_list = NULL;
+	t_list	**tmp_list;
 	char	*tmp_str;
 
 	tmp_env = (t_env *)malloc(sizeof(t_env));
@@ -111,7 +111,7 @@ void	expander(t_env *env, t_list **line_splited)
 	printf("12.tmp_list pointer: %p\n", tmp_list);
 	while (*tmp_list)
 	{
-		tmp_str = (*tmp_list)->content;
+		tmp_str = ft_strdup((*tmp_list)->content);
 		if (ft_strchr(tmp_str, '$') != 0)
 			(*tmp_list)->content = expand(tmp_str, tmp_env);
 		if ((*tmp_list)->next)
@@ -124,4 +124,6 @@ void	expander(t_env *env, t_list **line_splited)
 	//*tmp_list = *line_splited;
 	if (tmp_list)
 		free (tmp_list);
+	if (tmp_str)
+		free (tmp_str);
 }
