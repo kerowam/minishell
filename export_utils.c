@@ -66,7 +66,7 @@ int	check_if_exists(char *name, char *value, t_data *shell)
 		if (!ft_strncmp(ptr->name, name, ft_strlen(name)))
 		{
 			free(ptr->value);
-			ptr->value = ft_strjoin("=", value);
+			ptr->value = ft_strdup(value);
 			free(name);
 			return (1);
 		}
@@ -84,7 +84,7 @@ t_env	*new_node(char *name, char *value)
 	if (!env)
 		return (NULL);
 	env->name = ft_strdup(name);
-	env->value = ft_strjoin("=", value);
+	env->value = ft_strdup(value);
 	env->next = NULL;
 	return (env);
 }
