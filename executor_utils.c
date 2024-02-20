@@ -88,22 +88,26 @@ void	execute_builtin(t_process *process, t_data *shell)
 
 bool	is_builtin(t_process *process, t_data *shell)
 {
+	char	*trimmed_command;
+
 	(void)process;
-	if (ft_strncmp(shell->line, "exit\0", 5) == 0
-		|| ft_strncmp(shell->line, "EXIT\0", 5) == 0
-		|| ft_strncmp(shell->line, "env\0", 4) == 0
-		|| ft_strncmp(shell->line, "ENV\0", 4) == 0
-		|| ft_strncmp(shell->line, "pwd\0", 4) == 0
-		|| ft_strncmp(shell->line, "PWD\0", 4) == 0
-		|| ft_strncmp(shell->echo[0], "echo\0", 5) == 0
-		|| ft_strncmp(shell->echo[0], "ECHO\0", 5) == 0
-		|| ft_strncmp(shell->line, "unset\0", 6) == 0
-		|| ft_strncmp(shell->line, "UNSET\0", 6) == 0
-		|| ft_strncmp(*shell->echo, "cd\0", 3) == 0
-		|| ft_strncmp(*shell->echo, "CD\0", 3) == 0
-		|| ft_strncmp(shell->echo[0], "export\0", 7) == 0
-		|| ft_strncmp(shell->echo[0], "EXPORT\0", 7) == 0)
+	trimmed_command = ft_strtrim(shell->line, " \t\n\r\f\v");
+	if (ft_strncmp(trimmed_command, "exit", 4) == 0
+		|| ft_strncmp(trimmed_command, "EXIT", 4) == 0
+		|| ft_strncmp(trimmed_command, "env", 3) == 0
+		|| ft_strncmp(trimmed_command, "ENV", 3) == 0
+		|| ft_strncmp(trimmed_command, "pwd", 3) == 0
+		|| ft_strncmp(trimmed_command, "PWD", 3) == 0
+		|| ft_strncmp(trimmed_command, "echo", 4) == 0
+		|| ft_strncmp(trimmed_command, "ECHO", 4) == 0
+		|| ft_strncmp(trimmed_command, "unset", 5) == 0
+		|| ft_strncmp(trimmed_command, "UNSET", 5) == 0
+		|| ft_strncmp(trimmed_command, "cd", 2) == 0
+		|| ft_strncmp(trimmed_command, "CD", 2) == 0
+		|| ft_strncmp(trimmed_command, "export", 6) == 0
+		|| ft_strncmp(trimmed_command, "EXPORT", 6) == 0)
 		return (true);
 	else
 		return (false);
+	free(trimmed_command);
 }
