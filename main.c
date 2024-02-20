@@ -76,7 +76,6 @@ void	start_minishell(t_data *shell, char **env)
 				{
 					if (*shell->line)
 						add_history(shell->line);
-					printf("PRUEBA: %s\n", process->command);
 					if (is_builtin(process, shell))
 						execute_builtin(process, shell);
 					if (!is_builtin(process, shell))

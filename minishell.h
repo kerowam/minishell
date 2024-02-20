@@ -46,6 +46,7 @@ typedef struct s_data
 	int		del; //delimitador para variables
 	int		f_pipe;
 	t_env	*env;
+	size_t	env_count;
 	char	**temp;
 	t_env	*temp_env;
 	t_env	*export;
@@ -87,6 +88,9 @@ typedef struct s_process
 	int					status;
 	char				**env;
 	char				*path_env;
+	int					use_pipe;
+	int					in_fd;
+	int					out_fd;
 }				t_process;
 
 enum	e_error
@@ -128,8 +132,8 @@ int		handle_directory(t_data *shell, char **str);
 //enviroment.c
 void	initialize_env(t_data *shell, char **env);
 void	add_newenv_back(t_env **first, t_env *new, char **temp);
-void	add_path(t_data *shell);
 void	add_oldpwd(t_data *shell);
+void	add_path_to_env(t_data *shell, char *path);
 
 //export_utils.c
 void	only_export(t_data *shell);
@@ -207,9 +211,10 @@ void	clean_str_quot(char *str, t_list **list);
 void	parse(t_process *process, t_list **words_splited);
 
 //executor.c
+void	handle_redirections_and_pipes(t_process *process);
+void	execute_local_command(t_process *process);
+int		check_command_access(t_process *process);
 int		main_executor(t_data *shell, char **env, t_process *process);
-void	execute_builtin(t_process *process, t_data *shell);
-bool	is_builtin(t_process *process, t_data *shell);
 
 //executor_utils.c
 void	free_string_array(char **array);
@@ -225,5 +230,6 @@ void	free_env_list(t_env *env);
 char	*obtain_env_name(char *fullenv);
 char	*obtain_env_value(char *fullenv);
 
+void print_environment(t_env *env);
 
 #endif

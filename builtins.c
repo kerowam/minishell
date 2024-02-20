@@ -12,11 +12,8 @@ void	env_command(char **cmd, t_data *shell)
 	}
 	while (current_env)
 	{
-		if (current_env->value[0])
+		if (current_env->value != NULL)
 			printf("%s=%s\n", current_env->name, current_env->value);
-		if (ft_strncmp(current_env->name, "MallocNanoZone",
-				ft_strlen("MallocNanoZone")) == 0)
-			add_path(shell);
 		current_env = current_env->next;
 	}
 }

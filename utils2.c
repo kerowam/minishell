@@ -57,6 +57,15 @@ void	free_env_list(t_env *env)
 	}
 }
 
+void free_env_value(t_env *env)
+{
+    if (env != NULL)
+    {
+        free(env->value);
+        env->value = NULL; // opcional: establecer el puntero a NULL después de liberarlo
+    }
+}
+
 char	*obtain_env_name(char *fullenv)
 {
 	int	i;

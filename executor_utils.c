@@ -32,7 +32,7 @@ int	find_path(t_process *process, char **env)
 		{
 			free(process->path_env);
 			free_string_array(process->env);
-			process->path_env = strdup(env[i] + 5);
+			process->path_env = ft_strdup(env[i] + 5);
 			if (!process->path_env)
 			{
 				perror("Error al duplicar la cadena");
@@ -60,14 +60,14 @@ int	find_path(t_process *process, char **env)
 void	execute_builtin(t_process *process, t_data *shell)
 {
 	(void)process;
-	if (ft_strncmp(shell->line, "exit\0", 5) == 0
-		|| ft_strncmp(shell->line, "EXIT\0", 5) == 0)
+	if (ft_strncmp(shell->echo[0], "exit\0", 5) == 0
+		|| ft_strncmp(shell->echo[0], "EXIT\0", 5) == 0)
 	{
 		free(shell->line);
 		exit(EXIT_FAILURE);
 	}
-	if (ft_strncmp(shell->line, "env\0", 4) == 0
-		|| ft_strncmp(shell->line, "ENV\0", 4) == 0)
+	if (ft_strncmp(shell->echo[0], "env\0", 4) == 0
+		|| ft_strncmp(shell->echo[0], "ENV\0", 4) == 0)
 		env_command(shell->echo, shell);
 	if (ft_strncmp(shell->line, "pwd\0", 4) == 0
 		|| ft_strncmp(shell->line, "PWD\0", 4) == 0)

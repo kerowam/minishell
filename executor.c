@@ -19,7 +19,6 @@ int	check_command_access(t_process *process)
 		printf("Full Path: %s\n", full_path);
 		if (access(full_path, F_OK | X_OK) != -1)
 		{
-
 			printf("ACCESO\n");
 			printf("%s\n", process->command);
 			cmd_argv = malloc((ft_lstsize(process->argv) + 2) * sizeof(char *));
@@ -138,9 +137,10 @@ int	main_executor(t_data *shell, char **env, t_process *process)
 	{
 		find_path(process, env);
 		printf("%s\n", process->command);
-		if (check_command_access(process))
-			printf("Command path: %s\n", process->command);
-		else if (starts_with_dot_slash(process->command))
+		check_command_access(process);
+		if (ft_strncmp(process->command, "clear", 5) == 0)
+			printf("\033[H\033[J");
+		if (starts_with_dot_slash(process->command))
 			execute_local_command(process);
 		return (EXIT_SUCCESS);
 	}
