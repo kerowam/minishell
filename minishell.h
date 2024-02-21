@@ -12,6 +12,7 @@
 # include <stdbool.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <errno.h>
 
 # define RESET		"\x1B[0m"
 # define RED		"\x1B[31m"
@@ -80,6 +81,7 @@ typedef struct s_process
 	int					inf;//
 	char				*outfile;
 	int					outf;//
+	int					appendf;
 	char				*outfile_append;
 	t_list				*here_doc;
 	int					stderr;//??
@@ -88,9 +90,6 @@ typedef struct s_process
 	int					status;
 	char				**env;
 	char				*path_env;
-	int					use_pipe;
-	int					in_fd;
-	int					out_fd;
 }				t_process;
 
 enum	e_error
@@ -211,7 +210,10 @@ void	clean_str_quot(char *str, t_list **list);
 void	parse(t_process *process, t_list **words_splited);
 
 //executor.c
-void	handle_redirections_and_pipes(t_process *process);
+void	redirect_input(t_process *process);
+void	redirect_output(t_process *process);
+void	redirect_output_append(t_process *process);
+void	redirect_input_output(t_process *process);
 void	execute_local_command(t_process *process);
 int		check_command_access(t_process *process);
 int		main_executor(t_data *shell, char **env, t_process *process);
@@ -230,6 +232,7 @@ void	free_env_list(t_env *env);
 char	*obtain_env_name(char *fullenv);
 char	*obtain_env_value(char *fullenv);
 
-void print_environment(t_env *env);
+//utils3.c
+int		ft_strcmp(char *s1, char *s2);
 
 #endif

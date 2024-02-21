@@ -1,5 +1,68 @@
 #include "minishell.h"
 
+void	redirect_input(t_process *process)
+{
+	int	fd;
+
+	if (process->infile != NULL)
+	{
+		fd = open(process->infile, O_RDONLY);
+		if (fd == -1)
+		{
+			perror("Error opening input file");
+			exit(EXIT_FAILURE);
+		}
+		if (dup2(fd, STDIN_FILENO) == -1)
+		{
+			perror("Error redirecting input");
+			exit(EXIT_FAILURE);
+		}
+		close(fd);
+	}
+}
+
+void	redirect_output(t_process *process)
+{
+	int	flags;
+	int	fd;
+
+	fd = -1;
+	if (process->outfile != NULL || process->outfile_append != NULL)
+	{
+		flags = O_WRONLY | O_CREAT;
+		if (process->appendf == 1)
+		{
+			flags |= O_TRUNC;
+			fd = open(process->outfile, flags, 0666);
+		}
+		else if (process->appendf == 2)
+		{
+			if (process->outfile != NULL)
+				fd = open(process->outfile, O_WRONLY
+						| O_CREAT | O_APPEND, 0666);
+			else
+			{
+				flags |= O_APPEND;
+				fd = open(process->outfile_append, flags, 0666);
+			}
+		}
+		if (fd == -1)
+		{
+			perror("Error opening output file");
+			exit(EXIT_FAILURE);
+		}
+		if (dup2(fd, STDOUT_FILENO) == -1)
+		{
+			perror("Error redirecting output");
+			exit(EXIT_FAILURE);
+		}
+	}
+	if (fd != -1)
+		close(fd);
+}
+
+
+
 int	check_command_access(t_process *process)
 {
 	int		i;
@@ -9,24 +72,25 @@ int	check_command_access(t_process *process)
 	t_list	*current;
 	int		j;
 	int		k;
+	int		original_stdout;
 
 	i = 0;
+	original_stdout = dup(STDOUT_FILENO);
+	cmd_argv = malloc((ft_lstsize(process->argv) + 2) * sizeof(char *));
+	if (!cmd_argv)
+	{
+		perror("Error allocating memory for cmd_argv");
+		exit(EXIT_FAILURE);
+	}
 	while (process->env[++i] != NULL)
 	{
 		temp = ft_strjoin(process->env[i], "/");
-		printf("Temp: %s\n", temp);
 		full_path = ft_strjoin(temp, process->command);
-		printf("Full Path: %s\n", full_path);
 		if (access(full_path, F_OK | X_OK) != -1)
 		{
 			printf("ACCESO\n");
-			printf("%s\n", process->command);
-			cmd_argv = malloc((ft_lstsize(process->argv) + 2) * sizeof(char *));
-			if (!cmd_argv)
-			{
-				perror("Error al asignar memoria para cmd_argv");
-				exit(EXIT_FAILURE);
-			}
+			redirect_input(process);
+			redirect_output(process);
 			cmd_argv[0] = ft_strdup(process->command);
 			current = process->argv;
 			j = 1;
@@ -50,6 +114,8 @@ int	check_command_access(t_process *process)
 				exit(EXIT_FAILURE);
 			}
 			waitpid(process->pid, &process->status, 0);
+			dup2(original_stdout, STDOUT_FILENO);
+			close(original_stdout);
 			free(temp);
 			free(full_path);
 			k = 0;
@@ -68,6 +134,7 @@ int	check_command_access(t_process *process)
 		}
 		free(temp);
 	}
+	free(cmd_argv);
 	return (0);
 }
 
@@ -136,7 +203,9 @@ int	main_executor(t_data *shell, char **env, t_process *process)
 	else if (!is_builtin(process, shell))
 	{
 		find_path(process, env);
-		printf("%s\n", process->command);
+		printf("OUTFILE: %s\n", process->outfile);
+		printf("OUTFILE_APPEND: %s\n", process->outfile_append);
+		printf("OUTF: %d\n", process->outf);
 		check_command_access(process);
 		if (ft_strncmp(process->command, "clear", 5) == 0)
 			printf("\033[H\033[J");

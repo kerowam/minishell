@@ -16,6 +16,7 @@ void	init_process(t_process *process)
 	process->inf = 0;
 	process->outfile = NULL;
 	process->outf = 1;
+	process->appendf = 1;
 	process->outfile_append = NULL;
 	process->here_doc = NULL;
 	process->stderr = 2;
@@ -191,7 +192,7 @@ void	check_outfile_append(char *tmp_word, t_process *tmp_process)
 
 	if (access(tmp_word, F_OK) == -1)
 	{
-		file = open (tmp_word, O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);
+		file = open(tmp_word, O_WRONLY | O_CREAT | O_APPEND, S_IRUSR | S_IWUSR);
 		if (file < 0)
 		{
 			perror("Error opening file");
@@ -199,11 +200,11 @@ void	check_outfile_append(char *tmp_word, t_process *tmp_process)
 			//free_list (words_splited);
 			//Liberar listas
 			//Gestionar g_status
-			//return ;
+			return ;
 			//break ;
 		}
 		else
-			close (file);
+			close(file);
 	}
 	else if (access(tmp_word, W_OK) == -1)
 	{
@@ -215,7 +216,9 @@ void	check_outfile_append(char *tmp_word, t_process *tmp_process)
 		//return ;
 		//break ;
 	}
+	free(tmp_process->outfile_append);
 	tmp_process->outfile_append = ft_strdup(tmp_word);
+	tmp_process->appendf = 2;
 }
 
 void	parse(t_process *process, t_list **words_splited)
@@ -280,7 +283,7 @@ void	parse(t_process *process, t_list **words_splited)
 				//Gestionar g_status
 				return ;
 			}
-			tmp_word = (*tmp)->content;
+			tmp_word = ft_strdup((*tmp)->content);
 			if (check_redir(tmp_word) == 0)
 				check_outfile_append(tmp_word, tmp_process);
 		}
@@ -353,7 +356,7 @@ void	parse(t_process *process, t_list **words_splited)
 			//free (tmp);
 			//free (tmp_word);
 			tmp_process->args = list_to_array(tmp_process->argv);
-			free (tmp_word);
+			//free (tmp_word);
 			free (tmp);
 			free_list (words_splited);
 			return ;

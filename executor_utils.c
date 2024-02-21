@@ -47,7 +47,7 @@ int	find_path(t_process *process, char **env)
 			j = 0;
 			while (process->env[j] != NULL)
 			{
-				printf("Resultados de ft_split: %d: %s\n", j, process->env[j]);
+				//printf("Resultados de ft_split: %d: %s\n", j, process->env[j]);
 				j++;
 			}
 			return (EXIT_SUCCESS);
@@ -63,6 +63,7 @@ void	execute_builtin(t_process *process, t_data *shell)
 	if (ft_strncmp(shell->echo[0], "exit\0", 5) == 0
 		|| ft_strncmp(shell->echo[0], "EXIT\0", 5) == 0)
 	{
+		free_echo(shell->echo);
 		free(shell->line);
 		exit(EXIT_FAILURE);
 	}
@@ -88,26 +89,26 @@ void	execute_builtin(t_process *process, t_data *shell)
 
 bool	is_builtin(t_process *process, t_data *shell)
 {
+	bool	is_builtin_command;
 	char	*trimmed_command;
 
-	(void)process;
 	trimmed_command = ft_strtrim(shell->line, " \t\n\r\f\v");
-	if (ft_strncmp(trimmed_command, "exit", 4) == 0
-		|| ft_strncmp(trimmed_command, "EXIT", 4) == 0
-		|| ft_strncmp(trimmed_command, "env", 3) == 0
-		|| ft_strncmp(trimmed_command, "ENV", 3) == 0
-		|| ft_strncmp(trimmed_command, "pwd", 3) == 0
-		|| ft_strncmp(trimmed_command, "PWD", 3) == 0
-		|| ft_strncmp(trimmed_command, "echo", 4) == 0
-		|| ft_strncmp(trimmed_command, "ECHO", 4) == 0
-		|| ft_strncmp(trimmed_command, "unset", 5) == 0
-		|| ft_strncmp(trimmed_command, "UNSET", 5) == 0
-		|| ft_strncmp(trimmed_command, "cd", 2) == 0
-		|| ft_strncmp(trimmed_command, "CD", 2) == 0
-		|| ft_strncmp(trimmed_command, "export", 6) == 0
-		|| ft_strncmp(trimmed_command, "EXPORT", 6) == 0)
-		return (true);
-	else
-		return (false);
+	is_builtin_command = false;
+	if (ft_strcmp(process->command, "exit") == 0
+		|| ft_strcmp(process->command, "EXIT") == 0
+		|| ft_strcmp(process->command, "env") == 0
+		|| ft_strcmp(process->command, "ENV") == 0
+		|| ft_strcmp(shell->line, "pwd") == 0
+		|| ft_strcmp(shell->line, "PWD") == 0
+		|| ft_strcmp(trimmed_command, "echo") == 0
+		|| ft_strcmp(trimmed_command, "ECHO") == 0
+		|| ft_strcmp(process->command, "unset") == 0
+		|| ft_strcmp(process->command, "UNSET") == 0
+		|| ft_strcmp(*shell->echo, "cd") == 0
+		|| ft_strcmp(*shell->echo, "CD") == 0
+		|| ft_strcmp(process->command, "export") == 0
+		|| ft_strcmp(process->command, "EXPORT") == 0)
+		is_builtin_command = true;
 	free(trimmed_command);
+	return (is_builtin_command);
 }
