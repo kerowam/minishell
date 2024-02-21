@@ -68,9 +68,9 @@ void	lexer(t_data *shell, t_list **words_splited)
 	free(line);
 	//line = NULL;
 	//free (&line);
-	split_pipes(words_splited);
-	split_redirections(words_splited);
-	expander(shell->env, words_splited);
-	quot_cleaner(words_splited);
+	//split_pipes(words_splited);
+	//split_redirections(words_splited);
+	//expander(shell->env, words_splited);
+	//quot_cleaner(words_splited);
 	return ;
 }

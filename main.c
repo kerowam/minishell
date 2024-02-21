@@ -138,23 +138,25 @@ void	start_minishell(t_data *shell, char **env)
 
 	while (1)
 	{
-	words_splited = (t_list **)malloc(sizeof(t_list *));
-	printf("23.start minishell words_splited pointer = %p\n", words_splited);
-	if (!words_splited)
-		printf("error: malloc\n"); //Hacer función para enviar errores a stderr
-		//gestionar error.
-	//words_splited = NULL;
-	process = (t_process *)malloc(sizeof(t_process));
-	printf("24.start minishell process pointer = %p\n", process);
+		words_splited = (t_list **)malloc(sizeof(t_list *));
+		printf("23.start minishell words_splited pointer = %p\n", words_splited);
+		if (!words_splited)
+			printf("error: malloc\n"); //Hacer función para enviar errores a stderr
+			//gestionar error.
+		//words_splited = NULL;
+		process = (t_process *)malloc(sizeof(t_process));
+		printf("24.start minishell process pointer = %p\n", process);
 		
 		/*if (words_splited)
 			free(words_splited);*/
 		/*if (shell->line)
 		{
 			free(shell->line);
-			shell->line = NULL;
+			//shell->line = NULL;
 		}*/
 		shell->line = readline("Minishell@ ~ ");
+		printf("24.1.start minishell shell->line pointer = %p\n", shell->line);
+		printf("24.2.start minishell readline = %p\n", readline);
 		if (shell->line == NULL)
 			printf("\n");
 		else
@@ -174,6 +176,8 @@ void	start_minishell(t_data *shell, char **env)
 				print_list_splited(words_splited);
 				parse(process, words_splited);
 				free_list(words_splited);
+				/*if (words_splited)
+					free(words_splited);*/
 				print_process(process);
 				shell->echo = ft_split(shell->line, ' ');
 				if (shell->echo && shell->echo[0] != NULL)
@@ -186,8 +190,8 @@ void	start_minishell(t_data *shell, char **env)
 						main_executor(shell, env, process);
 					free_echo(shell->echo);
 					free(shell->line);
-					if (process)
-						free_process(process);
+					//if (process)
+					//	free_process(process);
 					//free(words_splited);
 					//exit (g_exit_status);
 					//break ;
@@ -214,7 +218,7 @@ int	main(int argc, char **argv, char **env)
 		start_minishell(shell, env);
 	}
 	free(shell->line);
-	free(shell->echo);
+	free_echo(shell->echo);
 	free(shell);
 	clear_history();
 	exit (g_exit_status); //He cambiado EXIT_SUCCESS por g_exit_status y return por exit
