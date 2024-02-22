@@ -39,7 +39,7 @@ int	split_redirs_2(t_list *list, int i, char *tmp_split, char *tmp_word)
 	else
 	{
 		tmp_split = ft_substr(tmp_word, 0, redir_index);
-		list->content = tmp_split;
+		list->content = ft_strdup(tmp_split);
 		free(tmp_split); // added
 		i = redir_index;
 	}
@@ -71,6 +71,7 @@ void	handle_redirections(t_list **list, int i)
 	int		len;
 	int		n_redirections;
 
+	tmp_word = NULL;
 	tmp_word = (*list)->content;
 	len = ft_strlen(tmp_word);
 	n_redirections = get_redirection_nbr(tmp_word, i);

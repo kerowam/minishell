@@ -147,12 +147,13 @@ char	set_in_quot(char *line, int i);
 
 //lexer.c
 void	create_line_splited(char *line, t_list **list);
-void	lexer(t_data *shell, t_list **words_splited);
+t_list	**lexer(t_data *shell, t_list **words_splited);
+void	init_list(t_list **list);
 
 //lexer_pipes.c
-void	split_pipes(t_list **list);
-void	split_pipe(t_list *list, int i);
-void	handle_pipes(t_list **list, int i);
+void	split_pipes(t_list **list, t_list **pipes_splited);
+void    split_pipe(t_list *list, int i, t_list **pipes_splited);
+void    handle_pipes(t_list **list, int i, t_list **pipes_splited);
 
 //lexer_utils.c
 void	insert_node(t_list **list, char *content);
