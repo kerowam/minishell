@@ -50,8 +50,10 @@ t_list	**lexer(t_data *shell, t_list **words_splited)
 {
 	char	*line;
 	t_list	**pipes_splited;
+	t_list	**redir_splited;
 
 	pipes_splited = (t_list **)malloc(sizeof(t_list *));
+	redir_splited = (t_list **)malloc(sizeof(t_list *));
 	line = (char *)malloc(sizeof(char) * (ft_strlen(shell->line) + 1));
 	line = ft_strdup(shell->line);
 	printf("22.lexer line pointer = %p\n", line);
@@ -62,9 +64,9 @@ t_list	**lexer(t_data *shell, t_list **words_splited)
 	//line = NULL;
 	//free (&line);
 	split_pipes(words_splited, pipes_splited);
-	//split_redirections(words_splited);
-	//expander(shell->env, words_splited);
-	//quot_cleaner(words_splited);
-	//free_list(words_splited);
+	//free_list(pipes_splited);
+	pipes_splited = split_redirections(pipes_splited, redir_splited);
+	//expander(shell->env, pipes_splited);
+	//quot_cleaner(pipes_splited);
 	return (pipes_splited);
 }

@@ -87,7 +87,7 @@ void	handle_pipes(t_list **list, int i, t_list **pipes_splited)
 		//splits = 
 		split_pipe(*list, i, pipes_splited);
 	}
-	else
+	else if (len > 0)
 		ft_lstadd_back(pipes_splited, ft_lstnew(tmp_word));
 	free(tmp_word); //
 	return ;
@@ -101,7 +101,7 @@ void	split_pipes(t_list **list, t_list **pipes_splited)
 
 	tmp = (t_list **)malloc(sizeof(t_list *));
 	init_list(pipes_splited);
-	tmp = list;
+	*tmp = *list;
 	printf("17.split_pipes tmp pointer = %p\n", tmp);
 	while (*tmp != NULL)
 	{
@@ -121,6 +121,7 @@ void	split_pipes(t_list **list, t_list **pipes_splited)
 			*tmp = NULL;*/
 			//break ;
 	}
-	free(tmp);
+	//*tmp = *list;
+	//free(tmp);
 	return ;
 }
