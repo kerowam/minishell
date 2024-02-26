@@ -44,12 +44,10 @@ typedef struct s_data
 	char	**echo;
 	char	*line;	
 	char	cwd[500];
-	int		del; //delimitador para variables
 	int		f_pipe;
 	t_env	*env;
+	int		i;
 	size_t	env_count;
-	char	**temp;
-	t_env	*temp_env;
 	t_env	*export;
 	t_env	*temp_export;
 }				t_data;
@@ -109,7 +107,7 @@ enum	e_error
 };
 
 //builtins.c
-void	env_command(char **cmd, t_data *shell);
+void	env_command(t_data *shell);
 void	pwd_command(t_data *shell);
 void	echo_command(char **str, int exists);
 void	unset_command(t_data *shell, char *name);
@@ -129,10 +127,10 @@ void	cd_command(char **str, t_data *shell);
 int		handle_directory(t_data *shell, char **str);
 
 //enviroment.c
-void	initialize_env(t_data *shell, char **env);
-void	add_newenv_back(t_env **first, t_env *new, char **temp);
-void	add_oldpwd(t_data *shell);
-void	add_path_to_env(t_data *shell, char *path);
+t_env	*copy_env_to_list(char **envp, t_data *shell);
+t_env	*create_env_node(char *name, char *value, int index);
+void	add_env_node(t_env **head, t_env **current, t_env *new_node);
+void	copy_env_to_data(t_data *data, char **envp);
 
 //export_utils.c
 void	only_export(t_data *shell);
@@ -153,7 +151,6 @@ void	free_temp(char **temp);
 void	free_echo(char **str);
 void	env_add_back(t_env **root, t_env *new);
 void	free_list(t_list **list);
-void	free_env_list(t_env *env);
 
 //solo para pruebas
 void	print_split(char **line_splited);
@@ -216,19 +213,19 @@ void	redirect_output_append(t_process *process);
 void	redirect_input_output(t_process *process);
 void	execute_local_command(t_process *process);
 int		check_command_access(t_process *process);
-int		main_executor(t_data *shell, char **env, t_process *process);
+int		main_executor(t_data *shell, t_process *process);
 
 //executor_utils.c
 void	free_string_array(char **array);
 int		starts_with_dot_slash(char *str);
-int		find_path(t_process *process, char **env);
+int		find_path(t_process *process, t_data *shell);
 void	execute_builtin(t_process *process, t_data *shell);
 bool	is_builtin(t_process *process, t_data *shell);
 
 //utils2.c
 void	print_list_splited(t_list **list);
 void	print_process(t_process *process);
-void	free_env_list(t_env *env);
+char	*ft_strndup(const char *str, size_t n);
 char	*obtain_env_name(char *fullenv);
 char	*obtain_env_value(char *fullenv);
 

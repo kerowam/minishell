@@ -43,18 +43,28 @@ void	print_process(t_process *process)
 	}
 }
 
-void	free_env_list(t_env *env)
+char	*ft_strndup(const char *str, size_t n)
 {
-	t_env	*temp;
+	size_t	len;
+	char	*new_str;
+	size_t	i;
 
-	while (env != NULL)
+	if (str == NULL)
+		return (NULL);
+	len = 0;
+	while (len < n && str[len] != '\0')
+		len++;
+	new_str = (char *)malloc(len + 1);
+	if (new_str == NULL)
+		return (NULL);
+	i = 0;
+	while (i < len)
 	{
-		temp = env;
-		env = env->next;
-		free(temp->name);
-		free(temp->value);
-		free(temp);
+		new_str[i] = str[i];
+		i++;
 	}
+	new_str[len] = '\0';
+	return (new_str);
 }
 
 char	*obtain_env_name(char *fullenv)

@@ -21,13 +21,13 @@ void	ft_header(void)
 
 void	initialize_minishell(t_data **shell, char **env)
 {
+	(void)env;
 	*shell = (t_data *)malloc(sizeof(t_data));
 	if (!*shell)
 	{
 		perror("Error al asignar memoria para t_data");
 		exit(EXIT_FAILURE);
 	}
-	initialize_env(*shell, env);
 }
 
 void	start_minishell(t_data *shell, char **env)
@@ -36,6 +36,7 @@ void	start_minishell(t_data *shell, char **env)
 	t_list		**words_splited;
 	t_process	*process;
 
+	(void)env;
 	words_splited = (t_list **)malloc(sizeof(t_list *));
 	process = (t_process *)malloc(sizeof(t_process));
 	if (!words_splited)
@@ -79,7 +80,7 @@ void	start_minishell(t_data *shell, char **env)
 					if (is_builtin(process, shell))
 						execute_builtin(process, shell);
 					if (!is_builtin(process, shell))
-						main_executor(shell, env, process);
+						main_executor(shell, process);
 					free_echo(shell->echo);
 					free(shell->line);
 				}
@@ -95,20 +96,25 @@ int	main(int argc, char **argv, char **env)
 	t_data		*shell;
 
 	(void)argv;
-	atexit(ft_leaks);
-	shell = NULL;
-	initialize_minishell(&shell, env);
-	shell->line = NULL;
 	if (argc == 1)
 	{
-		ft_header();
-		start_minishell(shell, env);
+		atexit(ft_leaks);
+		shell = NULL;
+		initialize_minishell(&shell, env);
+		copy_env_to_data(shell, env);
+		shell->line = NULL;
+		if (argc == 1)
+		{
+			ft_header();
+			start_minishell(shell, env);
+		}
+		free(shell->line);
+		free(shell->echo);
+		free(shell);
+		clear_history();
+		return (EXIT_SUCCESS);
 	}
-	free(shell->line);
-	free(shell->echo);
-	free(shell);
-	clear_history();
-	return (EXIT_SUCCESS);
+	printf("Error de argumentos\n");
 }
 
 void	ft_leaks(void)

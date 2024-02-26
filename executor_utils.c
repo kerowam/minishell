@@ -20,19 +20,18 @@ int	starts_with_dot_slash(char *str)
 	return (str && str[0] == '.' && str[1] == '/');
 }
 
-int	find_path(t_process *process, char **env)
+int	find_path(t_process *process, t_data *shell)
 {
-	int	i;
-	int	j;
+	t_env	*current_env;
 
-	i = 0;
-	while (env[i] != NULL)
+	current_env = shell->env;
+	while (current_env != NULL)
 	{
-		if (ft_strncmp(env[i], "PATH", 4) == 0)
+		if (ft_strncmp(current_env->name, "PATH", 4) == 0)
 		{
 			free(process->path_env);
 			free_string_array(process->env);
-			process->path_env = ft_strdup(env[i] + 5);
+			process->path_env = ft_strdup(current_env->value);
 			if (!process->path_env)
 			{
 				perror("Error al duplicar la cadena");
@@ -44,40 +43,38 @@ int	find_path(t_process *process, char **env)
 				perror("Error al dividir la cadena");
 				return (EXIT_FAILURE);
 			}
-			j = 0;
+			int j = 0;
 			while (process->env[j] != NULL)
 			{
-				//printf("Resultados de ft_split: %d: %s\n", j, process->env[j]);
+				printf("Resultados de ft_split: %d: %s\n", j, process->env[j]);
 				j++;
 			}
 			return (EXIT_SUCCESS);
 		}
-		i++;
+		current_env = current_env->next;
 	}
 	return (EXIT_FAILURE);
 }
 
 void	execute_builtin(t_process *process, t_data *shell)
 {
-	(void)process;
 	if (ft_strncmp(shell->echo[0], "exit\0", 5) == 0
 		|| ft_strncmp(shell->echo[0], "EXIT\0", 5) == 0)
 	{
-		free_echo(shell->echo);
 		free(shell->line);
 		exit(EXIT_FAILURE);
 	}
 	if (ft_strncmp(shell->echo[0], "env\0", 4) == 0
 		|| ft_strncmp(shell->echo[0], "ENV\0", 4) == 0)
-		env_command(shell->echo, shell);
+		env_command(shell);
 	if (ft_strncmp(shell->line, "pwd\0", 4) == 0
 		|| ft_strncmp(shell->line, "PWD\0", 4) == 0)
 		pwd_command(shell);
 	if (ft_strncmp(shell->echo[0], "echo\0", 5) == 0
 		|| ft_strncmp(shell->echo[0], "ECHO\0", 5) == 0)
 		echo_command(shell->echo, 0);
-	if (ft_strncmp(shell->line, "unset\0", 6) == 0
-		|| ft_strncmp(shell->line, "UNSET\0", 6) == 0)
+	if (ft_strncmp(&process->command[0], "unset\0", 6) == 0
+		|| ft_strncmp(&process->command[0], "UNSET\0", 6) == 0)
 		unset_command(shell, shell->echo[1]);
 	if (ft_strncmp(*shell->echo, "cd\0", 3) == 0
 		|| ft_strncmp(shell->line, "CD\0", 3) == 0)
@@ -102,8 +99,8 @@ bool	is_builtin(t_process *process, t_data *shell)
 		|| ft_strcmp(shell->line, "PWD") == 0
 		|| ft_strcmp(trimmed_command, "echo") == 0
 		|| ft_strcmp(trimmed_command, "ECHO") == 0
-		|| ft_strcmp(process->command, "unset") == 0
-		|| ft_strcmp(process->command, "UNSET") == 0
+		|| ft_strcmp(&process->command[0], "unset") == 0
+		|| ft_strcmp(&process->command[0], "UNSET") == 0
 		|| ft_strcmp(*shell->echo, "cd") == 0
 		|| ft_strcmp(*shell->echo, "CD") == 0
 		|| ft_strcmp(process->command, "export") == 0

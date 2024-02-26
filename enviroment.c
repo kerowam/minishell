@@ -1,139 +1,61 @@
 #include "minishell.h"
 
-void	initialize_env(t_data *shell, char **env)
+t_env	*copy_env_to_list(char **envp, t_data *shell)
 {
-	char	*miau;
-
-	miau = getenv("PATH");
-	if (!miau)
-		exit(EXIT_FAILURE);
-	shell->del = 0;
-	shell->env = ft_calloc(1, sizeof(t_env));
-	shell->temp = ft_split(env[shell->del], '=');
-	if (!shell->env || !shell->temp || !shell->temp[0] || !shell->temp[1])
-		return ;
-	free(shell->temp[0]);
-	shell->env->name = ft_strdup(shell->temp[0]);
-	free(shell->temp[1]);
-	shell->env->value = ft_strdup(shell->temp[1]);
-	shell->env->index = 0;
-	shell->env->next = NULL;
-	free(shell->temp);
-	while (env[shell->del++] != NULL)
-	{
-		shell->temp_env = ft_calloc(1, sizeof(t_env));
-		if (env[shell->del])
-			shell->temp = ft_split(env[shell->del], '=');
-		if (!shell->temp_env || !shell->temp
-			|| !shell->temp[0] || !shell->temp[1])
-			return ;
-		if (ft_strncmp(shell->temp[0], "PATH", 4) == 0)
-		{
-			free(shell->temp[1]);
-			free(shell->temp[0]);
-			free(shell->temp);
-			add_path_to_env(shell, miau);
-			continue ;
-		}
-		add_newenv_back(&shell->env, shell->temp_env, shell->temp);
-	}
-	free(miau);
-}
-
-void	add_newenv_back(t_env **first, t_env *new, char **temp)
-{
-	t_env	*first_node;
-
-	if (new == NULL || temp == NULL)
-		return ;
-	if (temp != NULL)
-	{
-		free(temp[0]);
-		new->name = ft_strdup(temp[0]);
-		free(temp[1]);
-		new->value = ft_strdup(temp[1]);
-		new->index = 0;
-		new->next = NULL;
-		free(temp);
-	}
-	first_node = *first;
-	if (*first == NULL)
-	{
-		*first = new;
-		return ;
-	}
-	while (first_node->next != NULL)
-		first_node = first_node->next;
-	first_node->next = new;
-}
-
-void	add_path_to_env(t_data *shell, char *path)
-{
-	t_env	*new;
+	t_env	*head;
 	t_env	*current;
+	char	*name_value;
+	char	*delim;
+	t_env	*new_node;
 
-	new = malloc(sizeof(t_env));
-	if (!new)
+	head = NULL;
+	current = NULL;
+	shell->i = 0;
+	while (envp[shell->i] != NULL)
 	{
-		perror("Error al asignar memoria");
-		exit(EXIT_FAILURE);
+		name_value = ft_strdup(envp[shell->i]);
+		delim = ft_strchr(name_value, '=');
+		if (delim)
+		{
+			new_node = create_env_node(name_value, delim + 1, shell->i);
+			if (new_node)
+				add_env_node(&head, &current, new_node);
+		}
+		free(name_value);
+		shell->i++;
 	}
-	new->name = strdup("PATH");
-	if (!new->name)
+	return (head);
+}
+
+t_env	*create_env_node(char *name, char *value, int index)
+{
+	t_env	*new_node;
+
+	new_node = malloc(sizeof(t_env));
+	if (!new_node)
+		return (NULL);
+	new_node->name = ft_strndup(name, ft_strchr(name, '=') - name);
+	new_node->value = ft_strdup(value);
+	new_node->index = index;
+	new_node->next = NULL;
+	return (new_node);
+}
+
+void	add_env_node(t_env **head, t_env **current, t_env *new_node)
+{
+	if (!*head)
 	{
-		perror("Error al asignar memoria");
-		exit(EXIT_FAILURE);
+		*head = new_node;
+		*current = new_node;
 	}
-	new->value = strdup(path);
-	if (!new->value)
-	{
-		perror("Error al asignar memoria");
-		exit(EXIT_FAILURE);
-	}
-	new->index = 0;
-	new->next = NULL;
-	current = shell->env;
-	if (current)
-	{
-		if (current->name)
-			free(current->name);
-		if (current->value)
-			free(current->value);
-	}
-	current = shell->env;
-	if (!current)
-		shell->env = new;
 	else
 	{
-		while (current->next)
-			current = current->next;
-		current->next = new;
+		(*current)->next = new_node;
+		*current = new_node;
 	}
-	shell->env_count++;
 }
 
-void	add_oldpwd(t_data *shell)
+void	copy_env_to_data(t_data *data, char **envp)
 {
-	t_env	*aux;
-	t_env	*new;
-	int		exist;
-	char	current_dir[500];
-
-	getcwd(current_dir, 500);
-	aux = shell->env;
-	exist = 0;
-	while (aux)
-	{
-		if (!ft_strncmp(aux->name, "OLDPWD", ft_strlen("OLDPWD")))
-			exist = 1;
-		aux = aux->next;
-	}
-	if (!exist)
-	{
-		new = ft_calloc(1, sizeof(t_env));
-		new->name = ft_strdup("OLDPWD");
-		new->value = ft_strjoin("=", current_dir);
-		new->next = NULL;
-		add_newenv_back(&shell->env, new, NULL);
-	}
+	data->env = copy_env_to_list(envp, data);
 }

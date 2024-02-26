@@ -1,20 +1,15 @@
 #include "minishell.h"
 
-void	env_command(char **cmd, t_data *shell)
+void	env_command(t_data *shell)
 {
-	t_env	*current_env;
+	t_env	*head;
 
-	current_env = shell->env;
-	if (cmd[1])
+	head = shell->env;
+	while (head)
 	{
-		printf("\033[0;33mNo arguments supported\n\033[0m\n");
-		return ;
-	}
-	while (current_env)
-	{
-		if (current_env->value != NULL)
-			printf("%s=%s\n", current_env->name, current_env->value);
-		current_env = current_env->next;
+		if (head != NULL)
+			printf("%s=%s\n", head->name, head->value);
+		head = head->next;
 	}
 }
 
@@ -56,30 +51,30 @@ void	echo_command(char **str, int exists)
 
 void	unset_command(t_data *shell, char *name)
 {
-	t_env	*prov;
+	t_env	*aux;
 	t_env	*del;
 	t_env	*prev;
 
 	if (!name)
 		return ;
-	prov = shell->env;
+	aux = shell->env;
 	prev = NULL;
-	while (prov)
+	while (aux)
 	{
-		if (!ft_strncmp(prov->name, name, ft_strlen(name)))
+		if (strcmp(aux->name, name) == 0)
 		{
-			del = prov;
+			del = aux;
 			if (prev)
-				prev->next = prov->next;
+				prev->next = aux->next;
 			else
-				shell->env = prov->next;
+				shell->env = aux->next;
 			free(del->name);
 			free(del->value);
 			free(del);
-			break ;
+			return ;
 		}
-		prev = prov;
-		prov = prov->next;
+		prev = aux;
+		aux = aux->next;
 	}
 }
 
@@ -95,7 +90,10 @@ void	export_command(char **cmd, t_data *shell)
 		while (cmd[i])
 		{
 			if (check_args(cmd[i], cmd[0]))
+			{
+				printf("Exporting: %s\n", cmd[i]);
 				create_variable(cmd[i], shell);
+			}
 			i++;
 		}
 	}

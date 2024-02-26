@@ -25,7 +25,11 @@ void	redirect_output(t_process *process)
 {
 	int	flags;
 	int	fd;
+	int	outfile_fd;
+	int	outfile_a_fd;
 
+	outfile_fd = -1;
+	outfile_a_fd = -1;
 	fd = -1;
 	if (process->outfile != NULL || process->outfile_append != NULL)
 	{
@@ -33,35 +37,40 @@ void	redirect_output(t_process *process)
 		if (process->appendf == 1)
 		{
 			flags |= O_TRUNC;
-			fd = open(process->outfile, flags, 0666);
+			outfile_fd = open(process->outfile, flags, 0666);
 		}
 		else if (process->appendf == 2)
 		{
 			if (process->outfile != NULL)
-				fd = open(process->outfile, O_WRONLY
-						| O_CREAT | O_APPEND, 0666);
-			else
+				outfile_fd = open(process->outfile, O_WRONLY | O_CREAT, 0666);
+			flags |= O_APPEND;
+			outfile_a_fd = open(process->outfile_append, flags, 0666);
+		}
+		if (outfile_fd != -1 && outfile_a_fd != -1)
+		{
+			fd = outfile_a_fd;
+			if (access(process->outfile_append, F_OK) != -1)
+				fd = outfile_a_fd;
+		}
+		else if (outfile_fd != -1)
+			fd = outfile_fd;
+		else
+			fd = outfile_a_fd;
+		if (fd != -1)
+		{
+			if (dup2(fd, STDOUT_FILENO) == -1)
 			{
-				flags |= O_APPEND;
-				fd = open(process->outfile_append, flags, 0666);
+				perror("Error redirecting output");
+				exit(EXIT_FAILURE);
 			}
-		}
-		if (fd == -1)
-		{
-			perror("Error opening output file");
-			exit(EXIT_FAILURE);
-		}
-		if (dup2(fd, STDOUT_FILENO) == -1)
-		{
-			perror("Error redirecting output");
-			exit(EXIT_FAILURE);
+			close(fd);
 		}
 	}
-	if (fd != -1)
-		close(fd);
+	if (outfile_fd != -1)
+		close(outfile_fd);
+	if (outfile_a_fd != -1)
+		close(outfile_a_fd);
 }
-
-
 
 int	check_command_access(t_process *process)
 {
@@ -194,7 +203,7 @@ void	execute_local_command(t_process *process)
 	free(cwd);
 }
 
-int	main_executor(t_data *shell, char **env, t_process *process)
+int	main_executor(t_data *shell, t_process *process)
 {
 	if (!process)
 		exit(EXIT_FAILURE);
@@ -202,7 +211,7 @@ int	main_executor(t_data *shell, char **env, t_process *process)
 		execute_builtin(process, shell);
 	else if (!is_builtin(process, shell))
 	{
-		find_path(process, env);
+		find_path(process, shell);
 		printf("OUTFILE: %s\n", process->outfile);
 		printf("OUTFILE_APPEND: %s\n", process->outfile_append);
 		printf("OUTF: %d\n", process->outf);

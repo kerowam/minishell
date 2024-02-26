@@ -146,7 +146,7 @@ void	check_outfile(char *tmp_word, t_process *tmp_process)
 			//free_list (words_splited);
 			//Liberar listas
 			//Gestionar g_status
-			//return ;
+			return ;
 			//break ;
 		}
 		else
@@ -159,14 +159,14 @@ void	check_outfile(char *tmp_word, t_process *tmp_process)
 		//free_list (words_splited);
 		//Liberar listas
 		//Gestionar g_status
-		//return ;
+		return ;
 		//break ;
 	}
 	if (!(tmp_process->outfile))
 		tmp_process->outfile = ft_strdup(tmp_word);
 	else
 	{
-		file = open (tmp_process->outfile, O_WRONLY, 0644);
+		file = open (tmp_process->outfile, O_WRONLY | O_TRUNC, 0644);
 		if (file == -1)
 		{
 			perror ("minishell: Error opening filen\n");
@@ -174,12 +174,11 @@ void	check_outfile(char *tmp_word, t_process *tmp_process)
 			//free_list (words_splited);
 			//Liberar listas
 			//Gestionar g_status
-			//return ;
+			return ;
 			//break ;
 		}
 		else
 		{
-			write (file, "", 1); //Comprobar que funciona
 			close (file);
 			tmp_process->outfile = ft_strdup(tmp_word);
 		}
@@ -213,7 +212,7 @@ void	check_outfile_append(char *tmp_word, t_process *tmp_process)
 		//free_list (words_splited);
 		//Liberar listas
 		//Gestionar g_status
-		//return ;
+		return ;
 		//break ;
 	}
 	free(tmp_process->outfile_append);
