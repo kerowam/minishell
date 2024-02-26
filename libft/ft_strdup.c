@@ -19,6 +19,11 @@ char	*ft_strdup(const char *s1)
 	int		i;
 
 	ptr = (char *)malloc(ft_strlen(s1) + 1);
+	if (!ptr)
+	{
+		printf("Error: ft_strdup malloc failed\n");
+		return (0);
+	}
 	i = 0;
 	if (!ptr)
 		return (0);

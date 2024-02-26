@@ -39,6 +39,11 @@ int	split_pipe_3(char *tmp_word, int i, t_list **pipes_splited)
 	{
 		pipe_index = get_pipe_index(tmp_word, i);
 		tmp_split = get_tmp_split(pipe_index, tmp_word, i);
+		if (tmp_split == NULL)
+		{
+			printf("16.1. tmp_split= %s\n", tmp_split);
+			return (-1);
+		}
 		ft_lstadd_back(pipes_splited, ft_lstnew(tmp_split));
 		//insert_node(pipes_splited, tmp_split);
 		i = pipe_index;
@@ -55,7 +60,7 @@ void	split_pipe(t_list *list, int i, t_list **pipes_splited)
 	tmp_word = ft_strdup(list->content); //
 	//tmp_split = NULL;
 	//splits = 0;
-	while (tmp_word[i])
+	while (tmp_word[i] && i >= 0)
 	{
 		if (i == 0)
 			i = split_pipe_2(i, tmp_word, pipes_splited);
@@ -100,6 +105,11 @@ void	split_pipes(t_list **list, t_list **pipes_splited)
 	//int		splits;
 
 	tmp = (t_list **)malloc(sizeof(t_list *));
+	if (!tmp)
+	{
+		put_error(MEMPROBLEM, 1);
+		return ;
+	}
 	init_list(pipes_splited);
 	*tmp = *list;
 	printf("17.split_pipes tmp pointer = %p\n", tmp);
@@ -109,7 +119,7 @@ void	split_pipes(t_list **list, t_list **pipes_splited)
 		handle_pipes(tmp, 0, pipes_splited);
 		//while (splits >=  0)
 		//{
-			if ((*tmp)->next)
+			if ((*tmp)->next != NULL && (*tmp)->next->content != NULL)
 				*tmp = (*tmp)->next;
 			else
 				*tmp = NULL;
