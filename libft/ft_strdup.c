@@ -22,11 +22,11 @@ char	*ft_strdup(const char *s1)
 	if (!ptr)
 	{
 		printf("Error: ft_strdup malloc failed\n");
-		return (0);
+		return (NULL);
 	}
 	i = 0;
 	if (!ptr)
-		return (0);
+		return (NULL);
 	while (s1[i] != '\0')
 	{
 		ptr[i] = s1[i];

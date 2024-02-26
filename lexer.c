@@ -66,7 +66,7 @@ t_list	**lexer(t_data *shell, t_list **words_splited)
 	split_pipes(words_splited, pipes_splited);
 	//free_list(pipes_splited);
 	pipes_splited = split_redirections(pipes_splited, redir_splited);
-	//expander(shell->env, pipes_splited);
-	//quot_cleaner(pipes_splited);
-	return (pipes_splited);
+	expander(shell->env, redir_splited);
+	quot_cleaner(redir_splited);
+	return (redir_splited);
 }
