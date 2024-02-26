@@ -207,11 +207,6 @@ void	clean_str_quot(char *str, t_list **list);
 void	parse(t_process *process, t_list **words_splited);
 
 //executor.c
-void	redirect_input(t_process *process);
-void	redirect_output(t_process *process);
-void	redirect_output_append(t_process *process);
-void	redirect_input_output(t_process *process);
-void	execute_local_command(t_process *process);
 int		check_command_access(t_process *process);
 int		main_executor(t_data *shell, t_process *process);
 
@@ -231,5 +226,13 @@ char	*obtain_env_value(char *fullenv);
 
 //utils3.c
 int		ft_strcmp(char *s1, char *s2);
+
+//executor_utils2.c
+int		execute_local_command(t_process *process);
+
+//redirections.c
+void    redirect_infile(t_process *process);
+void	redirect_outfile(t_process *process);
+void	redirect_outfile_append(t_process *process);
 
 #endif

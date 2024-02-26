@@ -32,22 +32,11 @@ int	find_path(t_process *process, t_data *shell)
 			free(process->path_env);
 			free_string_array(process->env);
 			process->path_env = ft_strdup(current_env->value);
-			if (!process->path_env)
-			{
-				perror("Error al duplicar la cadena");
-				return (EXIT_FAILURE);
-			}
 			process->env = ft_split(process->path_env, ':');
-			if (!process->env)
+			if (!process->env || !process->path_env)
 			{
-				perror("Error al dividir la cadena");
+				perror("Error al dividir o duplicar la cadena");
 				return (EXIT_FAILURE);
-			}
-			int j = 0;
-			while (process->env[j] != NULL)
-			{
-				printf("Resultados de ft_split: %d: %s\n", j, process->env[j]);
-				j++;
 			}
 			return (EXIT_SUCCESS);
 		}
@@ -61,6 +50,7 @@ void	execute_builtin(t_process *process, t_data *shell)
 	if (ft_strncmp(shell->echo[0], "exit\0", 5) == 0
 		|| ft_strncmp(shell->echo[0], "EXIT\0", 5) == 0)
 	{
+		printf("exit\n");
 		free(shell->line);
 		exit(EXIT_FAILURE);
 	}

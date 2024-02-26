@@ -24,7 +24,9 @@ SRCS = main.c\
 		executor.c\
 		utils2.c\
 		executor_utils.c\
-		utils3.c
+		utils3.c\
+		executor_utils2.c\
+		redirections.c
 
 CC = gcc
 
