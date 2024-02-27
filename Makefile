@@ -26,7 +26,8 @@ SRCS = main.c\
 		executor_utils.c\
 		utils3.c\
 		executor_utils2.c\
-		redirections.c
+		redirections.c\
+		here_doc.c
 
 CC = gcc
 

@@ -80,6 +80,8 @@ bool	is_builtin(t_process *process, t_data *shell)
 	char	*trimmed_command;
 
 	trimmed_command = ft_strtrim(shell->line, " \t\n\r\f\v");
+	if (!process->command)
+		return (false);
 	is_builtin_command = false;
 	if (ft_strcmp(process->command, "exit") == 0
 		|| ft_strcmp(process->command, "EXIT") == 0

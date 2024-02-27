@@ -75,15 +75,15 @@ int	check_redir(char *tmp_word)
 		|| ft_strncmp(tmp_word, "<", 2) == 0)
 	{
 		if (ft_strncmp(tmp_word, "|", 2) == 0)
-			perror("minishell: syntax error near unexpected token `|'\n");
+			perror("minishell: syntax error near unexpected token `|'");
 		else if (ft_strncmp(tmp_word, ">", 2) == 0)
-			perror("minishell: syntax error near unexpected token `>'\n");
+			perror("minishell: syntax error near unexpected token `>'");
 		else if (ft_strncmp(tmp_word, ">>", 3) == 0)
-			perror("minishell: syntax error near unexpected token `>>'\n");
+			perror("minishell: syntax error near unexpected token `>>'");
 		else if (ft_strncmp(tmp_word, "<<", 3) == 0)
-			perror("minishell: syntax error near unexpected token `<<'\n");
+			perror("minishell: syntax error near unexpected token `<<'");
 		else if (ft_strncmp(tmp_word, "<", 2) == 0)
-			perror("minishell: syntax error near unexpected token `<'\n");
+			perror("minishell: syntax error near unexpected token `<'");
 		//free (tmp);
 		//free_list (words_splited);
 		//Liberar listas
@@ -288,24 +288,40 @@ void	parse(t_process *process, t_list **words_splited)
 		}
 		else if (ft_strncmp(tmp_word, "<<", 3) == 0)
 		{
-			if ((*tmp)->next)
-				(*tmp) = (*tmp)->next;
+			if (!(*tmp)->next)
+			{
+				tmp_word = ft_strdup((*tmp)->content);
+				if (check_redir(tmp_word) == 0)
+				{
+					if (!(tmp_process->here_doc))
+						tmp_process->here_doc = ft_lstnew(ft_strdup(tmp_word));
+					else
+						ft_lstadd_back(&tmp_process->here_doc, ft_lstnew(ft_strdup(tmp_word)));
+				}
+			}
 			else
 			{
-				perror("minishell: syntax error near unexpected token `newline'\n");
-				//free (tmp);
-				//free_list (words_splited);
-				//Liberar listas
-				//Gestionar g_status
-				return ;
-			}
-			tmp_word = ft_strdup((*tmp)->content);
-			if (check_redir(tmp_word) == 0)
-			{
-				if (!(tmp_process->here_doc))
-					tmp_process->here_doc = ft_lstnew(ft_strdup(tmp_word));
+				if ((*tmp)->next)
+				{
+					(*tmp) = (*tmp)->next;
+					tmp_word = ft_strdup((*tmp)->content);
+					if (check_redir(tmp_word) == 0)
+					{
+						if (!(tmp_process->here_doc))
+							tmp_process->here_doc = ft_lstnew(ft_strdup(tmp_word));
+						else
+							ft_lstadd_back(&tmp_process->here_doc, ft_lstnew(ft_strdup(tmp_word)));
+					}
+				}
 				else
-					ft_lstadd_back(&tmp_process->here_doc, ft_lstnew(ft_strdup(tmp_word)));
+				{
+					perror("minishell: syntax error near unexpected token `newline'\n");
+					//free (tmp);
+					//free_list (words_splited);
+					//Liberar listas
+					//Gestionar g_status
+					return ;
+				}
 			}
 		}
 		else if (ft_strncmp(tmp_word, "|", 2) == 0)

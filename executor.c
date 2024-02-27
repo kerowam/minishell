@@ -25,8 +25,6 @@ int	check_command_access(t_process *process)
 		full_path = ft_strjoin(temp, process->command);
 		if (access(full_path, F_OK | X_OK) != -1)
 		{
-			printf("INFILE: %s\n", process->infile);
-			printf("COMMAND: %s\n", process->command);
 			redirect_outfile_append(process);
 			redirect_outfile(process);
 			cmd_argv[0] = ft_strdup(process->command);
@@ -84,10 +82,25 @@ int	main_executor(t_data *shell, t_process *process)
 		execute_builtin(process, shell);
 	else if (!is_builtin(process, shell))
 	{
+		if (!process->command)
+		{
+			if (!process->here_doc)
+				return (EXIT_FAILURE);
+			else
+				handle_heredoc(process);
+		}
 		find_path(process, shell);
-		check_command_access(process);
-		if (ft_strncmp(process->command, "clear", 5) == 0)
-			printf("\033[H\033[J");
+		if (!check_command_access(process) && process->command
+			&& !(starts_with_dot_slash(process->command)))
+		{
+			printf("zsh: command not found: %s\n", process->command);
+			return (EXIT_FAILURE);
+		}
+		if (process->command)
+		{
+			if (ft_strncmp(process->command, "clear", 5) == 0)
+				printf("\033[H\033[J");
+		}
 		if (starts_with_dot_slash(process->command))
 			execute_local_command(process);
 		return (EXIT_SUCCESS);

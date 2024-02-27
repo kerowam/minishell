@@ -1,64 +1,62 @@
 #include "minishell.h"
 
-static char	*prepare_local_command(t_process *process)
+static void	prepare_command_arguments(t_process *process, char ***cmd_argv)
 {
-	char	*full_path;
-	char	*cwd;
+	t_list	*current;
+	int		j;
 
-	cwd = getcwd(NULL, 0);
-	if (!cwd)
+	*cmd_argv = malloc((ft_lstsize(process->argv) + 2) * sizeof(char *));
+	if (!*cmd_argv)
 	{
-		perror("Error getting current working directory");
-		return (NULL);
+		perror("Error al asignar memoria para cmd_argv");
+		exit(EXIT_FAILURE);
 	}
-	full_path = malloc(sizeof(char) * (ft_strlen(cwd) + 1
-				+ ft_strlen(process->command) + 1));
-	if (!full_path)
+	(*cmd_argv)[0] = ft_strdup(process->command);
+	current = process->argv;
+	j = 1;
+	while (current)
 	{
-		perror("Error allocating memory for full path");
-		free(cwd);
-		return (NULL);
+		(*cmd_argv)[j] = ft_strdup(current->content);
+		current = current->next;
+		j++;
 	}
-	ft_strlcpy(full_path, cwd, sizeof(full_path));
-	ft_strlcat(full_path, "/", sizeof(full_path));
-	ft_strlcat(full_path, process->command, sizeof(full_path));
-	free(cwd);
-	return (full_path);
+	(*cmd_argv)[j] = NULL;
 }
 
-static int	execute_prepared_command(t_process *process, char *full_path)
+static void	execute_child_process(t_process *process,
+		char *full_path, char **cmd_argv)
 {
-	if (access(full_path, F_OK | X_OK) == -1)
-	{
-		printf("Error: command '%s' not found or not executable\n",
-			process->command);
-		return (-1);
-	}
 	process->pid = fork();
 	if (process->pid == -1)
 	{
-		perror("Error creating child process");
-		return (-1);
+		perror("Error al crear el proceso hijo");
+		exit(EXIT_FAILURE);
 	}
-	if (process->pid == 0)
+	else if (process->pid == 0)
 	{
-		execve(full_path, process->args, process->env);
-		perror("Error executing command");
+		execve(full_path, cmd_argv, process->env);
+		perror("Error al ejecutar el comando\n");
 		exit(EXIT_FAILURE);
 	}
 	waitpid(process->pid, &process->status, 0);
-	return (0);
+	free(cmd_argv);
 }
 
-int	execute_local_command(t_process *process)
+void	execute_local_command(t_process *process)
 {
-	int		result;
-	char	*full_path;
+	char	full_path[1000];
+	char	*cwd;
+	char	**cmd_argv;
 
-	full_path = prepare_local_command(process);
-	if (!full_path)
-		return (-1);
-	result = execute_prepared_command(process, full_path);
-	free(full_path);
-	return (result);
+	cwd = getcwd(NULL, 0);
+	ft_strlcpy(full_path, cwd, sizeof(full_path));
+	ft_strlcat(full_path, "/", sizeof(full_path));
+	ft_strlcat(full_path, process->command, sizeof(full_path));
+	if (access(full_path, F_OK | X_OK) != -1)
+	{
+		prepare_command_arguments(process, &cmd_argv);
+		execute_child_process(process, full_path, cmd_argv);
+		return ;
+	}
+	free(cwd);
 }

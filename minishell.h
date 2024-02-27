@@ -82,12 +82,14 @@ typedef struct s_process
 	int					appendf;
 	char				*outfile_append;
 	t_list				*here_doc;
+	int					heredoc_active;
 	int					stderr;//??
 	int					completed;//????
 	int					stopped;//????
 	int					status;
 	char				**env;
 	char				*path_env;
+	char				*here_doc_line;
 }				t_process;
 
 enum	e_error
@@ -226,13 +228,17 @@ char	*obtain_env_value(char *fullenv);
 
 //utils3.c
 int		ft_strcmp(char *s1, char *s2);
+int		ft_strends(const char *str, const char *end);
 
 //executor_utils2.c
-int		execute_local_command(t_process *process);
+void	execute_local_command(t_process *process);
 
 //redirections.c
-void    redirect_infile(t_process *process);
+void	redirect_infile(t_process *process);
 void	redirect_outfile(t_process *process);
 void	redirect_outfile_append(t_process *process);
+
+//here_doc.c
+int		handle_heredoc(t_process *process);
 
 #endif
