@@ -28,8 +28,10 @@ SRCS = main.c\
 		utils3.c\
 		executor_utils2.c\
 		redirections.c\
-		here_doc.c
+		here_doc.c\
 		free.c\
+		parser_utils.c\
+		parser_utils2.c\
 
 CC = gcc
 

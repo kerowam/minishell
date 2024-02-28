@@ -7,7 +7,7 @@ void	free_string_array(char **array)
 	if (!array)
 		return ;
 	i = 0;
-	while (array[i])
+	while (array[i] != NULL)
 	{
 		free(array[i]);
 		i++;
@@ -29,8 +29,8 @@ int	find_path(t_process *process, t_data *shell)
 	{
 		if (ft_strncmp(current_env->name, "PATH", 4) == 0)
 		{
-			free(process->path_env);
-			free_string_array(process->env);
+			//free(process->path_env);
+			//free_string_array(process->env);
 			process->path_env = ft_strdup(current_env->value);
 			process->env = ft_split(process->path_env, ':');
 			if (!process->env || !process->path_env)

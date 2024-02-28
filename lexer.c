@@ -14,7 +14,13 @@ static int	len_split(char *line, int i)
 
 void	init_list(t_list **list)
 {
-	*list = (t_list *)malloc(sizeof(t_list));
+	*list = (t_list *)ft_calloc(0, sizeof(t_list));
+	if (!*list)
+	{
+		perror("Error allocating memory for list");
+		//gestionar error.
+		return ;
+	}
 	(*list)->content = NULL;
 	(*list)->next = NULL;
 }
@@ -52,9 +58,9 @@ t_list	**lexer(t_data *shell, t_list **words_splited)
 	t_list	**pipes_splited;
 	t_list	**redir_splited;
 
-	pipes_splited = (t_list **)malloc(sizeof(t_list *));
-	redir_splited = (t_list **)malloc(sizeof(t_list *));
-	line = (char *)malloc(sizeof(char) * (ft_strlen(shell->line) + 1));
+	pipes_splited = (t_list **)ft_calloc(0, sizeof(t_list *));
+	redir_splited = (t_list **)ft_calloc(0, sizeof(t_list *));
+	line = (char *)ft_calloc(0, sizeof(char) * (ft_strlen(shell->line) + 1));
 	line = ft_strdup(shell->line);
 	printf("22.lexer line pointer = %p\n", line);
 	printf("22.1 shell->line pointer = %p\n", shell->line);	

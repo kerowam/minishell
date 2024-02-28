@@ -35,11 +35,23 @@ void	free_echo(char **str)
 	}
 }
 
+void	free_list_p(t_list **tmp)
+{
+	t_list	**next;
+
+	while (*tmp)
+	{
+		next = &(*tmp)->next;
+		if (*tmp)
+			free(*tmp);
+		*tmp = *next;
+	}
+}
+
 void	free_list(t_list **list)
 {
 	t_list	**tmp;
 	t_list	**next;
-	//char	*content;
 
 	tmp = list;
 	while (tmp)
@@ -48,28 +60,16 @@ void	free_list(t_list **list)
 			next = &(*tmp)->next;
 		else
 			next = NULL;
-		//content = ft_strdup(tmp->content);
 		if ((*tmp)->content)
 		{
 			printf("freeing content: %s\n", (*tmp)->content);
 			//getchar();
 			free((*tmp)->content);
 		}
-		/*if (*tmp)
-			free(*tmp);*/
 		tmp = next;
-		//free (content);
 	}
-		/*if (*tmp)
-			free(*tmp);*/
 	tmp = list;
-	while (*tmp)
-	{
-		next = &(*tmp)->next;
-		if (*tmp)
-			free(*tmp);
-		*tmp = *next;
-	}
+	free_list_p(tmp);
 	if (tmp)
 		free(tmp);
 	*list = NULL;

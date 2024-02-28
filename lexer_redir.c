@@ -97,12 +97,11 @@ void	handle_redirections(t_list **list, int i, t_list **redir_splited)
 	len = ft_strlen(tmp_word);
 	n_redirections = get_redirection_nbr(tmp_word, i);
 	if (len > 0 && n_redirections > 0)
-	{
 		split_redirection(*list, i, redir_splited);
-	}
 	else if (len > 0)
 		ft_lstadd_back(redir_splited, ft_lstnew(tmp_word));
-	free(tmp_word);
+	if (tmp_word)
+		free(tmp_word);
 	tmp_word = NULL;
 	return ;
 }
@@ -111,13 +110,10 @@ t_list	**split_redirections(t_list **list, t_list **redir_splited)
 {
 	t_list	**tmp;
 
-	tmp = (t_list **)malloc(sizeof(t_list *));
-	/*if (!tmp)
-	{
-		put_error(MEMPROBLEM, 1);
-		return (NULL);
-	}*/
+	tmp = (t_list **)ft_calloc(0, sizeof(t_list *));
 	init_list(redir_splited);
+	if (tmp == NULL)
+		return (NULL);
 	*tmp = *list;
 	printf("18.split_redirections tmp pointer = %p\n", tmp);
 	if (!tmp)
@@ -129,12 +125,11 @@ t_list	**split_redirections(t_list **list, t_list **redir_splited)
 	while (*tmp != NULL)
 	{
 		handle_redirections(tmp, 0, redir_splited);
-		if ((*tmp)->next != NULL && (*tmp)->next->content != NULL && (*tmp)->next->content[0] != '\0')
+		if ((*tmp)->next != NULL && (*tmp)->next->content != NULL
+			&& (*tmp)->next->content[0] != '\0')
 			*tmp = (*tmp)->next;
 		else
 			*tmp = NULL;
 	}
-	//tmp = list;
-	//free (tmp);
 	return (redir_splited);
 }

@@ -191,6 +191,7 @@ void	clean_str_quot(char *str, t_list **list);
 
 //parser.c
 void	parse(t_process *process, t_list **words_splited);
+void	init_process(t_process *process);
 
 //executor.c
 int		check_command_access(t_process *process);
@@ -237,5 +238,18 @@ void	free_echo(char **str);
 void	free_list(t_list **list);
 void	free_env_list(t_env *env);
 void	free_process(t_process *process);
+
+//parser_utils.c
+void	init_process(t_process *process);
+int		ft_lstsize(t_list *lst);
+char	**list_to_array(t_list *list);
+int		check_redir(char *tmp_word);
+
+//parser_utils2.c
+void	check_pipe(char *tmp_word);
+void	check_infile(char *tmp_word, t_process *tmp_process);
+int		check_access_outfile(char *tmp_word);
+void	check_outfile(char *tmp_word, t_process *tmp_process);
+void	check_outfile_append(char *tmp_word, t_process *tmp_process);
 
 #endif

@@ -1,7 +1,7 @@
 
 #include "minishell.h"
 
-/*void	ft_header(void)
+void	ft_header(void)
 {
 	printf("\n");
 	printf("               ╔╗ ╔╦═══╗ \n");
@@ -17,7 +17,7 @@
 	printf("   ║║║║║╠╣╠╣║ ║║╠╣╠╣╚═╝║║ ║║╚══╣╚═╝║╚═╝║ \n");
 	printf("   ╚╝╚╝╚╩══╩╝ ╚═╩══╩═══╩╝ ╚╩═══╩═══╩═══╝ \n");
 	printf("\n");
-}*/
+}
 /*
 void	initialize_minishell(t_data **shell, char **env)
 {
@@ -136,6 +136,7 @@ void	start_minishell(t_data *shell, char **env)
 	t_list		**words_splited;
 	t_process	*process;
 
+	(void)env;
 	while (1)
 	{
 		words_splited = (t_list **)malloc(sizeof(t_list *));

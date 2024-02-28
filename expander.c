@@ -103,13 +103,15 @@ void	expander(t_env *env, t_list **line_splited)
 	t_list	**tmp_list;
 	char	*tmp_str;
 
-	tmp_env = (t_env *)malloc(sizeof(t_env));
-	*tmp_env = *env;
+	tmp_env = (t_env *)ft_calloc(0, sizeof(t_env));
+	if (tmp_env == NULL)
+		return ;
+	tmp_env = env;
 	printf("11.tmp_env pointer: %p\n", tmp_env);
-	tmp_list = (t_list **)malloc(sizeof(t_list *));
+	tmp_list = (t_list **)ft_calloc(0, sizeof(t_list *)); //Añadir gestión de errores cuando falla malloc en ft_calloc
 	*tmp_list = *line_splited;
 	printf("12.tmp_list pointer: %p\n", tmp_list);
-	while (*tmp_list)
+	while (*tmp_list != NULL)
 	{
 		tmp_str = ft_strdup((*tmp_list)->content);
 		if (ft_strchr(tmp_str, '$') != 0)
@@ -117,12 +119,11 @@ void	expander(t_env *env, t_list **line_splited)
 		if ((*tmp_list)->next)
 			*tmp_list = (*tmp_list)->next;
 		else
-			break ;
+			*tmp_list = NULL;
 	}
-	if (tmp_env)
-		free (tmp_env);
-	//*tmp_list = *line_splited;
-	if (tmp_list)
+	/*if (tmp_env != NULL)
+		free (tmp_env);*/
+	if (tmp_list != NULL)
 		free (tmp_list);
 	if (tmp_str)
 		free (tmp_str);
