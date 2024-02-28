@@ -23,8 +23,8 @@
 # define CYAN		"\x1B[36m"
 # define WHITE		"\x1B[37m"
 
-# define Q		'\''
-# define D_Q	'\"'
+# define Q			'\''
+# define DQ			'\"'
 
 int		g_exit_status;
 
@@ -52,21 +52,6 @@ typedef struct s_data
 	t_env	*temp_export;
 }				t_data;
 
-//Para
-/*typedef struct	s_process
-{
-	//struct	t_process	*next;
-	t_list				*flags;
-	t_list				*argv;
-	//char				**argv;//Así o solo con 1 *???
-	//pid_t				pid;
-	char				token;//?????
-	int					completed;//?????
-	int					stopped;//?????
-	int					status;//????
-}				t_process;*/
-
-//Cada trabajo representa un proceso (Todo lo que hay dentro de un pipe)
 typedef struct s_process
 {
 	struct s_process	*next_process;
@@ -76,7 +61,7 @@ typedef struct s_process
 	char				**args;
 	pid_t				pid;//
 	char				*infile;
-	int					inf;//
+	int					in_fd;//
 	char				*outfile;
 	int					outf;//
 	int					appendf;
@@ -149,8 +134,6 @@ int		main(int argc, char **argv, char **env);
 void	ft_leaks(void);
 
 //utils.c
-void	free_temp(char **temp);
-void	free_echo(char **str);
 void	env_add_back(t_env **root, t_env *new);
 void	free_list(t_list **list);
 
@@ -166,12 +149,13 @@ char	set_in_quot(char *line, int i);
 
 //lexer.c
 void	create_line_splited(char *line, t_list **list);
-void	lexer(t_data *shell, t_list **words_splited);
+t_list	**lexer(t_data *shell, t_list **words_splited);
+void	init_list(t_list **list);
 
 //lexer_pipes.c
-void	split_pipes(t_list **list);
-void	split_pipe(t_list *list, int i);
-void	handle_pipes(t_list **list, int i);
+void	split_pipes(t_list **list, t_list **pipes_splited);
+void    split_pipe(t_list *list, int i, t_list **pipes_splited);
+void    handle_pipes(t_list **list, int i, t_list **pipes_splited);
 
 //lexer_utils.c
 void	insert_node(t_list **list, char *content);
@@ -184,12 +168,12 @@ int		get_pipe_nbr(char *line, int i);
 int		get_pipe_index(char *line, int i);
 
 //lexer_redir.c
-void	split_redirections(t_list **list);
+t_list	**split_redirections(t_list **list, t_list **redir_splited);
 
 //lexer_redir_utils.c
 int		get_redir_index(char *line, int i);
-int		insert_redirs(char redir, t_list *list, char *tmp_word, int i);
-void	set_redir(t_list *list, char redir, char *tmp_word, int i);
+int		insert_redirs(char redir, t_list **list, char *tmp_word, int i);
+void	set_redir(t_list **list, char redir, char *tmp_word, int i);
 int		get_redirection_nbr(char *line, int i);
 
 //expander.c
@@ -211,6 +195,8 @@ void	parse(t_process *process, t_list **words_splited);
 //executor.c
 int		check_command_access(t_process *process);
 int		main_executor(t_data *shell, t_process *process);
+void	handle_redirections_and_pipes(t_process *process);
+void	execute_local_command(t_process *process);
 
 //executor_utils.c
 void	free_string_array(char **array);
@@ -240,5 +226,16 @@ void	redirect_outfile_append(t_process *process);
 
 //here_doc.c
 int		handle_heredoc(t_process *process);
+//void 	print_environment(t_env *env);
+
+//error.c
+void	put_error(int error_tipe, int error_code);
+
+//free.c
+void	free_temp(char **temp);
+void	free_echo(char **str);
+void	free_list(t_list **list);
+void	free_env_list(t_env *env);
+void	free_process(t_process *process);
 
 #endif

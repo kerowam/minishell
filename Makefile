@@ -21,13 +21,15 @@ SRCS = main.c\
 		expander_utils.c\
 		quotes.c\
 		quote_cleaner.c\
+		error.c\
 		executor.c\
 		utils2.c\
 		executor_utils.c\
 		utils3.c\
 		executor_utils2.c\
 		redirections.c\
-		here_doc.c
+		here_doc.c\
+		free.c\
 
 CC = gcc
 

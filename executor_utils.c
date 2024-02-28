@@ -51,6 +51,7 @@ void	execute_builtin(t_process *process, t_data *shell)
 		|| ft_strncmp(shell->echo[0], "EXIT\0", 5) == 0)
 	{
 		printf("exit\n");
+		free(shell->echo);
 		free(shell->line);
 		exit(EXIT_FAILURE);
 	}
