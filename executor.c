@@ -38,13 +38,34 @@ static void	setup_command_and_redirects(t_process *process, char **cmd_argv,
 	cmd_argv[*j] = NULL;
 }
 
+static void	execute_single_command(t_process *process, char *full_path,
+	char **cmd_argv, int original_stdout)
+{
+	int	j;
+	int	k;
+
+	setup_command_and_redirects(process, cmd_argv, &j);
+	execute_command(process, full_path, cmd_argv);
+	if (ft_strcmp(process->command, "cat") == 0)
+		printf("\n");
+	dup2(original_stdout, STDOUT_FILENO);
+	close(original_stdout);
+	free(full_path);
+	k = 0;
+	while (cmd_argv[k] != NULL)
+	{
+		free(cmd_argv[k]);
+		k++;
+	}
+	free(cmd_argv);
+}
+
 int	check_command_access(t_process *process)
 {
 	int		i;
 	char	*full_path;
 	char	*temp;
 	char	**cmd_argv;
-	int		j;
 	int		k;
 	int		original_stdout;
 
@@ -60,29 +81,20 @@ int	check_command_access(t_process *process)
 	{
 		temp = ft_strjoin(process->env[i], "/");
 		full_path = ft_strjoin(temp, process->command);
-		if (access(full_path, F_OK | X_OK) != -1)
+		if (!process->next_process)
 		{
-			setup_command_and_redirects(process, cmd_argv, &j);
-			execute_command(process, full_path, cmd_argv);
-			if (ft_strcmp(process->command, "cat") == 0)
-				printf("\n");
-			dup2(original_stdout, STDOUT_FILENO);
-			close(original_stdout);
-			free(temp);
-			free(full_path);
-			k = 0;
-			while (cmd_argv[k] != NULL)
+			if (access(full_path, F_OK | X_OK) != -1)
 			{
-				free(cmd_argv[k]);
-				k++;
+				execute_single_command(process, full_path,
+					cmd_argv, original_stdout);
+				free(temp);
+				return (1);
 			}
-			free(cmd_argv);
-			return (1);
-		}
-		else
-		{
-			free(temp);
-			free(full_path);
+			else
+			{
+				free(temp),
+				free(full_path);
+			}
 		}
 		i++;
 	}

@@ -30,6 +30,7 @@ SRCS = main.c\
 		redirections.c\
 		here_doc.c\
 		free.c\
+		here_doc_utils.c
 
 CC = gcc
 

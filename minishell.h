@@ -226,7 +226,6 @@ void	redirect_outfile_append(t_process *process);
 
 //here_doc.c
 int		handle_heredoc(t_process *process);
-//void 	print_environment(t_env *env);
 
 //error.c
 void	put_error(int error_tipe, int error_code);
@@ -237,5 +236,12 @@ void	free_echo(char **str);
 void	free_list(t_list **list);
 void	free_env_list(t_env *env);
 void	free_process(t_process *process);
+
+//here_doc_utils.c
+int		create_temp_file(const char *filename);
+void	read_lines_until_delimiter(int fd, const char *delimiter);
+int		open_temp_file_read(const char *filename);
+void	write_temp_file_to_pipe(int fd_pipe, int fd_temp);
+void	free_argv(char **argv);
 
 #endif
