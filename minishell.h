@@ -253,4 +253,11 @@ int		check_access_outfile(char *tmp_word);
 void	check_outfile(char *tmp_word, t_process *tmp_process);
 void	check_outfile_append(char *tmp_word, t_process *tmp_process);
 
+//here_doc_utils.c
+int		create_temp_file(const char *filename);
+void	read_lines_until_delimiter(int fd, const char *delimiter);
+int		open_temp_file_read(const char *filename);
+void	write_temp_file_to_pipe(int fd_pipe, int fd_temp);
+void	free_argv(char **argv);
+
 #endif

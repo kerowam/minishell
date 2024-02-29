@@ -1,7 +1,5 @@
 #include "minishell.h"
 
-#include "minishell.h"
-
 void	only_export(t_data *shell)
 {
 	t_env	*current;
