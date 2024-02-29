@@ -17,7 +17,7 @@ void	handle_redirection(t_list **tmp, t_process *tmp_process,
 		else if (ft_strncmp(*tmp_word, "<<", 3) == 0)
 		{
 			if (!(tmp_process->here_doc))
-				tmp_process->here_doc = ft_lstnew(ft_strdup(tmp_word_next));
+				tmp_process->here_doc = ft_lstnew(tmp_word_next); //CAMBIADO
 			else
 				ft_lstadd_back(&tmp_process->here_doc,
 					ft_lstnew(tmp_word_next));
@@ -101,7 +101,11 @@ void	parse(t_process *process, t_list **words_splited)
 		else
 			handle_command(tmp_process, &tmp_word);
 		if (tmp->next != NULL)
+		{
 			tmp = tmp->next;
+			if (tmp_word)
+				free(tmp_word);
+		}
 		else
 		{
 			(*tmp_process)->args = list_to_array((*tmp_process)->argv);

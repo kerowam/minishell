@@ -104,15 +104,21 @@ void	free_process(t_process *process)
 	{
 		next = tmp->next_process;
 		if (tmp->command)
+		{
 			free(tmp->command);
+			//tmp->command = NULL;
+		}
 		if (tmp->argv)
 			free_list(&tmp->argv);
 		if (tmp->infile)
 			free(tmp->infile);
+		//tmp->infile = NULL;
 		if (tmp->outfile)
 			free(tmp->outfile);
+		//tmp->outfile = NULL;
 		if (tmp->outfile_append)
 			free(tmp->outfile_append);
+		//tmp->outfile_append = NULL;
 		if (tmp->here_doc)
 			free_list(&tmp->here_doc);
 		if (tmp->args)

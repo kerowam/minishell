@@ -46,6 +46,7 @@ int	split_pipe_3(char *tmp_word, int i, t_list **pipes_splited)
 		}
 		ft_lstadd_back(pipes_splited, ft_lstnew(tmp_split));
 		//insert_node(pipes_splited, tmp_split);
+		free(tmp_split); //CAMBIADO
 		i = pipe_index;
 	}
 	return (i);
@@ -126,6 +127,6 @@ void	split_pipes(t_list **list, t_list **pipes_splited)
 			//break ;
 	}
 	//*tmp = *list;
-	//free(tmp);
+	free(tmp);  //CAMBIADO
 	return ;
 }

@@ -70,6 +70,7 @@ t_list	**lexer(t_data *shell, t_list **words_splited)
 	//line = NULL;
 	//free (&line);
 	split_pipes(words_splited, pipes_splited);
+	free(words_splited);                         /////CAMBIADO
 	split_redirections(pipes_splited, redir_splited);
 	expander(shell->env, redir_splited);
 	quot_cleaner(redir_splited);
