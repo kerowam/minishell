@@ -80,7 +80,10 @@ int	check_command_access(t_process *process)
 			return (1);
 		}
 		else
+		{
+			free(temp);
 			free(full_path);
+		}
 		i++;
 	}
 	k = 0;
@@ -116,6 +119,8 @@ int	main_executor(t_data *shell, t_process *process)
 			&& !(starts_with_dot_slash(process->command)))
 		{
 			printf("zsh: command not found: %s\n", process->command);
+			free(process->path_env);
+			free_string_array(process->env);
 			return (EXIT_FAILURE);
 		}
 		if (process->command)
@@ -124,7 +129,11 @@ int	main_executor(t_data *shell, t_process *process)
 				printf("\033[H\033[J");
 		}
 		if (starts_with_dot_slash(process->command))
+		{
 			execute_local_command(process);
+			return (EXIT_SUCCESS);
+		}
+		free(process->path_env);
 		free_string_array(process->env);
 		return (EXIT_SUCCESS);
 	}

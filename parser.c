@@ -75,6 +75,7 @@ int	check_redir(char *tmp_word)
 		//free_list (words_splited);
 		//Liberar listas
 		//Gestionar g_status
+		//free(tmp_word);
 		return (1);
 	}
 	return (0);
@@ -326,7 +327,7 @@ void	parse(t_process *process, t_list **words_splited)
 				}
 			}
 			//if (tmp_word)
-			//	free (tmp_word);
+			free (tmp_word);
 		}
 		else if (ft_strncmp(tmp_word, "|", 2) == 0)
 		{
