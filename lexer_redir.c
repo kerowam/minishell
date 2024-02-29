@@ -106,20 +106,19 @@ void	handle_redirections(t_list **list, int i, t_list **redir_splited)
 	return ;
 }
 
-t_list	**split_redirections(t_list **list, t_list **redir_splited)
+void	split_redirections(t_list **list, t_list **redir_splited)
 {
 	t_list	**tmp;
 
 	tmp = (t_list **)ft_calloc(0, sizeof(t_list *));
 	init_list(redir_splited);
 	if (tmp == NULL)
-		return (NULL);
-	*tmp = *list;
+		return ;
 	printf("18.split_redirections tmp pointer = %p\n", tmp);
 	if (!tmp)
 	{
 		put_error(MEMPROBLEM, 1);
-		return (NULL);
+		return ;
 	}
 	*tmp = *list;
 	while (*tmp != NULL)
@@ -131,5 +130,5 @@ t_list	**split_redirections(t_list **list, t_list **redir_splited)
 		else
 			*tmp = NULL;
 	}
-	return (redir_splited);
+	return ;
 }

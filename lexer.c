@@ -15,7 +15,7 @@ static int	len_split(char *line, int i)
 void	init_list(t_list **list)
 {
 	*list = (t_list *)ft_calloc(0, sizeof(t_list));
-	if (!*list)
+	if (*list == NULL)
 	{
 		perror("Error allocating memory for list");
 		//gestionar error.
@@ -70,9 +70,10 @@ t_list	**lexer(t_data *shell, t_list **words_splited)
 	//line = NULL;
 	//free (&line);
 	split_pipes(words_splited, pipes_splited);
-	//free_list(pipes_splited);
-	pipes_splited = split_redirections(pipes_splited, redir_splited);
+	split_redirections(pipes_splited, redir_splited);
 	expander(shell->env, redir_splited);
 	quot_cleaner(redir_splited);
+	free(pipes_splited);
+	//free(*pipes_splited);
 	return (redir_splited);
 }

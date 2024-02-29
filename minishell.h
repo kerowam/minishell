@@ -26,7 +26,7 @@
 # define Q			'\''
 # define DQ			'\"'
 
-int		g_exit_status;
+//int		g_exit_status;
 
 typedef struct s_env
 {
@@ -168,7 +168,7 @@ int		get_pipe_nbr(char *line, int i);
 int		get_pipe_index(char *line, int i);
 
 //lexer_redir.c
-t_list	**split_redirections(t_list **list, t_list **redir_splited);
+void	split_redirections(t_list **list, t_list **redir_splited);
 
 //lexer_redir_utils.c
 int		get_redir_index(char *line, int i);

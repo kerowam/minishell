@@ -181,9 +181,9 @@ void	start_minishell(t_data *shell, char **env)
 				words_splited = lexer(shell, words_splited);
 				print_list_splited(words_splited);
 				parse(process, words_splited);
-				//free_list(words_splited);
-				/*if (words_splited)
-					free(words_splited);*/
+				free_list(words_splited);
+				if (words_splited != NULL)
+					free(words_splited);
 				print_process(process);
 				shell->echo = ft_split(shell->line, ' ');
 				if (shell->echo && shell->echo[0] != NULL)
@@ -196,8 +196,11 @@ void	start_minishell(t_data *shell, char **env)
 						main_executor(shell, process);
 					free_echo(shell->echo);
 					free(shell->line);
-					//if (process)
-					//	free_process(process);
+					if (process != NULL)
+					{
+						free_process(process);
+						//free(process);
+					}
 					//free(words_splited);
 					//exit (g_exit_status);
 					//break ;

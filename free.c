@@ -69,9 +69,9 @@ void	free_list(t_list **list)
 		tmp = next;
 	}
 	tmp = list;
-	free_list_p(tmp);
-	if (tmp)
-		free(tmp);
+	//free_list_p(tmp);
+	/*if (tmp)
+		free(tmp);*/
 	*list = NULL;
 }
 
