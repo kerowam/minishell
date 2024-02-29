@@ -42,7 +42,7 @@ void	free_list_p(t_list **tmp)
 	while (*tmp)
 	{
 		next = &(*tmp)->next;
-		if (*tmp)
+		if (*tmp != NULL)
 			free(*tmp);
 		*tmp = *next;
 	}
@@ -60,19 +60,24 @@ void	free_list(t_list **list)
 			next = &(*tmp)->next;
 		else
 			next = NULL;
-		if ((*tmp)->content)
+		if ((*tmp)->content != NULL)
 		{
 			printf("freeing content: %s\n", (*tmp)->content);
 			//getchar();
 			free((*tmp)->content);
+			(*tmp)->content = NULL;
 		}
 		tmp = next;
 	}
-	tmp = list;
-	//free_list_p(tmp);
+	/*if (list != NULL)
+	{
+		tmp = list;
+		free_list_p(tmp);
+	}*/
 	/*if (tmp)
 		free(tmp);*/
-	*list = NULL;
+	//list = NULL;
+	//free(list);
 }
 
 void	free_env_list(t_env *env)

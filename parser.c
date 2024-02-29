@@ -26,6 +26,8 @@ void	handle_redirection(t_list **tmp, t_process *tmp_process,
 			check_infile(tmp_word_next, tmp_process);
 	}
 	free (*tmp_word);
+	*tmp_word = NULL; //
+	free(tmp_word_next);
 	*tmp = tmp_next;
 }
 
@@ -98,12 +100,15 @@ void	parse(t_process *process, t_list **words_splited)
 			handle_pipe(tmp_process, &tmp_word, tmp);
 		else
 			handle_command(tmp_process, &tmp_word);
-		if (tmp->next)
+		if (tmp->next != NULL)
 			tmp = tmp->next;
 		else
 		{
 			(*tmp_process)->args = list_to_array((*tmp_process)->argv);
+			free(tmp_word);
+			free(tmp_process);
 			return ;
 		}
+		//free(tmp_word); //
 	}
 }

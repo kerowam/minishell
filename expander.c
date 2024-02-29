@@ -117,7 +117,11 @@ void	expander(t_env *env, t_list **line_splited)
 		if (ft_strchr(tmp_str, '$') != 0)
 			(*tmp_list)->content = expand(tmp_str, tmp_env);
 		if ((*tmp_list)->next)
+		{
 			*tmp_list = (*tmp_list)->next;
+			if (tmp_str)
+				free(tmp_str);
+		}
 		else
 			*tmp_list = NULL;
 	}
@@ -125,6 +129,6 @@ void	expander(t_env *env, t_list **line_splited)
 		free (tmp_env);*/
 	if (tmp_list != NULL)
 		free (tmp_list);
-	if (tmp_str)
+	if (tmp_str != NULL)
 		free (tmp_str);
 }

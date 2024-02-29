@@ -21,6 +21,7 @@ int	split_redirs_3(char *tmp_word, int i, t_list **redir_splited)
 		printf("17.0.1.tmp_split = %s\n", tmp_split);
 		ft_lstadd_back(redir_splited, ft_lstnew(tmp_split));
 		//insert_node(&list, tmp_split);
+		free(tmp_split);
 		i = redir_index;
 	}
 	return (i);
@@ -120,7 +121,7 @@ void	split_redirections(t_list **list, t_list **redir_splited)
 		put_error(MEMPROBLEM, 1);
 		return ;
 	}
-	*tmp = *list;
+	tmp = list;
 	while (*tmp != NULL)
 	{
 		handle_redirections(tmp, 0, redir_splited);
