@@ -39,13 +39,20 @@ void	free_list_p(t_list **tmp)
 {
 	t_list	**next;
 
-	while (*tmp)
+	next = (t_list **)malloc(sizeof(t_list *));
+	if (!next)
+		return ;
+	while (*tmp != NULL)
 	{
-		next = &(*tmp)->next;
+		if ((*tmp)->next != NULL)
+			*next = (*tmp)->next;
+		else
+			*next = NULL;
 		if (*tmp != NULL)
 			free(*tmp);
 		*tmp = *next;
 	}
+	free (next);
 }
 
 void	free_list(t_list **list)
@@ -65,15 +72,15 @@ void	free_list(t_list **list)
 			printf("freeing content: %s\n", (*tmp)->content);
 			//getchar();
 			free((*tmp)->content);
-			(*tmp)->content = NULL;
+			//(*tmp)->content = NULL;
 		}
 		tmp = next;
 	}
-	/*if (list != NULL)
+	if (list != NULL)
 	{
-		tmp = list;
-		free_list_p(tmp);
-	}*/
+		//tmp = list;
+		free_list_p(list);
+	}
 	/*if (tmp)
 		free(tmp);*/
 	//list = NULL;

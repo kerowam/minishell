@@ -245,6 +245,7 @@ void	init_process(t_process *process);
 int		ft_lstsize(t_list *lst);
 char	**list_to_array(t_list *list);
 int		check_redir(char *tmp_word);
+void	free_list_p(t_list **tmp);
 
 //parser_utils2.c
 void	check_pipe(char *tmp_word);

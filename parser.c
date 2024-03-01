@@ -88,6 +88,7 @@ void	parse(t_process *process, t_list **words_splited)
 	t_process	**tmp_process;
 
 	tmp_process = (t_process **)malloc(sizeof(t_process *));
+	//tmp = (t_list *)malloc(sizeof(t_list));
 	tmp = *words_splited;
 	init_process(process);
 	*tmp_process = process;
@@ -111,6 +112,7 @@ void	parse(t_process *process, t_list **words_splited)
 			(*tmp_process)->args = list_to_array((*tmp_process)->argv);
 			free(tmp_word);
 			free(tmp_process);
+			//free(tmp);
 			return ;
 		}
 		//free(tmp_word); //
