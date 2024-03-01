@@ -150,7 +150,7 @@ char	set_in_quot(char *line, int i);
 
 //lexer.c
 void	create_line_splited(char *line, t_list **list);
-t_list	**lexer(t_data *shell, t_list **words_splited);
+void	lexer(t_data *shell, t_list **words_splited, t_list **redir_splited);
 void	init_list(t_list **list);
 
 //lexer_pipes.c

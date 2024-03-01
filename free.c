@@ -129,7 +129,12 @@ void	free_process(t_process *process)
 		if (tmp->here_doc)
 			free_list(&tmp->here_doc);
 		if (tmp->args)
+		{
 			free_echo(tmp->args);
+			/*if (tmp->args)
+				free(tmp->args);*/
+		}
+
 		if (tmp)
 			free(tmp);
 		tmp = next;

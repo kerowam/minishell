@@ -52,14 +52,14 @@ void	create_line_splited(char *line, t_list **list)
 	}
 }
 
-t_list	**lexer(t_data *shell, t_list **words_splited)
+void	lexer(t_data *shell, t_list **words_splited, t_list **redir_splited)
 {
 	char	*line;
 	t_list	**pipes_splited;
-	t_list	**redir_splited;
+	//t_list	**redir_splited;
 
 	pipes_splited = (t_list **)ft_calloc(0, sizeof(t_list *));
-	redir_splited = (t_list **)ft_calloc(0, sizeof(t_list *));
+	//redir_splited = (t_list **)ft_calloc(0, sizeof(t_list *));
 	line = (char *)ft_calloc(0, sizeof(char) * (ft_strlen(shell->line) + 1));
 	line = ft_strdup(shell->line);
 	printf("22.lexer line pointer = %p\n", line);
@@ -70,9 +70,9 @@ t_list	**lexer(t_data *shell, t_list **words_splited)
 	line = NULL;
 	//free (&line);
 	split_pipes(words_splited, pipes_splited);
-	free_list(words_splited);
-	free(words_splited);                        /////CAMBIADO
-	words_splited = NULL;
+	//free_list(words_splited);
+	//free(words_splited);                        /////CAMBIADO
+	//words_splited = NULL;
 	split_redirections(pipes_splited, redir_splited);
 	free_list(pipes_splited);
 	free(pipes_splited);
@@ -80,5 +80,5 @@ t_list	**lexer(t_data *shell, t_list **words_splited)
 	quot_cleaner(redir_splited);
 	//free(pipes_splited);
 	//free(*pipes_splited);
-	return (redir_splited);
+	return ;
 }
