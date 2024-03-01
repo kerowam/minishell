@@ -121,7 +121,7 @@ void	split_redirections(t_list **list, t_list **redir_splited)
 		put_error(MEMPROBLEM, 1);
 		return ;
 	}
-	tmp = list;
+	*tmp = *list;
 	while (*tmp != NULL)
 	{
 		handle_redirections(tmp, 0, redir_splited);
@@ -130,6 +130,11 @@ void	split_redirections(t_list **list, t_list **redir_splited)
 			*tmp = (*tmp)->next;
 		else
 			*tmp = NULL;
+	}
+	if (tmp != NULL)
+	{
+		free (tmp);
+		tmp = NULL;
 	}
 	return ;
 }

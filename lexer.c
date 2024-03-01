@@ -67,17 +67,18 @@ t_list	**lexer(t_data *shell, t_list **words_splited)
 	//printf("line = %s\n", line);
 	create_line_splited(line, words_splited);
 	free(line);
-	//line = NULL;
+	line = NULL;
 	//free (&line);
 	split_pipes(words_splited, pipes_splited);
 	free_list(words_splited);
-	free(words_splited);                         /////CAMBIADO
+	free(words_splited);                        /////CAMBIADO
+	words_splited = NULL;
 	split_redirections(pipes_splited, redir_splited);
-	//free_list(pipes_splited);
-	//free(pipes_splited);
+	free_list(pipes_splited);
+	free(pipes_splited);
 	expander(shell->env, redir_splited);
 	quot_cleaner(redir_splited);
-	free(pipes_splited);
+	//free(pipes_splited);
 	//free(*pipes_splited);
 	return (redir_splited);
 }

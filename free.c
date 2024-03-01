@@ -63,7 +63,7 @@ void	free_list(t_list **list)
 	tmp = list;
 	while (tmp)
 	{
-		if ((*tmp)->next)
+		if ((*tmp)->next != NULL)
 			next = &(*tmp)->next;
 		else
 			next = NULL;
