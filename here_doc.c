@@ -7,7 +7,7 @@ static char	**create_argv_for_command(t_process *process)
 
 	argc = 2;
 	argv = malloc(sizeof(char *) * (argc + 1));
-	argv[0] = process->command;
+	argv[0] = ft_strdup(process->command); //ft_strdup added by gfredes
 	argv[1] = ft_strdup(*process->args);
 	argv[2] = NULL;
 	return (argv);

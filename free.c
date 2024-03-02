@@ -110,11 +110,11 @@ void	free_process(t_process *process)
 	while (tmp)
 	{
 		next = tmp->next_process;
-		/*if (tmp->command != NULL)
+		if (tmp->command != NULL)
 		{
 			free(tmp->command);
 			//tmp->command = NULL;
-		}*/
+		}
 		if (tmp->argv)
 			free_list(&tmp->argv);
 		if (tmp->infile)

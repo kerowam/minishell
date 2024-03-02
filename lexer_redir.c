@@ -112,9 +112,9 @@ void	split_redirections(t_list **list, t_list **redir_splited)
 	t_list	**tmp;
 
 	tmp = (t_list **)ft_calloc(0, sizeof(t_list *));
-	init_list(redir_splited);
 	if (tmp == NULL)
 		return ;
+	init_list(redir_splited);
 	printf("18.split_redirections tmp pointer = %p\n", tmp);
 	if (!tmp)
 	{

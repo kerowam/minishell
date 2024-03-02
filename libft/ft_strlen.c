@@ -17,7 +17,7 @@ size_t	ft_strlen(const char *x)
 	size_t	c;
 
 	if (!x)
-		exit(EXIT_FAILURE);
+		return (0);
 	c = 0;
 	while (x[c] != '\0')
 		c++;

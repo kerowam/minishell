@@ -32,7 +32,8 @@ int	split_pipe_3(char *tmp_word, int i, t_list **pipes_splited)
 
 	if (tmp_word[i] == '|')
 	{
-		ft_lstadd_back(pipes_splited, ft_lstnew("|")); // 
+		tmp_split = ft_substr(tmp_word, i, 1);
+		ft_lstadd_back(pipes_splited, ft_lstnew(tmp_split)); // 
 		i++;
 	}
 	else
@@ -46,9 +47,10 @@ int	split_pipe_3(char *tmp_word, int i, t_list **pipes_splited)
 		}
 		ft_lstadd_back(pipes_splited, ft_lstnew(tmp_split));
 		//insert_node(pipes_splited, tmp_split);
-		free(tmp_split); //CAMBIADO
+		//free(tmp_split); //CAMBIADO
 		i = pipe_index;
 	}
+	free(tmp_split);
 	return (i);
 }
 
