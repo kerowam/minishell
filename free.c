@@ -26,7 +26,7 @@ void	free_echo(char **str)
 		while (str[i])
 		{
 			free(str[i]);
-			str[i] = NULL;
+			str[i] = '\0';
 			i++;
 		}
 		if (str)
@@ -113,7 +113,7 @@ void	free_process(t_process *process)
 		if (tmp->command != NULL)
 		{
 			free(tmp->command);
-			//tmp->command = NULL;
+			tmp->command = NULL;
 		}
 		if (tmp->argv)
 			free_list(&tmp->argv);
