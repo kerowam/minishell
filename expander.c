@@ -124,12 +124,14 @@ void	expander(t_env *env, t_list **line_splited)
 			*tmp_list = (*tmp_list)->next;
 			if (tmp_str)
 				free(tmp_str);
+			tmp_str = NULL;
 		}
 		else
 			*tmp_list = NULL;
 	}
 	if (tmp_env != NULL)
 		free (tmp_env);
+	tmp_env = NULL;
 	if (tmp_list != NULL)
 		free (tmp_list);
 	tmp_list = NULL;

@@ -112,7 +112,9 @@ void	parse(t_process *process, t_list **words_splited)
 		{
 			(*tmp_process)->args = list_to_array((*tmp_process)->argv);
 			free(tmp_word);
+			tmp_word = NULL;
 			free(tmp_process);
+			tmp_process = NULL;
 			//free(tmp);
 			return ;
 		}

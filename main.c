@@ -184,11 +184,13 @@ void	start_minishell(t_data *shell, char **env)
 				free_list(words_splited);
 				if (words_splited != NULL)
 					free(words_splited);
+				words_splited = NULL;
 				print_list_splited(redir_splited);
 				parse(process, redir_splited);
 				free_list(redir_splited);
 				if (redir_splited != NULL)
 					free(redir_splited);
+				redir_splited = NULL;
 				print_process(process);
 				shell->echo = ft_split(shell->line, ' ');
 				if (shell->echo && shell->echo[0] != NULL)
@@ -201,6 +203,7 @@ void	start_minishell(t_data *shell, char **env)
 						main_executor(shell, process);
 					free_echo(shell->echo);
 					free(shell->line);
+					shell->line = NULL;
 					//free(shell);
 					if (process != NULL)
 					{
@@ -212,7 +215,10 @@ void	start_minishell(t_data *shell, char **env)
 					//break ;
 				}
 				else
+				{
 					free(shell->line);
+					shell->line = NULL;
+				}
 			}
 		}
 	}

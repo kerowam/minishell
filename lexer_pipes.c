@@ -51,6 +51,7 @@ int	split_pipe_3(char *tmp_word, int i, t_list **pipes_splited)
 		i = pipe_index;
 	}
 	free(tmp_split);
+	tmp_split = NULL;
 	return (i);
 }
 
@@ -75,6 +76,7 @@ void	split_pipe(t_list *list, int i, t_list **pipes_splited)
 		}
 	}
 	free(tmp_word); //
+	tmp_word = NULL;
 	return ;
 	//return (splits);
 }
@@ -98,6 +100,7 @@ void	handle_pipes(t_list **list, int i, t_list **pipes_splited)
 	else if (len > 0)
 		ft_lstadd_back(pipes_splited, ft_lstnew(tmp_word));
 	free(tmp_word); //
+	tmp_word = NULL;
 	return ;
 	//return (splits);
 }
@@ -130,5 +133,6 @@ void	split_pipes(t_list **list, t_list **pipes_splited)
 	}
 	//*tmp = *list;
 	free(tmp);  //CAMBIADO
+	tmp = NULL;
 	return ;
 }

@@ -22,6 +22,7 @@ int	split_redirs_3(char *tmp_word, int i, t_list **redir_splited)
 		ft_lstadd_back(redir_splited, ft_lstnew(tmp_split));
 		//insert_node(&list, tmp_split);
 		free(tmp_split);
+		tmp_split = NULL;
 		i = redir_index;
 	}
 	return (i);
@@ -53,6 +54,7 @@ int	split_redirs_2(int i, char *tmp_word, t_list **redir_splited)
 		ft_lstadd_back(redir_splited, ft_lstnew(tmp_split));
 		//list->content = ft_strdup(tmp_split);
 		free(tmp_split); // added
+		tmp_split = NULL;
 		i = redir_index;
 	}
 	return (i);
@@ -82,6 +84,7 @@ void	split_redirection(t_list *list, int i, t_list **redir_splited)
 		}
 	}
 	free(tmp_word);
+	tmp_word = NULL;
 	return ;
 }
 
