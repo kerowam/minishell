@@ -42,7 +42,9 @@ char	*expand_value(char *str, int i, t_env *env, char *end_str)
 		end_str = ft_strjoin(end_str, value);
 	printf("9.expand value end_str pointer = %p\n", end_str);
 	free(tmp);
+	tmp = NULL;
 	free(value);
+	value = NULL;
 	return (end_str);
 }
 
@@ -66,6 +68,7 @@ char	*join_expand(char *str, int i, char *end_str)
 		end_str = ft_strjoin(end_str, tmp);
 	printf("10.join expand end_str pointer = %p\n", end_str);
 	free(tmp);
+	tmp = NULL;
 	return (end_str);
 }
 
@@ -99,15 +102,15 @@ char	*expand(char *str, t_env *env)
 
 void	expander(t_env *env, t_list **line_splited)
 {
-	t_env	*tmp_env;
+	t_env	**tmp_env;
 	t_list	**tmp_list;
 	char	*tmp_str;
 
-	tmp_env = (t_env *)ft_calloc(0, sizeof(t_env));
+	tmp_env = (t_env **)ft_calloc(0, sizeof(t_env *));
 	if (tmp_env == NULL)
 		return ;
-	tmp_env = env;
-	printf("11.tmp_env pointer: %p\n", tmp_env);
+	*tmp_env = env;
+	printf("11.*tmp_env pointer: %p\n", *tmp_env);
 	tmp_list = (t_list **)ft_calloc(0, sizeof(t_list *)); //Añadir gestión de errores cuando falla malloc en ft_calloc
 	*tmp_list = *line_splited;
 	printf("12.tmp_list pointer: %p\n", tmp_list);
@@ -115,7 +118,7 @@ void	expander(t_env *env, t_list **line_splited)
 	{
 		tmp_str = ft_strdup((*tmp_list)->content);
 		if (ft_strchr(tmp_str, '$') != 0)
-			(*tmp_list)->content = expand(tmp_str, tmp_env);
+			(*tmp_list)->content = expand(tmp_str, *tmp_env);
 		if ((*tmp_list)->next)
 		{
 			*tmp_list = (*tmp_list)->next;
@@ -125,10 +128,12 @@ void	expander(t_env *env, t_list **line_splited)
 		else
 			*tmp_list = NULL;
 	}
-	/*if (tmp_env != NULL)
-		free (tmp_env);*/
+	if (tmp_env != NULL)
+		free (tmp_env);
 	if (tmp_list != NULL)
 		free (tmp_list);
+	tmp_list = NULL;
 	if (tmp_str != NULL)
 		free (tmp_str);
+	tmp_str = NULL;
 }

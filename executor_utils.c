@@ -54,6 +54,11 @@ void	execute_builtin(t_process *process, t_data *shell)
 		printf("exit\n");
 		free(shell->echo);
 		free(shell->line);
+		//free(shell);
+		/*if (process)
+		{
+			free_process(process);
+		}*/
 		exit(EXIT_FAILURE);
 	}
 	if (ft_strncmp(shell->echo[0], "env\0", 4) == 0

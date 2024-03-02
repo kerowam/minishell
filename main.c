@@ -201,6 +201,7 @@ void	start_minishell(t_data *shell, char **env)
 						main_executor(shell, process);
 					free_echo(shell->echo);
 					free(shell->line);
+					//free(shell);
 					if (process != NULL)
 					{
 						free_process(process);

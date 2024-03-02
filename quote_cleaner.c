@@ -87,7 +87,7 @@ void	quot_cleaner(t_list **list)
 	}
 	*tmp = *list;
 	printf("35.quot_cleaner *tmp pointer = %p\n", *tmp);
-	while (*tmp)
+	while (*tmp != NULL)
 	{
 		tmp_word = ft_strdup((*tmp)->content);
 		if (tmp_word != NULL)

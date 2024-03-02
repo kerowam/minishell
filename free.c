@@ -119,20 +119,21 @@ void	free_process(t_process *process)
 			free_list(&tmp->argv);
 		if (tmp->infile)
 			free(tmp->infile);
-		//tmp->infile = NULL;
+		tmp->infile = NULL;
 		if (tmp->outfile)
 			free(tmp->outfile);
-		//tmp->outfile = NULL;
+		tmp->outfile = NULL;
 		if (tmp->outfile_append)
 			free(tmp->outfile_append);
-		//tmp->outfile_append = NULL;
+		tmp->outfile_append = NULL;
 		if (tmp->here_doc)
 			free_list(&tmp->here_doc);
 		if (tmp->args)
 		{
 			free_echo(tmp->args);
-			/*if (tmp->args)
+			/*if (tmp->args != NULL)
 				free(tmp->args);*/
+			tmp->args = NULL;
 		}
 
 		if (tmp)

@@ -48,6 +48,7 @@ void	create_line_splited(char *line, t_list **list)
 			else
 				ft_lstadd_back(list, ft_lstnew(tmp_word));
 			free (tmp_word);
+			tmp_word = NULL;
 		}
 	}
 }
@@ -76,6 +77,7 @@ void	lexer(t_data *shell, t_list **words_splited, t_list **redir_splited)
 	split_redirections(pipes_splited, redir_splited);
 	free_list(pipes_splited);
 	free(pipes_splited);
+	pipes_splited = NULL;
 	expander(shell->env, redir_splited);
 	quot_cleaner(redir_splited);
 	//free(pipes_splited);

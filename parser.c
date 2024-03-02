@@ -105,6 +105,8 @@ void	parse(t_process *process, t_list **words_splited)
 			tmp = tmp->next;
 			if (tmp_word)
 				free(tmp_word);
+			/*if (tmp_process)
+				free (tmp_process);*/
 		}
 		else
 		{
