@@ -27,11 +27,13 @@ static void	setup_command_and_redirects(t_process *process, char **cmd_argv,
 	redirect_outfile_append(process);
 	redirect_outfile(process);
 	cmd_argv[0] = ft_strdup(process->command);
+	printf("3. setup_command_and_redirects cmd_argv pointer = %p\n", cmd_argv);
 	current = process->argv;
 	*j = 1;
 	while (current)
 	{
 		cmd_argv[*j] = ft_strdup(current->content);
+		printf("4. setup_command_and_redirects cmd_argv[%d] pointer = %p\n", *j, cmd_argv[*j]);
 		current = current->next;
 		(*j)++;
 	}

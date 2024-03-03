@@ -41,7 +41,7 @@ OBJS = ${SRCS:.c=.o}
 all: ${LIBFT}/libft.a $(NAME)
 
 $(NAME): $(OBJS)
-	@$(CC) -g $(CFLAGS) $(SRCS) ${LIBFT}/libft.a -o $(NAME) -lreadline
+	@$(CC) $(CFLAGS) $(SRCS) ${LIBFT}/libft.a -o $(NAME) -lreadline
 	
 #gcc -L/usr/local/opt/readline/lib -I/usr/local/opt/readline/include -lreadline main.c -o main
 

@@ -13,6 +13,7 @@ void	update_pwd(t_data *shell)
 			free(prov->value);
 			getcwd(dir, sizeof(dir));
 			prov->value = ft_strdup(dir);
+			printf("0. cd_utils prov->value pointer: %p\n", prov->value);
 			if (!prov->value)
 				return ;
 			break ;
@@ -34,6 +35,7 @@ void	update_oldpwd(t_data *shell)
 			free(prov->value);
 			getcwd(dir, sizeof(dir));
 			prov->value = ft_strdup(dir);
+			printf("0.1 cd_utils prov->value pointer: %p\n", prov->value);
 			if (!prov->value)
 				return ;
 			break ;
@@ -53,6 +55,7 @@ void	update_oldpwd_again(t_data *shell, char *pwd)
 		{
 			free(prov->value);
 			prov->value = ft_strdup(pwd);
+			printf("0.2 cd_utils prov->value pointer: %p\n", prov->value);
 			if (!prov->value)
 				return ;
 			break ;
@@ -71,6 +74,7 @@ void	obtain_env(t_data *shell, char *env_var)
 		if (ft_strncmp(prov->name, env_var, ft_strlen(prov->name)) == 0)
 		{
 			shell->cd = ft_strdup(prov->value + 1);
+			printf("0.3 cd_utils shell->cd pointer: %p\n", shell->cd);
 			if (!shell->cd)
 				return ;
 			break ;

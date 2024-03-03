@@ -14,7 +14,7 @@ int	split_redirs_3(char *tmp_word, int i, t_list **redir_splited)
 	else if (*tmp_word)
 	{
 		redir_index = get_redir_index(tmp_word, i);
-		tmp_split = get_tmp_split(redir_index, tmp_word, i);
+		tmp_split = get_tmp_split(redir_index, tmp_word, i); ////*********
 		if (tmp_split == NULL)
 			return (-1);
 		printf("17.0.tmp_split pointer = %p\n", tmp_split);
@@ -65,11 +65,12 @@ void	split_redirection(t_list *list, int i, t_list **redir_splited)
 	char	*tmp_word;
 	//char	*tmp_split;
 
-	tmp_word = ft_strdup(list->content);
+	tmp_word = ft_strdup(list->content); 								////*******
 	printf("17.2.split_redirection tmp_word pointer = %p\n", tmp_word);
 	if (tmp_word == NULL)
 	{
 		put_error(MEMPROBLEM, 1);
+		free(tmp_word);
 		return ;
 	}
 	//tmp_split = NULL;

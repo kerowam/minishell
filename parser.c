@@ -8,6 +8,7 @@ void	handle_redirection(t_list **tmp, t_process *tmp_process,
 
 	tmp_next = (*tmp)->next;
 	tmp_word_next = ft_strdup(tmp_next->content);
+	printf("27.1.tmp_word_next pointer= %p\n", tmp_word_next);
 	if (check_redir(tmp_word_next) == 0)
 	{
 		if (ft_strncmp(tmp_word, ">", 2) == 0)
@@ -41,6 +42,7 @@ void	handle_pipe(t_process **tmp_process, char *tmp_word, t_list *tmp)
 		//free (tmp_word);
 		return ;
 	}
+	printf("27.2.next_pr pointer = %p\n", next_pr);
 	(*tmp_process)->args = list_to_array((*tmp_process)->argv);
 	if (!(next_pr))
 	{
@@ -53,13 +55,17 @@ void	handle_pipe(t_process **tmp_process, char *tmp_word, t_list *tmp)
 	*tmp_process = (*tmp_process)->next_process;
 	free (tmp_word);
 	tmp_word = ft_strdup(tmp->next->content);
+	printf("27.3.tmp_word pointer = %p\n", tmp_word);
 	check_pipe(tmp_word);
 }
 
 void	handle_command(t_process **tmp_process, char *tmp_word)
 {
 	if ((*tmp_process)->command == NULL)
+	{
 		(*tmp_process)->command = ft_strdup(tmp_word);
+		printf("27.4.(*tmp_process)->command pointer = %p\n", tmp_word);
+	}
 	else
 	{
 		if (!((*tmp_process)->argv))
@@ -87,6 +93,12 @@ void	parse(t_process *process, t_list **words_splited)
 	t_process	**tmp_process;
 
 	tmp_process = (t_process **)malloc(sizeof(t_process *));
+	if (!tmp_process)
+	{
+		put_error(MEMPROBLEM, 1); //exit status 1???
+		return ;
+	}
+	printf("27.5.tmp_process pointer = %p\n", tmp_process);
 	//tmp = (t_list *)malloc(sizeof(t_list));
 	tmp = *words_splited;
 	init_process(process);
@@ -94,6 +106,7 @@ void	parse(t_process *process, t_list **words_splited)
 	while (tmp)
 	{
 		tmp_word = ft_strdup(tmp->content);
+		printf("27.6.tmp_word pointer = %p\n", tmp_word);
 		if (is_redir(tmp_word) == 1)
 			handle_redirection(&tmp, *tmp_process, tmp_word);
 		else if (ft_strncmp(tmp_word, "|", 2) == 0)
@@ -111,6 +124,7 @@ void	parse(t_process *process, t_list **words_splited)
 		else
 		{
 			(*tmp_process)->args = list_to_array((*tmp_process)->argv);
+			printf("27.7.(*tmp_process)->args pointer = %p\n", (*tmp_process)->args);
 			free(tmp_word);
 			tmp_word = NULL;
 			free(tmp_process);

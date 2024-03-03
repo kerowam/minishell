@@ -12,6 +12,7 @@ char	*get_expanded_value(t_env *env, char *key)
 	while (tmp->name)
 	{
 		name = ft_strdup(tmp->name);
+		printf("7.0. name pointer = %p\n", name);
 		if (ft_strncmp(key, name, ft_strlen(name)) == 0)
 		{
 			value = ft_strdup(tmp->value);
@@ -36,6 +37,7 @@ char	*expand_value(char *str, int i, t_env *env, char *end_str)
 
 	tmp = set_key(str, i);
 	value = get_expanded_value(env, tmp);
+	printf("9.0. expand_value value pointer = %p\n", value);
 	if (!end_str)
 		end_str = ft_strdup(value);
 	else

@@ -33,7 +33,9 @@ int	find_path(t_process *process, t_data *shell)
 		if (ft_strncmp(current_env->name, "PATH", 4) == 0)
 		{
 			process->path_env = ft_strdup(current_env->value);
+			printf("1. find_path process->path_env pointer: %p\n", process->path_env);
 			process->env = ft_split(process->path_env, ':');
+			printf("2. find_path process->env pointer: %p\n", process->env);
 			if (!process->env || !process->path_env)
 			{
 				perror("Error al dividir o duplicar la cadena");

@@ -1,5 +1,6 @@
 
 #include "minishell.h"
+//#include "memory-leaks/include/memory_leaks.h"
 
 void	ft_header(void)
 {
@@ -142,8 +143,9 @@ void	start_minishell(t_data *shell, char **env)
 	{
 		words_splited = (t_list **)malloc(sizeof(t_list *));
 		redir_splited = (t_list **)malloc(sizeof(t_list *));
-		printf("23.start minishell words_splited pointer = %p\n", words_splited);
-		if (!words_splited)
+		printf("23.start minishell words_splited pointer = %p\n", words_splited); ////*******
+		printf("23.1.start minishell redir_splited pointer = %p\n", redir_splited);
+		if (!words_splited || !redir_splited)
 			printf("error: malloc\n"); //Hacer función para enviar errores a stderr
 			//gestionar error.
 		//words_splited = NULL;
