@@ -27,8 +27,6 @@ char	*ft_strdup(const char *s1)
 		return (NULL);
 	}
 	i = 0;
-	if (!ptr)
-		return (NULL);
 	while (s1[i] != '\0')
 	{
 		ptr[i] = s1[i];

@@ -21,6 +21,7 @@ t_list	*ft_lstnew(void *content)
 	if (!new_l)
 		return (NULL);
 	new_l->content = ft_strdup(content);
+	//free(content);
 	if (!new_l->content)
 	{
 		free(new_l);

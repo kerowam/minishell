@@ -32,6 +32,7 @@ SRCS = main.c\
 		free.c\
 		parser_utils.c\
 		parser_utils2.c\
+		here_doc_utils.c\
 
 CC = gcc
 

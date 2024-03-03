@@ -4,6 +4,7 @@
 
 # include "libft/libft.h"
 # include <stdio.h>
+# include <stdlib.h>
 # include <string.h>
 # include <sys/types.h>
 # include <sys/wait.h>
@@ -13,6 +14,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <errno.h>
+# include "memory-leaks/memory_leaks.h"
 
 # define RESET		"\x1B[0m"
 # define RED		"\x1B[31m"
@@ -26,7 +28,7 @@
 # define Q			'\''
 # define DQ			'\"'
 
-int		g_exit_status;
+//int		g_exit_status;
 
 typedef struct s_env
 {
@@ -149,7 +151,7 @@ char	set_in_quot(char *line, int i);
 
 //lexer.c
 void	create_line_splited(char *line, t_list **list);
-t_list	**lexer(t_data *shell, t_list **words_splited);
+void	lexer(t_data *shell, t_list **words_splited, t_list **redir_splited);
 void	init_list(t_list **list);
 
 //lexer_pipes.c
@@ -168,7 +170,7 @@ int		get_pipe_nbr(char *line, int i);
 int		get_pipe_index(char *line, int i);
 
 //lexer_redir.c
-t_list	**split_redirections(t_list **list, t_list **redir_splited);
+void	split_redirections(t_list **list, t_list **redir_splited);
 
 //lexer_redir_utils.c
 int		get_redir_index(char *line, int i);
@@ -244,6 +246,7 @@ void	init_process(t_process *process);
 int		ft_lstsize(t_list *lst);
 char	**list_to_array(t_list *list);
 int		check_redir(char *tmp_word);
+void	free_list_p(t_list **tmp);
 
 //parser_utils2.c
 void	check_pipe(char *tmp_word);
@@ -251,5 +254,12 @@ void	check_infile(char *tmp_word, t_process *tmp_process);
 int		check_access_outfile(char *tmp_word);
 void	check_outfile(char *tmp_word, t_process *tmp_process);
 void	check_outfile_append(char *tmp_word, t_process *tmp_process);
+
+//here_doc_utils.c
+int		create_temp_file(const char *filename);
+void	read_lines_until_delimiter(int fd, const char *delimiter);
+int		open_temp_file_read(const char *filename);
+void	write_temp_file_to_pipe(int fd_pipe, int fd_temp);
+void	free_argv(char **argv);
 
 #endif

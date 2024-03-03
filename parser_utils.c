@@ -5,6 +5,7 @@ void	init_process(t_process *process)
 	process->next_process = NULL;
 	process->command = NULL;
 	process->argv = NULL;
+	process->args = NULL;
 	process->pid = 0;
 	process->infile = NULL;
 	process->in_fd = 0;
@@ -41,7 +42,7 @@ char	**list_to_array(t_list *list)
 	t_list	*tmp;
 
 	i = ft_lstsize(list);
-	tmp = list;
+	tmp = NULL;
 	array = (char **)malloc(sizeof(char *) * (i + 1));
 	printf("25.array pointer = %p\n", array);
 	if (!array)

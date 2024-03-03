@@ -5,9 +5,12 @@ void	free_string_array(char **array)
 	int	i;
 
 	if (!array)
+	{
+		printf("Warning: Attempting to free a NULL array.\n");
 		return ;
+	}
 	i = 0;
-	while (array[i] != NULL)
+	while (array[i])
 	{
 		free(array[i]);
 		i++;
@@ -29,8 +32,6 @@ int	find_path(t_process *process, t_data *shell)
 	{
 		if (ft_strncmp(current_env->name, "PATH", 4) == 0)
 		{
-			//free(process->path_env);
-			//free_string_array(process->env);
 			process->path_env = ft_strdup(current_env->value);
 			process->env = ft_split(process->path_env, ':');
 			if (!process->env || !process->path_env)
@@ -51,7 +52,13 @@ void	execute_builtin(t_process *process, t_data *shell)
 		|| ft_strncmp(shell->echo[0], "EXIT\0", 5) == 0)
 	{
 		printf("exit\n");
+		free_echo(shell->echo);
 		free(shell->line);
+		//free(shell);
+		/*if (process)
+		{
+			free_process(process);
+		}*/
 		exit(EXIT_FAILURE);
 	}
 	if (ft_strncmp(shell->echo[0], "env\0", 4) == 0
