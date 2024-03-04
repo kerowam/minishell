@@ -75,6 +75,11 @@ void	clean_str_quot(char *str, t_list **list)
 	}
 	if (end_str)
 	{
+		if ((*list)->content)
+		{
+			free((*list)->content);
+			(*list)->content = NULL;
+		}
 		(*list)->content = ft_strdup(end_str);
 		printf("34.1.clean_str_quot (*list)->content = %s\n", (*list)->content);
 		printf("34.2.clean_str_quot (*list)->content pointer = %p\n", (*list)->content);

@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-int	ft_strcmp(char *s1, char *s2)
+/*int	ft_strcmp(char *s1, char *s2)
 {
 	while (*s1 != '\0' && *s2 != '\0' && *s1 == *s2)
 	{
@@ -8,7 +8,7 @@ int	ft_strcmp(char *s1, char *s2)
 		s2++;
 	}
 	return (*s1 - *s2);
-}
+}*/
 
 int	ft_strends(const char *str, const char *end)
 {

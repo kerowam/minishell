@@ -2,6 +2,7 @@ NAME = minishell
 
 CFLAGS = -g -Wextra -Wall -Werror
 LIBFT = ./libft
+LEAK = ./memory-leaks
 
 SRCS = main.c\
 		enviroment.c\
@@ -38,10 +39,10 @@ CC = gcc
 
 OBJS = ${SRCS:.c=.o}
 
-all: ${LIBFT}/libft.a $(NAME)
+all: ${LIBFT}/libft.a ${LEAKD}/memory_leaks.a $(NAME)
 
 $(NAME): $(OBJS)
-	@$(CC) $(CFLAGS) $(SRCS) ${LIBFT}/libft.a -o $(NAME) -lreadline
+	@$(CC) $(CFLAGS) $(SRCS) ${LIBFT}/libft.a ${LEAK}/memory_leaks.a -o $(NAME) -lreadline
 	
 #gcc -L/usr/local/opt/readline/lib -I/usr/local/opt/readline/include -lreadline main.c -o main
 
@@ -50,6 +51,9 @@ $(NAME): $(OBJS)
 
 $(LIBFT)/libft.a:
 	@${MAKE} -C ${LIBFT}
+
+${LEAKD}/memory_leaks.a:
+	@${MAKE} -C ${LEAK}
 
 clean:
 	@rm -rf $(OBJS)

@@ -50,6 +50,7 @@ int	find_path(t_process *process, t_data *shell)
 
 void	execute_builtin(t_process *process, t_data *shell)
 {
+	(void)process;
 	if (ft_strncmp(shell->echo[0], "exit\0", 5) == 0
 		|| ft_strncmp(shell->echo[0], "EXIT\0", 5) == 0)
 	{
@@ -63,7 +64,7 @@ void	execute_builtin(t_process *process, t_data *shell)
 		}*/
 		exit(EXIT_FAILURE);
 	}
-	if (ft_strncmp(shell->echo[0], "env\0", 4) == 0
+	/*if (ft_strncmp(shell->echo[0], "env\0", 4) == 0
 		|| ft_strncmp(shell->echo[0], "ENV\0", 4) == 0)
 		env_command(shell);
 	if (ft_strncmp(shell->line, "pwd\0", 4) == 0
@@ -80,7 +81,7 @@ void	execute_builtin(t_process *process, t_data *shell)
 		cd_command(shell->echo, shell);
 	if (ft_strncmp(shell->echo[0], "export\0", 7) == 0
 		|| ft_strncmp(shell->echo[0], "EXPORT\0", 7) == 0)
-		export_command(shell->echo, shell);
+		export_command(shell->echo, shell);*/
 }
 
 bool	is_builtin(t_process *process, t_data *shell)

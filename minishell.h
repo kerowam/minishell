@@ -14,7 +14,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <errno.h>
-//# include "memory-leaks/include/memory_leaks.h"
+# include "memory-leaks/include/memory_leaks.h"
 
 # define RESET		"\x1B[0m"
 # define RED		"\x1B[31m"
