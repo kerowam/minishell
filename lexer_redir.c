@@ -51,7 +51,10 @@ int	split_redirs_2(int i, char *tmp_word, t_list **redir_splited)
 			return (0);
 		printf("17.1.tmp_split pointer = %p\n", tmp_split);
 		printf("17.1.1.tmp_split = %s\n", tmp_split);
-		ft_lstadd_back(redir_splited, ft_lstnew(tmp_split));
+		if ((*redir_splited)->content == NULL)
+			(*redir_splited)->content = ft_strdup(tmp_word);
+		else
+			ft_lstadd_back(redir_splited, ft_lstnew(tmp_split));
 		//list->content = ft_strdup(tmp_split);
 		free(tmp_split); // added
 		tmp_split = NULL;
@@ -104,7 +107,12 @@ void	handle_redirections(t_list **list, int i, t_list **redir_splited)
 	if (len > 0 && n_redirections > 0)
 		split_redirection(*list, i, redir_splited);
 	else if (len > 0)
-		ft_lstadd_back(redir_splited, ft_lstnew(tmp_word));
+	{
+		if ((*redir_splited)->content == NULL)
+			(*redir_splited)->content = ft_strdup(tmp_word);
+		else
+			ft_lstadd_back(redir_splited, ft_lstnew(tmp_word));
+	}
 	if (tmp_word != NULL)
 		free(tmp_word);
 	tmp_word = NULL;
