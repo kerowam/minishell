@@ -134,18 +134,18 @@ void	initialize_minishell(t_data **shell, char **env)
 void	start_minishell(t_data *shell, char **env)
 {
 	int			q;
-	t_list		**words_splited;
+	//t_list		**words_splited;
 	t_list		**redir_splited;
 	t_process	*process;
 
 	(void)env;
 	while (1)
 	{
-		words_splited = (t_list **)malloc(sizeof(t_list *));
+		//words_splited = (t_list **)malloc(sizeof(t_list *));
 		redir_splited = (t_list **)malloc(sizeof(t_list *));
-		printf("23.start minishell words_splited pointer = %p\n", words_splited); ////*******
+		//printf("23.start minishell words_splited pointer = %p\n", words_splited); ////*******
 		printf("23.1.start minishell redir_splited pointer = %p\n", redir_splited);
-		if (!words_splited || !redir_splited)
+		if (!redir_splited)
 			printf("error: malloc\n"); //Hacer función para enviar errores a stderr
 			//gestionar error.
 		//words_splited = NULL;
@@ -182,11 +182,11 @@ void	start_minishell(t_data *shell, char **env)
 			}
 			if (shell->line && *shell->line)
 			{
-				lexer(shell, words_splited, redir_splited);
-				free_list(words_splited);
+				lexer(shell, redir_splited);
+				/*free_list(words_splited);
 				if (words_splited != NULL)
 					free(words_splited);
-				words_splited = NULL;
+				words_splited = NULL;*/
 				print_list_splited(redir_splited);
 				parse(process, redir_splited);
 				free_list(redir_splited);

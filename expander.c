@@ -109,6 +109,7 @@ void	expander(t_env *env, t_list **line_splited)
 	char	*tmp_str;
 
 	tmp_env = (t_env **)ft_calloc(0, sizeof(t_env *));
+	printf("11.0.tmp_env pointer: %p\n", tmp_env);
 	if (tmp_env == NULL)
 		return ;
 	*tmp_env = env;

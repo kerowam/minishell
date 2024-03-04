@@ -14,7 +14,8 @@ static int	len_split(char *line, int i)
 
 void	init_list(t_list **list)
 {
-	*list = (t_list *)ft_calloc(0, sizeof(t_list));
+	*list = (t_list *)ft_calloc(0, sizeof(t_list)); ////******////
+	printf("21.0.init_list list pointer = %p\n", *list);
 	if (*list == NULL)
 	{
 		perror("Error allocating memory for list");
@@ -56,14 +57,16 @@ void	create_line_splited(char *line, t_list **list)
 	}
 }
 
-void	lexer(t_data *shell, t_list **words_splited, t_list **redir_splited)
+void	lexer(t_data *shell, t_list **redir_splited)
 {
 	char	*line;
 	t_list	**pipes_splited;
-	//t_list	**redir_splited;
+	t_list	**words_splited;
 
 	pipes_splited = (t_list **)ft_calloc(0, sizeof(t_list *));
-	//redir_splited = (t_list **)ft_calloc(0, sizeof(t_list *));
+	printf("22.0.lexer pipes_splited pointer = %p\n", pipes_splited);
+	words_splited = (t_list **)ft_calloc(0, sizeof(t_list *));
+	printf("22.0.1.lexer words_splited pointer = %p\n", words_splited);
 	line = (char *)ft_calloc(0, sizeof(char) * (ft_strlen(shell->line) + 1));
 	line = ft_strdup(shell->line);
 	printf("22.lexer line pointer = %p\n", line);
@@ -74,9 +77,9 @@ void	lexer(t_data *shell, t_list **words_splited, t_list **redir_splited)
 	line = NULL;
 	//free (&line);
 	split_pipes(words_splited, pipes_splited);
-	//free_list(words_splited);
-	//free(words_splited);                        /////CAMBIADO
-	//words_splited = NULL;
+	free_list(words_splited);
+	free(words_splited);                        /////CAMBIADO
+	words_splited = NULL;
 	split_redirections(pipes_splited, redir_splited);
 	free_list(pipes_splited);
 	free(pipes_splited);
