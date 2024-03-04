@@ -117,7 +117,7 @@ void	split_pipes(t_list **list, t_list **pipes_splited)
 	t_list	**tmp;
 
 	tmp = (t_list **)ft_calloc(0, sizeof(t_list *));
-	init_list(pipes_splited);
+	//init_list(pipes_splited);
 	*tmp = *list;
 	printf("17.split_pipes tmp pointer = %p\n", tmp);
 	while (*tmp != NULL)

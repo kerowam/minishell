@@ -79,7 +79,10 @@ static char	*get_a_lot(int fd, char *acum_str)
 	int		read_char;
 
 	if (!acum_str)
+	{
 		acum_str = ft_calloc(1, sizeof(char));
+		printf("0. gnl acum_str pointer = %p\n", acum_str);
+	}
 	tmp = ft_calloc_gnl((BUFFER_SIZE + 1), sizeof(char));
 	read_char = 1;
 	while (read_char > 0)

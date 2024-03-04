@@ -141,6 +141,7 @@ void	start_minishell(t_data *shell, char **env)
 	(void)env;
 	while (1)
 	{
+		system("leaks -q minishell");
 		//words_splited = (t_list **)malloc(sizeof(t_list *));
 		redir_splited = (t_list **)malloc(sizeof(t_list *));
 		//printf("23.start minishell words_splited pointer = %p\n", words_splited); ////*******
@@ -183,6 +184,7 @@ void	start_minishell(t_data *shell, char **env)
 			if (shell->line && *shell->line)
 			{
 				lexer(shell, redir_splited);
+				//lexer(shell);
 				/*free_list(words_splited);
 				if (words_splited != NULL)
 					free(words_splited);
@@ -194,9 +196,23 @@ void	start_minishell(t_data *shell, char **env)
 					free(redir_splited);
 				redir_splited = NULL;
 				print_process(process);
+				//free (process);
 				shell->echo = ft_split(shell->line, ' ');
 				if (shell->echo && shell->echo[0] != NULL)
 				{
+					/*if (ft_strncmp(shell->echo[0], "exit\0", 5) == 0
+						|| ft_strncmp(shell->echo[0], "EXIT\0", 5) == 0)
+					{
+						printf("exit\n");
+						free_echo(shell->echo);
+						free(shell->line);
+						//free(shell);
+						if (process)
+						{
+							free_process(process);
+						}
+						exit(EXIT_FAILURE);
+					}*/
 					if (*shell->line)
 						add_history(shell->line);
 					if (is_builtin(process, shell))

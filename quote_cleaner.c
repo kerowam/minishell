@@ -98,7 +98,7 @@ void	quot_cleaner(t_list **list)
 	char	*tmp_word;
 
 	tmp = (t_list **)ft_calloc(0, sizeof(t_list *)); // Comprobar si es necesario malloc
-	printf("35.0.quot_cleaner tmp pointer = %p\n", *tmp);
+	printf("35.0.quot_cleaner tmp pointer = %p\n", tmp);
 	if (!tmp)
 	{
 		printf("Error: quot_cleaner ft_calloc failed\n");

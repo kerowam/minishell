@@ -54,6 +54,7 @@ void	handle_pipe(t_process **tmp_process, char *tmp_word, t_list *tmp)
 	(*tmp_process)->next_process = next_pr;
 	*tmp_process = (*tmp_process)->next_process;
 	free (tmp_word);
+	tmp_word = NULL;
 	tmp_word = ft_strdup(tmp->next->content);
 	printf("27.3.tmp_word pointer = %p\n", tmp_word);
 	check_pipe(tmp_word);
@@ -89,7 +90,7 @@ int	is_redir(char *tmp_word)
 void	parse(t_process *process, t_list **words_splited)
 {
 	char		*tmp_word;
-	t_list		*tmp;
+	t_list		**tmp;
 	t_process	**tmp_process;
 
 	tmp_process = (t_process **)malloc(sizeof(t_process *));
@@ -98,24 +99,31 @@ void	parse(t_process *process, t_list **words_splited)
 		put_error(MEMPROBLEM, 1); //exit status 1???
 		return ;
 	}
+	tmp = (t_list **)malloc(sizeof(t_list *));
+	if (!tmp)
+	{
+		put_error(MEMPROBLEM, 1); //exit status 1???
+		return ;
+	}
 	printf("27.5.tmp_process pointer = %p\n", tmp_process);
 	//tmp = (t_list *)malloc(sizeof(t_list));
-	tmp = *words_splited;
+	*tmp = *words_splited;
 	init_process(process);
 	*tmp_process = process;
-	while (tmp)
+	while (*tmp)
 	{
-		tmp_word = ft_strdup(tmp->content);
+		tmp_word = ft_strdup((*tmp)->content);
 		printf("27.6.tmp_word pointer = %p\n", tmp_word);
 		if (is_redir(tmp_word) == 1)
-			handle_redirection(&tmp, *tmp_process, tmp_word);
+			handle_redirection(tmp, *tmp_process, tmp_word);
 		else if (ft_strncmp(tmp_word, "|", 2) == 0)
-			handle_pipe(tmp_process, tmp_word, tmp);
+			handle_pipe(tmp_process, tmp_word, *tmp);
 		else
 			handle_command(tmp_process, tmp_word);
-		if (tmp->next != NULL)
+		if ((*tmp)->next != NULL)
 		{
-			tmp = tmp->next;
+			//free(*tmp);
+			*tmp = (*tmp)->next;
 			if (tmp_word)
 				free(tmp_word);
 			/*if (tmp_process)
@@ -129,7 +137,7 @@ void	parse(t_process *process, t_list **words_splited)
 			tmp_word = NULL;
 			free(tmp_process);
 			tmp_process = NULL;
-			//free(tmp);
+			free(tmp);
 			return ;
 		}
 		//free(tmp_word); //
