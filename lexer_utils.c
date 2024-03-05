@@ -19,7 +19,7 @@ void	insert_node(t_list **list, char *content)
 	t_list	*tmp;
 
 	new_node = ft_lstnew(content);
-	printf("19.0.new_node pointer = %p\n", new_node);
+	//printf("19.0.new_node pointer = %p\n", new_node);
 	if (!new_node)
 		return ;
 	tmp = (*list)->next;
@@ -34,18 +34,18 @@ char	*get_tmp_split(int target_index, char *tmp_word, int i)
 
 	if (target_index > 0)
 	{
-		tmp_split = ft_substr(tmp_word, i, target_index - i); ////******
+		tmp_split = ft_substr(tmp_word, i, target_index - i);
 		if (tmp_split == NULL)
 			return (free(tmp_split), NULL);
 	}
 	else
 	{
 		end = get_end_index(tmp_word, i);
-		tmp_split = ft_substr(tmp_word, i, end); ////********
+		tmp_split = ft_substr(tmp_word, i, end);
 		if (tmp_split == NULL)
 			return (free(tmp_split), NULL);
 	}
-	printf("19.get_tmp_split tmp_split pointer = %p\n", tmp_split);
+	//printf("19.get_tmp_split tmp_split pointer = %p\n", tmp_split);
 	return (tmp_split);
 }
 

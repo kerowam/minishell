@@ -33,9 +33,7 @@ int	find_path(t_process *process, t_data *shell)
 		if (ft_strncmp(current_env->name, "PATH", 4) == 0)
 		{
 			process->path_env = ft_strdup(current_env->value);
-			printf("1. find_path process->path_env pointer: %p\n", process->path_env);
 			process->env = ft_split(process->path_env, ':');
-			printf("2. find_path process->env pointer: %p\n", process->env);
 			if (!process->env || !process->path_env)
 			{
 				perror("Error al dividir o duplicar la cadena");
@@ -50,18 +48,14 @@ int	find_path(t_process *process, t_data *shell)
 
 void	execute_builtin(t_process *process, t_data *shell)
 {
-	//(void)process;
 	if (ft_strncmp(shell->echo[0], "exit\0", 5) == 0
 		|| ft_strncmp(shell->echo[0], "EXIT\0", 5) == 0)
 	{
 		printf("exit\n");
 		free_echo(shell->echo);
 		free(shell->line);
-		//free(shell);
 		if (process)
-		{
 			free_process(process);
-		}
 		exit(EXIT_FAILURE);
 	}
 	if (ft_strncmp(shell->echo[0], "env\0", 4) == 0

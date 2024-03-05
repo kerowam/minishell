@@ -34,6 +34,9 @@ SRCS = main.c\
 		parser_utils.c\
 		parser_utils2.c\
 		here_doc_utils.c\
+		free2.c\
+		parser_utils3.c\
+		quote_cleaner_utils.c\
 
 CC = gcc
 

@@ -47,7 +47,7 @@ char	**list_to_array(t_list *list)
 	printf("25.array pointer = %p\n", array);
 	if (!array)
 	{
-		put_error(MEMPROBLEM, 1); //exit status 1???
+		put_error(MEMPROBLEM, 1);
 		return (NULL);
 	}
 	i = 0;
@@ -72,10 +72,6 @@ int	check_redir(char *tmp_word)
 		|| ft_strncmp(tmp_word, "<", 2) == 0)
 	{
 		put_error(UNEXPECTEDTOKEN, 258);
-		//free (tmp);
-		//free_list (words_splited);
-		//Liberar listas
-		//Gestionar g_status
 		return (1);
 	}
 	return (0);

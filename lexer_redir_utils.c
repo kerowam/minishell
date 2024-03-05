@@ -21,20 +21,16 @@ int	insert_redirs(char redir, t_list **list, char *tmp_word, int i)
 	{
 		if (redir == '>')
 			ft_lstadd_back(list, ft_lstnew(">>"));
-			//insert_node(&list, ft_strdup(">>"));
 		else
 			ft_lstadd_back(list, ft_lstnew("<<"));
-			//insert_node(&list, ft_strdup("<<"));
 		i += 2;
 	}
 	else
 	{
 		if (redir == '>')
 			ft_lstadd_back(list, ft_lstnew(">"));
-			//insert_node(&list, ft_strdup(">"));
 		else
 			ft_lstadd_back(list, ft_lstnew("<"));
-			//insert_node(&list, ft_strdup("<"));
 		i++;
 	}
 	return (i);
@@ -46,19 +42,15 @@ void	set_redir(t_list **list, char redir, char *tmp_word, int i)
 	{
 		if (redir == '>')
 			ft_lstadd_back(list, ft_lstnew(">>"));
-			//list->content = ft_strdup(">>");
 		else
 			ft_lstadd_back(list, ft_lstnew("<<"));
-			//list->content = ft_strdup("<<");
 	}
 	else
 	{
 		if (redir == '>')
 			ft_lstadd_back(list, ft_lstnew(">"));
-			//list->content = ft_strdup(">");
 		else
 			ft_lstadd_back(list, ft_lstnew("<"));
-			//list->content = ft_strdup("<");
 	}
 }
 
@@ -85,4 +77,12 @@ int	get_redirection_nbr(char *line, int i)
 		}
 	}
 	return (redirection_nbr);
+}
+
+void	add_node(t_list **list, char *tmp_word, char *tmp_split)
+{
+	if ((*list)->content == NULL)
+		(*list)->content = ft_strdup(tmp_word);
+	else
+		ft_lstadd_back(list, ft_lstnew(tmp_split));
 }

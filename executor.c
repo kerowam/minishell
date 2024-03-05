@@ -33,7 +33,6 @@ static void	setup_command_and_redirects(t_process *process, char **cmd_argv,
 	while (current)
 	{
 		cmd_argv[*j] = ft_strdup(current->content);
-		printf("4. setup_command_and_redirects cmd_argv[%d] pointer = %p\n", *j, cmd_argv[*j]);
 		current = current->next;
 		(*j)++;
 	}

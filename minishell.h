@@ -58,7 +58,6 @@ typedef struct s_process
 {
 	struct s_process	*next_process;
 	char				*command;
-	//t_list				*flags;
 	t_list				*argv;
 	char				**args;
 	pid_t				pid;//
@@ -154,6 +153,7 @@ void	create_line_splited(char *line, t_list **list);
 void	lexer(t_data *shell, t_list **redir_splited);
 //void	lexer(t_data *shell);
 void	init_list(t_list **list);
+void	ft_free_list(t_list **list);
 
 //lexer_pipes.c
 void	split_pipes(t_list **list, t_list **pipes_splited);
@@ -178,6 +178,7 @@ int		get_redir_index(char *line, int i);
 int		insert_redirs(char redir, t_list **list, char *tmp_word, int i);
 void	set_redir(t_list **list, char redir, char *tmp_word, int i);
 int		get_redirection_nbr(char *line, int i);
+void	add_node(t_list **list, char *tmp_word, char *tmp_split);
 
 //expander.c
 void	expander(t_env *env, t_list **line_splited);
@@ -194,7 +195,10 @@ void	clean_str_quot(char *str, t_list **list);
 
 //parser.c
 void	parse(t_process *process, t_list **words_splited);
-void	init_process(t_process *process);
+void	handle_redirection(t_list **tmp, t_process *tmp_process);
+void	handle_pipe(t_process **tmp_process, t_list *tmp);
+void	handle_command(t_process **tmp_process, t_list *tmp);
+int		is_redir(char *tmp_word);
 
 //executor.c
 int		check_command_access(t_process *process);
@@ -238,9 +242,9 @@ void	put_error(int error_tipe, int error_code);
 //free.c
 void	free_temp(char **temp);
 void	free_echo(char **str);
+void	free_list_p(t_list **tmp);
 void	free_list(t_list **list);
 void	free_env_list(t_env *env);
-void	free_process(t_process *process);
 
 //parser_utils.c
 void	init_process(t_process *process);
@@ -262,5 +266,21 @@ void	read_lines_until_delimiter(int fd, const char *delimiter);
 int		open_temp_file_read(const char *filename);
 void	write_temp_file_to_pipe(int fd_pipe, int fd_temp);
 void	free_argv(char **argv);
+
+//free2.c
+void	free_expander(t_env **tmp_env, t_list **tmp_list, char *tmp_str);
+void	ft_free_char(char *str);
+void	free_process(t_process *process);
+void	free_list_dp(t_list **list);
+void	free_list_process(t_list *list);
+
+//parser_utils3.c
+void	add_heredoc(t_list **here_doc, char *word);
+void	parse_final(t_process **process, t_list **tmp);
+void	handle_command_pipe_redir(t_process **tmp_process, t_list **tmp);
+
+//quote_cleaner_utils.c
+char	*add_quot_substr(int start, int i, char *str, char *end_str);
+char	*add_substr(int start, int i, char *str, char *end_str);
 
 #endif
