@@ -70,15 +70,22 @@ void	handle_pipe(t_process **tmp_process, t_list *tmp)
 }
 
 //void	handle_command(t_process **tmp_process, char *tmp_word)
-void	handle_command(t_process **tmp_process, t_list *tmp)
+void	handle_command(t_process **tmp_process, t_list **tmp)
 {
 	char		*tmp_word;
 
-	tmp_word = ft_strdup((tmp->content));
+	tmp_word = ft_strdup((*tmp)->content);
 	if ((*tmp_process)->command == NULL)
 	{
 		(*tmp_process)->command = ft_strdup(tmp_word);
 		printf("27.4.(*tmp_process)->command pointer = %p\n", tmp_word);
+		if (strncmp((*tmp_process)->command, "cat\0", 4) == 0)
+		{
+			printf("command = %s\n", (*tmp_process)->command);
+			(*tmp_process)->infile = ft_strdup((*tmp)->next->content);
+			if ((*tmp)->next)
+				*tmp = (*tmp)->next;
+		}
 	}
 	else
 	{
@@ -136,7 +143,7 @@ void	parse(t_process *process, t_list **words_splited)
 			handle_pipe(tmp_process, *tmp);
 			//handle_pipe(tmp_process, tmp_word, *tmp);
 		else
-			handle_command(tmp_process, *tmp);
+			handle_command(tmp_process, tmp);
 			//handle_command(tmp_process, tmp_word);
 		if ((*tmp)->next != NULL)
 		{
