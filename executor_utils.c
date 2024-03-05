@@ -50,7 +50,7 @@ int	find_path(t_process *process, t_data *shell)
 
 void	execute_builtin(t_process *process, t_data *shell)
 {
-	(void)process;
+	//(void)process;
 	if (ft_strncmp(shell->echo[0], "exit\0", 5) == 0
 		|| ft_strncmp(shell->echo[0], "EXIT\0", 5) == 0)
 	{

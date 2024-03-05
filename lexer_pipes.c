@@ -18,7 +18,10 @@ int	split_pipe_2(int i, char *tmp_word, t_list **pipes_splited)
 	{
 		tmp_split = ft_substr(tmp_word, 0, pipe_index);
 		printf("16.tmp_split pointer = %p\n", tmp_split); ////*******
-		ft_lstadd_back(pipes_splited, ft_lstnew(tmp_split));
+		if ((*pipes_splited)->content == NULL)
+			(*pipes_splited)->content = ft_strdup(tmp_split);
+		else
+			ft_lstadd_back(pipes_splited, ft_lstnew(tmp_split));
 		//(*pipes_splited)->content = ft_strdup(tmp_split);
 		i = pipe_index;
 	}
@@ -104,7 +107,15 @@ void	handle_pipes(t_list **list, int i, t_list **pipes_splited)
 		split_pipe(*list, i, pipes_splited);
 	}
 	else if (len > 0)
+	{
+		if ((*pipes_splited)->content == NULL)
+		{
+			(*pipes_splited)->content = ft_strdup(tmp_word);
+			printf("16.4.1 list->content pointer = %p\n", (*pipes_splited)->content);
+		}
+		else
 		ft_lstadd_back(pipes_splited, ft_lstnew(tmp_word));
+	}
 	printf("16.5.handle_pipes pipes_splited pointer = %p\n", *pipes_splited);
 	free(tmp_word); //
 	tmp_word = NULL;
