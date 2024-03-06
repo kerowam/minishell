@@ -30,7 +30,12 @@ SRCS = main.c\
 		redirections.c\
 		here_doc.c\
 		free.c\
-		here_doc_utils.c
+		parser_utils.c\
+		parser_utils2.c\
+		here_doc_utils.c\
+		parser_utils3.c\
+		free2.c\
+		quot_cleaner_utils.c\
 
 CC = gcc
 
@@ -39,7 +44,7 @@ OBJS = ${SRCS:.c=.o}
 all: ${LIBFT}/libft.a $(NAME)
 
 $(NAME): $(OBJS)
-	@$(CC) -g $(CFLAGS) $(SRCS) ${LIBFT}/libft.a -o $(NAME) -lreadline
+	@$(CC) $(CFLAGS) $(SRCS) ${LIBFT}/libft.a -o $(NAME) -lreadline
 	
 #gcc -L/usr/local/opt/readline/lib -I/usr/local/opt/readline/include -lreadline main.c -o main
 

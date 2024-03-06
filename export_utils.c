@@ -1,7 +1,5 @@
 #include "minishell.h"
 
-#include "minishell.h"
-
 void	only_export(t_data *shell)
 {
 	t_env	*current;
@@ -28,6 +26,7 @@ void	create_variable(char *variable, t_data *shell)
 		env_add_back(&shell->env, new_env);
 	}
 	free(value);
+	value = NULL;
 }
 
 bool	check_args(char *arg, char *cmd)
@@ -67,6 +66,8 @@ int	check_if_exists(char *name, char *value, t_data *shell)
 		{
 			free(ptr->value);
 			ptr->value = ft_strdup(value);
+			printf("13.check_if_exists ptr->value pointer = %p\n", ptr->value);
+			printf("13.1check_if_exists ptr->value pointer = %s\n", ptr->value);
 			free(name);
 			return (1);
 		}
@@ -84,8 +85,9 @@ t_env	*new_node(char *name, char *value)
 	if (!env)
 		return (NULL);
 	env->name = ft_strdup(name);
+	printf("13.2.new_node env->name pointer = %p\n", env->name);
 	env->value = ft_strdup(value);
-	printf("13.new_node env->name pointer = %p\n", env->name);
+	printf("13.3.new_node env->name pointer = %p\n", env->name);
 	env->next = NULL;
 	return (env);
 }

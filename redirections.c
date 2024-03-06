@@ -12,7 +12,9 @@ void	redirect_infile(t_process *process)
 			perror("Error opening input file");
 			exit(EXIT_FAILURE);
 		}
+		printf("File '%s' opened successfully for input redirection.\n", process->infile);
 		dup2(fd, STDIN_FILENO);
+		printf("Input redirected successfully.\n");
 		if (close(fd) == -1)
 		{
 			perror("Error closing input file descriptor");

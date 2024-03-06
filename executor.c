@@ -1,153 +1,148 @@
 #include "minishell.h"
 
-static void	execute_command(t_process *process, char *full_path,
-		char **cmd_argv)
-{
-	process->pid = fork();
-	if (process->pid == -1)
-	{
-		perror("Error creating child process");
-		exit(EXIT_FAILURE);
-	}
-	else if (process->pid == 0)
-	{
-		redirect_infile(process);
-		execve(full_path, cmd_argv, process->env);
-		perror("Error executing command");
-		exit(EXIT_FAILURE);
-	}
-	waitpid(process->pid, &process->status, 0);
-}
-
-static void	setup_command_and_redirects(t_process *process, char **cmd_argv,
-		int *j)
-{
-	t_list	*current;
-
-	redirect_outfile_append(process);
-	redirect_outfile(process);
-	cmd_argv[0] = ft_strdup(process->command);
-	current = process->argv;
-	*j = 1;
-	while (current)
-	{
-		cmd_argv[*j] = ft_strdup(current->content);
-		current = current->next;
-		(*j)++;
-	}
-	cmd_argv[*j] = NULL;
-}
-
-static void	execute_single_command(t_process *process, char *full_path,
-	char **cmd_argv, int original_stdout)
-{
-	int	j;
-	int	k;
-
-	setup_command_and_redirects(process, cmd_argv, &j);
-	execute_command(process, full_path, cmd_argv);
-	if (ft_strcmp(process->command, "cat") == 0)
-		printf("\n");
-	dup2(original_stdout, STDOUT_FILENO);
-	close(original_stdout);
-	free(full_path);
-	k = 0;
-	while (cmd_argv[k] != NULL)
-	{
-		free(cmd_argv[k]);
-		k++;
-	}
-	free(cmd_argv);
-}
-
-int	check_command_access(t_process *process)
+int	execute_command(t_process *process, int input_fd, int output_fd)
 {
 	int		i;
-	char	*full_path;
+	int		j;
 	char	*temp;
-	char	**cmd_argv;
+	char	*full_path;
+	char	**argv;
+	t_list	*current;
 	int		k;
-	int		original_stdout;
 
 	i = 0;
-	original_stdout = dup(STDOUT_FILENO);
-	cmd_argv = malloc((ft_lstsize(process->argv) + 2) * sizeof(char *));
-	if (!cmd_argv)
-	{
-		perror("Error allocating memory for cmd_argv");
-		exit(EXIT_FAILURE);
-	}
+	argv = malloc((ft_lstsize(process->argv) + 2) * sizeof(char *));
 	while (process->env[i] != NULL)
 	{
+		
 		temp = ft_strjoin(process->env[i], "/");
 		full_path = ft_strjoin(temp, process->command);
-		if (!process->next_process)
+		if (access(full_path, F_OK | X_OK) != -1)
 		{
-			if (access(full_path, F_OK | X_OK) != -1)
+			argv[0] = ft_strdup(process->command);
+			current = process->argv;
+			j = 1;
+			while (current)
 			{
-				execute_single_command(process, full_path,
-					cmd_argv, original_stdout);
-				free(temp);
-				return (1);
+				argv[j] = ft_strdup(current->content);
+				current = current->next;
+				j++;
 			}
-			else
+			argv[j] = NULL;
+			process->pid = fork();
+			if (process->pid == 0)
 			{
-				free(temp),
-				free(full_path);
+				redirect_outfile_append(process);
+				redirect_outfile(process);
+				redirect_infile(process);
+				if (input_fd != STDIN_FILENO)
+				{
+					dup2(input_fd, STDIN_FILENO);
+					close(input_fd);
+				}
+				if (output_fd != STDOUT_FILENO)
+				{
+					dup2(output_fd, STDOUT_FILENO);
+					close(output_fd);
+				}
+				execve(full_path, argv, process->env);
+				perror("execve");
+				exit(EXIT_FAILURE);
+
 			}
+			waitpid(process->pid, &process->status, 0);
+			if (input_fd != STDIN_FILENO)
+				close(input_fd);
+			if (output_fd != STDOUT_FILENO)
+				close(output_fd);
+			free(temp);
+			free(full_path);
+			k = 0;
+			while (argv[k] != NULL)
+			{
+				free(argv[k]);
+				k++;
+			}
+			free(argv);
+		}
+		else
+		{
+			free(full_path);
+			free(temp);
 		}
 		i++;
 	}
-	k = 0;
-	while (cmd_argv[k] != NULL)
+	return (EXIT_SUCCESS);
+}
+
+bool	is_single_command(t_process *process)
+{
+	int	i;
+
+	i = 1;
+	while (process->next_process)
 	{
-		free(cmd_argv[k]);
-		k++;
+		i++;
+		process = process->next_process;
 	}
-	free(cmd_argv);
-	return (0);
+	if (i == 1)
+		return (true);
+	else
+		return (false);
 }
 
 int	main_executor(t_data *shell, t_process *process)
 {
+	t_process	*current_process;
+	int			input_fd;
+	int			pipe_fd[2];
+	id_t		i;
+
 	if (!process)
-		exit(EXIT_FAILURE);
-	if (is_builtin(process, shell))
-		execute_builtin(process, shell);
-	else if (!is_builtin(process, shell))
+		return (EXIT_FAILURE);
+	else
 	{
-		if (!process->command || (process->command && process->here_doc))
+		if (is_single_command(process))
 		{
-			if (!process->here_doc)
-				return (EXIT_FAILURE);
-			else
-			{
-				handle_heredoc(process);
-				return (EXIT_SUCCESS);
-			}
-		}
-		find_path(process, shell);
-		if (!check_command_access(process) && process->command
-			&& !(starts_with_dot_slash(process->command)))
-		{
-			printf("zsh: command not found: %s\n", process->command);
+			find_path(process, shell);
+			execute_command(process, STDIN_FILENO, STDOUT_FILENO);
 			free(process->path_env);
 			free_string_array(process->env);
-			return (EXIT_FAILURE);
 		}
-		if (process->command)
+		else if (!is_single_command(process))
 		{
-			if (ft_strncmp(process->command, "clear", 5) == 0)
-				printf("\033[H\033[J");
+			current_process = process;
+			input_fd = STDIN_FILENO;
+			i = 1;
+			while (current_process)
+			{
+				find_path(current_process, shell);
+				printf("Ejecutando comando %d: %s\n", i, current_process->command);
+				if (current_process->next_process)
+				{
+					if (pipe(pipe_fd) == -1)
+					{
+						perror("pipe");
+						exit(EXIT_FAILURE);
+					}
+				}
+				if (current_process->next_process)
+					execute_command(current_process, input_fd, pipe_fd[1]);
+				else
+					execute_command(current_process, input_fd, STDOUT_FILENO);
+				if (current_process->next_process)
+				{
+					close(pipe_fd[1]);
+					input_fd = pipe_fd[0];
+				}
+				current_process = current_process->next_process;
+				i++;
+			}
+			while (wait(NULL) > 0)
+				;
+			free(process->path_env);
+			free_string_array(process->env);
 		}
-		if (starts_with_dot_slash(process->command))
-		{
-			execute_local_command(process);
-			return (EXIT_SUCCESS);
-		}
-		free(process->path_env);
-		free_string_array(process->env);
-		return (EXIT_SUCCESS);
 	}
-	exit(EXIT_FAILURE);
+	return (EXIT_SUCCESS);
 }

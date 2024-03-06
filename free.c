@@ -10,9 +10,11 @@ void	free_temp(char **temp)
 		while (temp[i])
 		{
 			free(temp[i]);
+			temp[i] = NULL;
 			i++;
 		}
 		free(temp);
+		temp = NULL;
 	}
 }
 
@@ -35,44 +37,48 @@ void	free_echo(char **str)
 	}
 }
 
-void	free_list(t_list **list)
+void	free_list_p(t_list **tmp)
 {
-	t_list	**tmp;
-	t_list	**next;
-	//char	*content;
+	t_list	*next;
 
-	tmp = list;
-	while (tmp)
+	while (*tmp != NULL)
 	{
-		if ((*tmp)->next)
-			next = &(*tmp)->next;
+		if ((*tmp)->next != NULL)
+			next = (*tmp)->next;
 		else
 			next = NULL;
-		//content = ft_strdup(tmp->content);
-		if ((*tmp)->content)
+		if (*tmp != NULL)
 		{
-			printf("freeing content: %s\n", (*tmp)->content);
-			//getchar();
-			free((*tmp)->content);
-		}
-		/*if (*tmp)
-			free(*tmp);*/
-		tmp = next;
-		//free (content);
-	}
-		/*if (*tmp)
-			free(*tmp);*/
-	tmp = list;
-	while (*tmp)
-	{
-		next = &(*tmp)->next;
-		if (*tmp)
 			free(*tmp);
-		*tmp = *next;
+			*tmp = NULL;
+		}
+		*tmp = next;
 	}
-	if (tmp)
-		free(tmp);
-	*list = NULL;
+	next = NULL;
+}
+
+void	free_list(t_list **list)
+{
+	t_list	*next;
+
+	while (*list != NULL)
+	{
+		if ((*list)->next != NULL)
+			next = (*list)->next;
+		else
+			next = NULL;
+		if ((*list)->content != NULL)
+		{
+			printf("freeing content: %s\n", (*list)->content);
+			free((*list)->content);
+			(*list)->content = NULL;
+			free(*list);
+		}
+		*list = next;
+	}
+	if (list != NULL)
+		free_list_p(list);
+	return ;
 }
 
 void	free_env_list(t_env *env)
@@ -84,35 +90,10 @@ void	free_env_list(t_env *env)
 		temp = env;
 		env = env->next;
 		free(temp->name);
+		temp->name = NULL;
 		free(temp->value);
+		temp->value = NULL;
 		free(temp);
-	}
-}
-
-void	free_process(t_process *process)
-{
-	t_process	*tmp;
-	t_process	*next;
-
-	tmp = process;
-	while (tmp)
-	{
-		next = tmp->next_process;
-		if (tmp->command)
-			free(tmp->command);
-		if (tmp->argv)
-			free_list(&tmp->argv);
-		if (tmp->infile)
-			free(tmp->infile);
-		if (tmp->outfile)
-			free(tmp->outfile);
-		if (tmp->outfile_append)
-			free(tmp->outfile_append);
-		if (tmp->here_doc)
-			free_list(&tmp->here_doc);
-		if (tmp->args)
-			free_echo(tmp->args);
-		free(tmp);
-		tmp = next;
+		temp = NULL;
 	}
 }

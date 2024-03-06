@@ -12,11 +12,13 @@ static void	prepare_command_arguments(t_process *process, char ***cmd_argv)
 		exit(EXIT_FAILURE);
 	}
 	(*cmd_argv)[0] = ft_strdup(process->command);
+	//printf("2. prepare_command_arguments cmd_argv pointer = %p\n", *cmd_argv);
 	current = process->argv;
 	j = 1;
 	while (current)
 	{
 		(*cmd_argv)[j] = ft_strdup(current->content);
+		//printf("3. prepare_command_arguments cmd_argv[%d] pointer = %p\n", j, (*cmd_argv)[j]);
 		current = current->next;
 		j++;
 	}

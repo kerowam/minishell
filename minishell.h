@@ -4,6 +4,7 @@
 
 # include "libft/libft.h"
 # include <stdio.h>
+# include <stdlib.h>
 # include <string.h>
 # include <sys/types.h>
 # include <sys/wait.h>
@@ -13,6 +14,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <errno.h>
+//# include "memory-leaks/include/memory_leaks.h"
 
 # define RESET		"\x1B[0m"
 # define RED		"\x1B[31m"
@@ -26,7 +28,7 @@
 # define Q			'\''
 # define DQ			'\"'
 
-int		g_exit_status;
+//int		g_exit_status;
 
 typedef struct s_env
 {
@@ -56,7 +58,6 @@ typedef struct s_process
 {
 	struct s_process	*next_process;
 	char				*command;
-	//t_list				*flags;
 	t_list				*argv;
 	char				**args;
 	pid_t				pid;//
@@ -149,7 +150,7 @@ char	set_in_quot(char *line, int i);
 
 //lexer.c
 void	create_line_splited(char *line, t_list **list);
-t_list	**lexer(t_data *shell, t_list **words_splited);
+void	lexer(t_data *shell, t_list **words_splited, t_list **redir_splited);
 void	init_list(t_list **list);
 
 //lexer_pipes.c
@@ -168,7 +169,7 @@ int		get_pipe_nbr(char *line, int i);
 int		get_pipe_index(char *line, int i);
 
 //lexer_redir.c
-t_list	**split_redirections(t_list **list, t_list **redir_splited);
+void	split_redirections(t_list **list, t_list **redir_splited);
 
 //lexer_redir_utils.c
 int		get_redir_index(char *line, int i);
@@ -191,12 +192,13 @@ void	clean_str_quot(char *str, t_list **list);
 
 //parser.c
 void	parse(t_process *process, t_list **words_splited);
+void	init_process(t_process *process);
 
 //executor.c
-int		check_command_access(t_process *process);
+int		execute_command(t_process *process, int input_fd, int output_fd);
 int		main_executor(t_data *shell, t_process *process);
-void	handle_redirections_and_pipes(t_process *process);
 void	execute_local_command(t_process *process);
+
 
 //executor_utils.c
 void	free_string_array(char **array);
@@ -226,6 +228,7 @@ void	redirect_outfile_append(t_process *process);
 
 //here_doc.c
 int		handle_heredoc(t_process *process);
+//void 	print_environment(t_env *env);
 
 //error.c
 void	put_error(int error_tipe, int error_code);
@@ -237,11 +240,46 @@ void	free_list(t_list **list);
 void	free_env_list(t_env *env);
 void	free_process(t_process *process);
 
+//parser_utils.c
+void	init_process(t_process *process);
+int		ft_lstsize(t_list *lst);
+char	**list_to_array(t_list *list);
+int		check_redir(char *tmp_word);
+void	free_list_p(t_list **tmp);
+
+//parser_utils2.c
+void	check_pipe(char *tmp_word);
+void	check_infile(char *tmp_word, t_process *tmp_process);
+int		check_access_outfile(char *tmp_word);
+void	check_outfile(char *tmp_word, t_process *tmp_process);
+void	check_outfile_append(char *tmp_word, t_process *tmp_process);
+
 //here_doc_utils.c
 int		create_temp_file(const char *filename);
 void	read_lines_until_delimiter(int fd, const char *delimiter);
 int		open_temp_file_read(const char *filename);
 void	write_temp_file_to_pipe(int fd_pipe, int fd_temp);
 void	free_argv(char **argv);
+
+//parser_utils3.c
+void	add_heredoc(t_list **here_doc, char *word);
+void	parse_final(t_process **process, t_list **tmp);
+void	handle_command_pipe_redir(t_process **tmp_process, t_list **tmp);
+
+//free2.c
+void	free_expander(t_env **tmp_env, t_list **tmp_list, char *tmp_str);
+void	ft_free_char(char *str);
+void	free_list_process(t_list *list);
+void	free_list_dp(t_list **list);
+void	free_process(t_process *process);
+
+void	handle_redirection(t_list **tmp, t_process *tmp_process);
+void	handle_pipe(t_process **tmp_process, t_list *tmp);
+void	handle_command(t_process **tmp_process, t_list *tmp);
+int		is_redir(char *tmp_word);
+void	parse(t_process *process, t_list **words_splited);
+
+char	*add_quot_substr(int start, int i, char *str, char *end_str);
+char	*add_substr(int start, int i, char *str, char *end_str);
 
 #endif
