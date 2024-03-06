@@ -40,6 +40,7 @@ void	start_minishell(t_data *shell, char **env)
 	(void)env;
 	while (1)
 	{
+		setup_signal_handlers();
 		system("leaks -q minishell");
 		redir_splited = (t_list **)malloc(sizeof(t_list *));
 		if (!redir_splited)
@@ -64,9 +65,8 @@ void	start_minishell(t_data *shell, char **env)
 			if (q % 2 != 0)
 			{
 				printf("error: dequoted line\n");
-				free(shell->line);
-				//rl_replace_line("Minishell@ ~ ", 1);
-				shell->line = readline("Minishell@ ~ ");
+				//free(shell->line);
+				rl_replace_line("", 0);
 			}
 			if (shell->line && *shell->line)
 			{

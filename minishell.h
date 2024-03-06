@@ -15,6 +15,7 @@
 # include <readline/history.h>
 # include <errno.h>
 # include "memory-leaks/include/memory_leaks.h"
+# include <sys/ioctl.h>
 
 # define RESET		"\x1B[0m"
 # define RED		"\x1B[31m"
@@ -282,5 +283,11 @@ void	handle_command_pipe_redir(t_process **tmp_process, t_list **tmp);
 //quote_cleaner_utils.c
 char	*add_quot_substr(int start, int i, char *str, char *end_str);
 char	*add_substr(int start, int i, char *str, char *end_str);
+
+//signals.c
+void	signals_handler(int sign);
+
+void	rl_replace_line(const char *text, int clear_undo);
+void	setup_signal_handlers(void);
 
 #endif

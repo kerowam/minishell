@@ -56,7 +56,7 @@ void	execute_builtin(t_process *process, t_data *shell)
 		free(shell->line);
 		if (process)
 			free_process(process);
-		exit(EXIT_FAILURE);
+		exit(EXIT_SUCCESS);
 	}
 	if (ft_strncmp(shell->echo[0], "env\0", 4) == 0
 		|| ft_strncmp(shell->echo[0], "ENV\0", 4) == 0)
