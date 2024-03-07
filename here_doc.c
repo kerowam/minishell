@@ -4,12 +4,21 @@ static char	**create_argv_for_command(t_process *process)
 {
 	int		argc;
 	char	**argv;
+	t_list	*current;
+	int		j;
 
 	argc = 2;
 	argv = malloc(sizeof(char *) * (argc + 1));
-	argv[0] = ft_strdup(process->command); //ft_strdup added by gfredes
-	argv[1] = ft_strdup(*process->args);
-	argv[2] = NULL;
+	argv[0] = ft_strdup(process->command);
+	current = process->argv;
+	j = 1;
+	while (current)
+	{
+		argv[j] = ft_strdup(current->content);
+		current = current->next;
+		j++;
+	}
+	argv[j] = NULL;
 	return (argv);
 }
 
@@ -51,7 +60,6 @@ int	handle_heredoc(t_process *process)
 	if (!process->here_doc)
 		return (0);
 	filename = "here_doc.tmp";
-	printf("Creating temporary file: %s\n", filename);
 	fd_write = create_temp_file(filename);
 	read_lines_until_delimiter(fd_write, process->here_doc->content);
 	close(fd_write);
