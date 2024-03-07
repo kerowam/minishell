@@ -12,11 +12,9 @@ char	*get_expanded_value(t_env *env, char *key)
 	while (tmp->name)
 	{
 		name = ft_strdup(tmp->name);
-		//printf("7.0. name pointer = %p\n", name);
 		if (ft_strncmp(key, name, ft_strlen(name)) == 0)
 		{
 			value = ft_strdup(tmp->value);
-			//printf("7.value pointer = %p\n", value);
 			return (value);
 		}
 		free(name);
@@ -26,7 +24,6 @@ char	*get_expanded_value(t_env *env, char *key)
 			break ;
 	}
 	value = ft_strdup("");
-	//printf("8.value pointer = %p\n", value);
 	return (value);
 }
 
@@ -37,12 +34,10 @@ char	*expand_value(char *str, int i, t_env *env, char *end_str)
 
 	tmp = set_key(str, i);
 	value = get_expanded_value(env, tmp);
-	//printf("9.0. expand_value value pointer = %p\n", value);
 	if (!end_str)
 		end_str = ft_strdup(value);
 	else
 		end_str = ft_strjoin(end_str, value);
-	//printf("9.expand value end_str pointer = %p\n", end_str);
 	free(tmp);
 	tmp = NULL;
 	free(value);
@@ -68,7 +63,6 @@ char	*join_expand(char *str, int i, char *end_str)
 		end_str = ft_strdup(tmp);
 	else
 		end_str = ft_strjoin(end_str, tmp);
-	//printf("10.join expand end_str pointer = %p\n", end_str);
 	free(tmp);
 	tmp = NULL;
 	return (end_str);
@@ -112,10 +106,8 @@ void	expander(t_env *env, t_list **line_splited)
 	if (tmp_env == NULL)
 		return ;
 	*tmp_env = env;
-	//printf("11.*tmp_env pointer: %p\n", *tmp_env);
-	tmp_list = (t_list **)ft_calloc(0, sizeof(t_list *)); //Añadir gestión de errores cuando falla malloc en ft_calloc
+	tmp_list = (t_list **)ft_calloc(0, sizeof(t_list *));
 	*tmp_list = *line_splited;
-	//printf("12.tmp_list pointer: %p\n", tmp_list);
 	while (*tmp_list != NULL)
 	{
 		tmp_str = ft_strdup((*tmp_list)->content);
@@ -124,20 +116,10 @@ void	expander(t_env *env, t_list **line_splited)
 		if ((*tmp_list)->next)
 		{
 			*tmp_list = (*tmp_list)->next;
-			if (tmp_str)
-				free(tmp_str);
-			tmp_str = NULL;
+			ft_free_char(tmp_str);
 		}
 		else
 			*tmp_list = NULL;
 	}
-	if (tmp_env != NULL)
-		free (tmp_env);
-	tmp_env = NULL;
-	if (tmp_list != NULL)
-		free (tmp_list);
-	tmp_list = NULL;
-	if (tmp_str != NULL)
-		free (tmp_str);
-	tmp_str = NULL;
+	free_expander(tmp_env, tmp_list, tmp_str);
 }

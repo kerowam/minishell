@@ -12,13 +12,13 @@ static void	prepare_command_arguments(t_process *process, char ***cmd_argv)
 		exit(EXIT_FAILURE);
 	}
 	(*cmd_argv)[0] = ft_strdup(process->command);
-	//printf("2. prepare_command_arguments cmd_argv pointer = %p\n", *cmd_argv);
+	printf("2. prepare_command_arguments cmd_argv pointer = %p\n", *cmd_argv);
 	current = process->argv;
 	j = 1;
 	while (current)
 	{
 		(*cmd_argv)[j] = ft_strdup(current->content);
-		//printf("3. prepare_command_arguments cmd_argv[%d] pointer = %p\n", j, (*cmd_argv)[j]);
+		printf("3. prepare_command_arguments cmd_argv[%d] pointer = %p\n", j, (*cmd_argv)[j]);
 		current = current->next;
 		j++;
 	}
@@ -41,15 +41,6 @@ static void	execute_child_process(t_process *process,
         exit(EXIT_FAILURE);
     }
     waitpid(process->pid, &process->status, 0);
-
-    // Liberar la memoria de cmd_argv después de que el proceso hijo termina
-    /*int i = 0;
-    while (cmd_argv[i] != NULL)
-    {
-        free(cmd_argv[i]);
-        i++;
-    }
-    free(cmd_argv);*/
 }
 
 void	execute_local_command(t_process *process)
