@@ -1,4 +1,6 @@
+
 #include "minishell.h"
+//#include "memory-leaks/include/memory_leaks.h"
 
 void	ft_header(void)
 {
@@ -20,80 +22,109 @@ void	ft_header(void)
 
 void	initialize_minishell(t_data **shell, char **env)
 {
+	(void)env;
 	*shell = (t_data *)malloc(sizeof(t_data));
 	if (!*shell)
 	{
 		perror("Error al asignar memoria para t_data");
 		exit(EXIT_FAILURE);
 	}
-	initialize_env(*shell, env);
 }
 
-void	process_builtins(t_data *shell)
+void	start_minishell(t_data *shell, char **env)
 {
-	if (ft_strncmp(shell->line, "exit\0", 5) == 0
-		|| ft_strncmp(shell->line, "EXIT\0", 5) == 0)
-	{
-		free(shell->line);
-		exit(EXIT_FAILURE);
-	}
-	if (ft_strncmp(shell->line, "env\0", 4) == 0
-		|| ft_strncmp(shell->line, "ENV\0", 4) == 0)
-		env_command(shell->echo, shell);
-	if (ft_strncmp(shell->line, "pwd\0", 4) == 0
-		|| ft_strncmp(shell->line, "PWD\0", 4) == 0)
-		pwd_command(shell);
-	if (ft_strncmp(shell->echo[0], "echo\0", 5) == 0
-		|| ft_strncmp(shell->echo[0], "ECHO\0", 5) == 0)
-		echo_command(shell->echo, 0);
-	if (ft_strncmp(shell->echo[0], "unset\0", 6) == 0
-		|| ft_strncmp(shell->echo[0], "UNSET\0", 6) == 0)
-		unset_command(shell, shell->echo[1]);
-	if (ft_strncmp(*shell->echo, "cd\0", 3) == 0
-		|| ft_strncmp(*shell->echo, "CD\0", 3) == 0)
-		cd_command(shell->echo, shell);
-	if (ft_strncmp(shell->echo[0], "export\0", 7) == 0
-		|| ft_strncmp(shell->echo[0], "EXPORT\0", 7) == 0)
-		export_command(shell->echo, shell);
-}
+	int			q;
+	t_list		**redir_splited;
+	t_process	*process;
 
-void	start_minishell(t_data *shell)
-{
+	(void)env;
 	while (1)
 	{
+		setup_signal_handlers();
+		system("leaks -q minishell");
 		shell->line = readline("Minishell@ ~ ");
-		if (shell->line != NULL && *shell->line != '\0')
+		redir_splited = (t_list **)malloc(sizeof(t_list *));
+		if (!redir_splited)
 		{
-			shell->echo = ft_split(shell->line, ' ');
-			if (shell->echo && shell->echo[0] != NULL)
-			{
-				add_history(shell->line);
-				process_builtins(shell);
-				free_echo(shell->echo);
-			}
-			free(shell->line);
+			put_error(MEMPROBLEM, 1);
+			return ;
 		}
-		else if (shell->line != NULL)
-			free(shell->line);
+		process = (t_process *)malloc(sizeof(t_process));
+		if (!process)
+		{
+			put_error(MEMPROBLEM, 1);
+			return ;
+		}
+		printf("24.1.start minishell shell->line pointer = %p\n", shell->line);
+		printf("24.2.start minishell readline = %p\n", readline);
+		if (shell->line == NULL)
+			printf("\n");
+		else
+		{
+			q = check_quotes(shell->line, 0, 0);
+			if (q % 2 != 0)
+			{
+				printf("error: dequoted line\n");
+				//free(shell->line);
+				//rl_replace_line("", 0);
+			}
+			if (shell->line && *shell->line)
+			{
+				lexer(shell, redir_splited);
+				print_list_splited(redir_splited);
+				parse(process, redir_splited);
+				ft_free_list(redir_splited);
+				print_process(process);
+				shell->echo = ft_split(shell->line, ' ');
+				if (shell->echo && shell->echo[0] != NULL)
+				{
+					if (*shell->line)
+						add_history(shell->line);
+					if (is_builtin(process, shell))
+						execute_builtin(process, shell);
+					if (!is_builtin(process, shell))
+						main_executor(shell, process);
+					free_echo(shell->echo);
+					free(shell->line);
+					shell->line = NULL;
+					//free(shell);
+					if (process != NULL)
+						free_process(process);
+				}
+				else
+				{
+					free(shell->line);
+					shell->line = NULL;
+				}
+			}
+		}
 	}
 }
 
 int	main(int argc, char **argv, char **env)
 {
-	t_data	*shell;
+	t_data		*shell;
 
 	(void)argv;
-	atexit(ft_leaks);
-	initialize_minishell(&shell, env);
-	shell->line = NULL;
 	if (argc == 1)
 	{
-		ft_header();
-		start_minishell(shell);
+		atexit(ft_leaks);
+		shell = NULL;
+		initialize_minishell(&shell, env);
+		copy_env_to_data(shell, env);
+		shell->line = NULL;
+		if (argc == 1)
+		{
+			ft_header();
+			start_minishell(shell, env);
+		}
+		free(shell->line);
+		free(shell->echo);
+		free(shell);
+		clear_history();
+		return (EXIT_SUCCESS);
 	}
-	free(shell);
-	clear_history();
-	return (EXIT_SUCCESS);
+	printf("Error de argumentos\n");
 }
 
 void	ft_leaks(void)
