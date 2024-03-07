@@ -25,7 +25,6 @@ SRCS = main.c\
 		executor.c\
 		utils2.c\
 		executor_utils.c\
-		utils3.c\
 		executor_utils2.c\
 		redirections.c\
 		here_doc.c\
@@ -33,9 +32,10 @@ SRCS = main.c\
 		parser_utils.c\
 		parser_utils2.c\
 		here_doc_utils.c\
-		parser_utils3.c\
 		free2.c\
-		quot_cleaner_utils.c\
+		parser_utils3.c\
+		quote_cleaner_utils.c\
+		signals.c\
 
 CC = gcc
 
@@ -44,15 +44,17 @@ OBJS = ${SRCS:.c=.o}
 all: ${LIBFT}/libft.a $(NAME)
 
 $(NAME): $(OBJS)
-	@$(CC) $(CFLAGS) $(SRCS) ${LIBFT}/libft.a -o $(NAME) -lreadline
+	gcc $(CFLAGS) -lreadline -L/Users/nmontiel/.brew/opt/readline/lib -I/Users/nmontiel/.brew/opt/readline/include $(SRCS) ${LIBFT}/libft.a -o $(NAME)
 	
-#gcc -L/usr/local/opt/readline/lib -I/usr/local/opt/readline/include -lreadline main.c -o main
+#	@$(CC) $(CFLAGS) $(SRCS) ${LIBFT}/libft.a ${LEAK}/memory_leaks.a -o $(NAME) -lreadline
+	
 
 %.o: %.c
 	@$(CC) $(CFLAGS) -o $@ -c $< $(HEADERS) && printf "Compiling: $(notdir $<)\n"
 
 $(LIBFT)/libft.a:
 	@${MAKE} -C ${LIBFT}
+
 
 clean:
 	@rm -rf $(OBJS)
