@@ -1,96 +1,62 @@
 #include "minishell.h"
 
-void	initialize_env(t_data *shell, char **env)
+t_env	*copy_env_to_list(char **envp, t_data *shell)
 {
-	char	**temp;
+	t_env	*head;
+	t_env	*current;
+	char	*name_value;
+	char	*delim;
+	t_env	*new_node;
 
-	shell->env = ft_calloc(1, sizeof(t_env));
-	temp = ft_split(env[shell->del], '=');
-	if (!shell->env || !temp)
-		return ;
-	shell->env->name = ft_strdup(temp[0]);
-	shell->env->value = ft_strjoin("=", temp[1]);
-	shell->env->index = 0;
-	shell->env->next = NULL;
-	free_temp(temp);
-	while (env[++shell->del])
+	head = NULL;
+	current = NULL;
+	shell->i = 0;
+	while (envp[shell->i] != NULL)
 	{
-		shell->temp_env = ft_calloc(1, sizeof(t_env));
-		temp = ft_split(env[shell->del], '=');
-		if (!shell->temp_env || !temp)
-			return ;
-		add_newenv_back(&shell->env, shell->temp_env, temp);
-		free_temp(temp);
+		name_value = ft_strdup(envp[shell->i]);
+		delim = ft_strchr(name_value, '=');
+		if (delim)
+		{
+			new_node = create_env_node(name_value, delim + 1, shell->i);
+			printf("new_node pointer= %p\n", new_node);
+			if (new_node)
+				add_env_node(&head, &current, new_node);
+		}
+		free(name_value);
+		shell->i++;
 	}
-	add_oldpwd(shell);
+	return (head);
 }
 
-void	add_newenv_back(t_env **first, t_env *new, char **temp)
+t_env	*create_env_node(char *name, char *value, int index)
 {
-	t_env	*first_node;
+	t_env	*new_node;
 
-	if (new == NULL)
-		return ;
-	if (temp != NULL)
-	{
-		new->name = ft_strdup(temp[0]);
-		new->value = ft_strjoin("=", temp[1]);
-		new->index = 0;
-		new->next = NULL;
-	}
-	first_node = *first;
-	if (*first == NULL)
-	{
-		*first = new;
-		return ;
-	}
-	while (first_node->next != NULL)
-		first_node = first_node->next;
-	first_node->next = new;
+	new_node = malloc(sizeof(t_env));
+	if (!new_node)
+		return (NULL);
+	new_node->name = ft_strndup(name, ft_strchr(name, '=') - name);
+	new_node->value = ft_strdup(value);
+	new_node->index = index;
+	new_node->next = NULL;
+	return (new_node);
 }
 
-void	add_oldpwd(t_data *shell)
+void	add_env_node(t_env **head, t_env **current, t_env *new_node)
 {
-	t_env	*aux;
-	t_env	*new;
-	int		exist;
-	char	current_dir[500];
-
-	getcwd(current_dir, 500);
-	aux = shell->env;
-	exist = 0;
-	while (aux)
+	if (!*head)
 	{
-		if (!ft_strncmp(aux->name, "OLDPWD", ft_strlen("OLDPWD")))
-			exist = 1;
-		aux = aux->next;
+		*head = new_node;
+		*current = new_node;
 	}
-	if (!exist)
+	else
 	{
-		new = ft_calloc(1, sizeof(t_env));
-		new->name = ft_strdup("OLDPWD");
-		new->value = ft_strjoin("=", current_dir);
-		new->next = NULL;
-		add_newenv_back(&shell->env, new, NULL);
+		(*current)->next = new_node;
+		*current = new_node;
 	}
 }
 
-char	*obtain_env_name(char *fullenv)
+void	copy_env_to_data(t_data *data, char **envp)
 {
-	int	i;
-
-	i = 0;
-	while (fullenv[i] && fullenv[i] != '=' && fullenv[i] != ' ')
-		i++;
-	return (ft_substr(fullenv, 0, i));
-}
-
-char	*obtain_env_value(char *fullenv)
-{
-	int	i;
-
-	i = 0;
-	while (fullenv[i] && fullenv[i] != '=' && fullenv[i] != ' ')
-		i++;
-	return (ft_substr(fullenv, i + 1, ft_strlen(fullenv) - i));
+	data->env = copy_env_to_list(envp, data);
 }
