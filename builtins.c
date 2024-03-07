@@ -1,5 +1,4 @@
 #include "minishell.h"
-//# include "memory-leaks/include/memory_leaks.h"
 
 void	env_command(t_data *shell)
 {

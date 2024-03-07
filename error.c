@@ -2,7 +2,7 @@
 
 void	put_error(int error_type, int error_code)
 {
-	//g_exit_status = error_code;
+	g_exit_status = error_code;
 	(void)error_code;
 	if (error_type == DEQUOTE)
 		perror("minishell: error: dequoted line\n");
