@@ -7,7 +7,7 @@ void	only_export(t_data *shell)
 	current = shell->env;
 	while (current)
 	{
-		printf("declare -x %s%s\n", current->name, current->value);
+		printf("declare -x \"%s%s\"\n", current->name, current->value);
 		current = current->next;
 	}
 }
@@ -26,6 +26,7 @@ void	create_variable(char *variable, t_data *shell)
 		env_add_back(&shell->env, new_env);
 	}
 	free(value);
+	value = NULL;
 }
 
 bool	check_args(char *arg, char *cmd)
@@ -64,7 +65,7 @@ int	check_if_exists(char *name, char *value, t_data *shell)
 		if (!ft_strncmp(ptr->name, name, ft_strlen(name)))
 		{
 			free(ptr->value);
-			ptr->value = ft_strjoin("=", value);
+			ptr->value = ft_strdup(value);
 			free(name);
 			return (1);
 		}
@@ -82,7 +83,7 @@ t_env	*new_node(char *name, char *value)
 	if (!env)
 		return (NULL);
 	env->name = ft_strdup(name);
-	env->value = ft_strjoin("=", value);
+	env->value = ft_strdup(value);
 	env->next = NULL;
 	return (env);
 }
