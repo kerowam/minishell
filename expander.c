@@ -122,10 +122,7 @@ void	expander(t_env *env, t_list **line_splited)
 			(*tmp_list)->content = expand(tmp_str, *tmp_env);
 		}
 		ft_free_char(tmp_str);
-		if ((*tmp_list)->next)
-			*tmp_list = (*tmp_list)->next;
-		else
-			*tmp_list = NULL;
+		*tmp_list = list_next(tmp_list);
 	}
 	free_expander(tmp_env, tmp_list);
 }

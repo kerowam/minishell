@@ -48,7 +48,7 @@ static void	execute_command_with_heredoc(t_process *process, int fd_read)
 		close(fd_read);
 		waitpid(pid, NULL, 0);
 	}
-	free_argv(argv);
+	//free_argv(argv);
 }
 
 int	handle_heredoc(t_process *process)
