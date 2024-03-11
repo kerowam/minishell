@@ -40,6 +40,12 @@ static int	execute_single_process(t_process *process, t_data *shell,
 	int input_fd, int output_fd)
 {
 	find_path(process, shell);
+	if (process->command == NULL || process->command[0] == '\0')
+	{
+		if (process->next_process != NULL)
+			free_commands(process);
+		return (EXIT_SUCCESS);
+	}
 	if (!execute_command(process, input_fd, output_fd))
 	{
 		printf("zsh: command not found: %s\n", process->command);
