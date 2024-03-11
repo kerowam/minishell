@@ -14,7 +14,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <errno.h>
-# include "memory-leaks/include/memory_leaks.h"
+//# include "memory-leaks/include/memory_leaks.h"
 # include <sys/ioctl.h>
 
 # define RESET		"\x1B[0m"
@@ -228,6 +228,7 @@ int		execute_command(t_process *process, int input_fd, int output_fd);
 //expander_utils.c
 int		get_len_word(char *str, int i);
 char	*set_key(char *str, int i);
+t_env	**init_tmp_env(t_env **tmp);
 
 //expander.c
 char	*get_expanded_value(t_env *env, char *key);
@@ -251,11 +252,11 @@ void	free_list(t_list **list);
 void	free_env_list(t_env *env);
 
 //free2.c
-void	free_expander(t_env **tmp_env, t_list **tmp_list, char *tmp_str);
+/*void	free_expander(t_env **tmp_env, t_list **tmp_list, char *tmp_str);
 void	ft_free_char(char *str);
 void	free_list_process(t_list *list);
 void	free_list_dp(t_list **list);
-void	free_process(t_process *process);
+void	free_process(t_process *process);*/
 
 //here_doc_utils.c
 int		create_temp_file(const char *filename);
@@ -423,7 +424,8 @@ void	write_temp_file_to_pipe(int fd_pipe, int fd_temp);
 void	free_argv(char **argv);
 
 //free2.c
-void	free_expander(t_env **tmp_env, t_list **tmp_list, char *tmp_str);
+//void	free_expander(t_env **tmp_env, t_list **tmp_list, char *tmp_str);
+void	free_expander(t_env **tmp_env, t_list **tmp_list);
 void	ft_free_char(char *str);
 void	free_process(t_process *process);
 void	free_list_dp(t_list **list);

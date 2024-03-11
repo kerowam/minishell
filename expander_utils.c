@@ -25,3 +25,14 @@ char	*set_key(char *str, int i)
 	printf("6.tmp pointer = %p\n", tmp);
 	return (tmp);
 }
+
+t_env	**init_tmp_env(t_env **tmp)
+{
+	tmp = (t_env **)malloc(sizeof(t_env *));
+	if (!tmp)
+	{
+		put_error(MEMPROBLEM, 1);
+		return (NULL);
+	}
+	return (tmp);
+}

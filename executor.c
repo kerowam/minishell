@@ -1,44 +1,6 @@
 #include "minishell.h"
 
-int	main_executor(t_data *shell, t_process *process)
-{
-	if (!process)
-		return (EXIT_FAILURE);
-	if (!is_builtin(process, shell))
-	{
-		if (!process->command || (process->command && process->here_doc))
-		{
-			if (!process->here_doc)
-				return (EXIT_FAILURE);
-			else
-			{
-				handle_heredoc(process);
-			return (EXIT_SUCCESS);
-		}
-		if (process->command)
-		{
-			if (ft_strncmp(process->command, "clear", 5) == 0)
-				printf("\033[H\033[J");
-		}
-		execute_multiple_commands(process, shell);
-		if (starts_with_dot_slash(process->command))
-		{
-			execute_local_command(process);
-	}
-	return (EXIT_SUCCESS);
-}
-
-static int	create_pipe(int pipe_fd[2])
-{
-	if (pipe(pipe_fd) == -1)
-	{
-		perror("pipe");
-		exit(EXIT_FAILURE);
-	}
-	return (pipe_fd[0]);
-}
-
-static int	execute_single_process(t_process *process, t_data *shell,
+int	execute_single_process(t_process *process, t_data *shell,
 	int input_fd, int output_fd)
 {
 	find_path(process, shell);
@@ -52,10 +14,20 @@ static int	execute_single_process(t_process *process, t_data *shell,
 	return (EXIT_FAILURE);
 }
 
-static void	wait_for_children(void)
+void	wait_for_children(void)
 {
 	while (wait(NULL) > 0)
 		;
+}
+
+int	create_pipe(int pipe_fd[2])
+{
+	if (pipe(pipe_fd) == -1)
+	{
+		perror("pipe");
+		exit(EXIT_FAILURE);
+	}
+	return (pipe_fd[0]);
 }
 
 void	execute_multiple_commands(t_process *process, t_data *shell)
@@ -85,3 +57,32 @@ void	execute_multiple_commands(t_process *process, t_data *shell)
 	}
 	wait_for_children();
 }
+
+int	main_executor(t_data *shell, t_process *process)
+{
+	if (!process)
+		return (EXIT_FAILURE);
+	if (!is_builtin(process, shell))
+	{
+		if (!process->command || (process->command && process->here_doc))
+		{
+			if (!process->here_doc)
+				return (EXIT_FAILURE);
+			else
+			{
+				handle_heredoc(process);
+				return (EXIT_SUCCESS);
+			}
+		}
+		if (process->command)
+		{
+			if (ft_strncmp(process->command, "clear", 5) == 0)
+				printf("\033[H\033[J");
+		}
+		execute_multiple_commands(process, shell);
+		if (starts_with_dot_slash(process->command))
+			execute_local_command(process);
+	}
+	return (EXIT_SUCCESS);
+}
+

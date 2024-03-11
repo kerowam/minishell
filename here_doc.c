@@ -8,7 +8,7 @@ static char	**create_argv_for_command(t_process *process)
 	int		j;
 
 	argc = 2;
-	argv = malloc(sizeof(char *) * (argc + 1));
+	argv = (char **)malloc(sizeof(char *) * (argc + 1));
 	argv[0] = ft_strdup(process->command);
 	current = process->argv;
 	j = 1;
