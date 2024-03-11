@@ -28,19 +28,19 @@ static void	prepare_command_arguments(t_process *process, char ***cmd_argv)
 static void	execute_child_process(t_process *process,
 		char *full_path, char **cmd_argv)
 {
-    process->pid = fork();
-    if (process->pid == -1)
-    {
-        perror("Error al crear el proceso hijo");
-        exit(EXIT_FAILURE);
-    }
-    else if (process->pid == 0)
-    {
-        execve(full_path, cmd_argv, process->env);
-        perror("Error al ejecutar el comando\n");
-        exit(EXIT_FAILURE);
-    }
-    waitpid(process->pid, &process->status, 0);
+	process->pid = fork();
+	if (process->pid == -1)
+	{
+		perror("Error al crear el proceso hijo");
+		exit(EXIT_FAILURE);
+	}
+	else if (process->pid == 0)
+	{
+		execve(full_path, cmd_argv, process->env);
+		perror("Error al ejecutar el comando\n");
+		exit(EXIT_FAILURE);
+	}
+	waitpid(process->pid, &process->status, 0);
 }
 
 void	execute_local_command(t_process *process)

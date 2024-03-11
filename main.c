@@ -41,9 +41,9 @@ void	start_minishell(t_data *shell, char **env)
 	while (1)
 	{
 		setup_signal_handlers();
-		system("leaks -q minishell");
+		//system("leaks -q minishell");
 		shell->line = readline("Minishell@ ~ ");
-		printf("shell->line: %s\n", shell->line);
+		//printf("shell->line: %s\n", shell->line);
 		if (shell->line && *shell->line)
 		{
 			redir_splited = (t_list **)malloc(sizeof(t_list *));
@@ -77,10 +77,10 @@ void	start_minishell(t_data *shell, char **env)
 			else if (shell->line && *shell->line)
 			{
 				lexer(shell, redir_splited);
-				print_list_splited(redir_splited);
+				//print_list_splited(redir_splited);
 				parse(process, redir_splited);
 				ft_free_list(redir_splited);
-				print_process(process);
+				//print_process(process);
 				shell->echo = ft_split(shell->line, ' ');
 				if (shell->echo && shell->echo[0] != NULL)
 				{
@@ -114,7 +114,7 @@ int	main(int argc, char **argv, char **env)
 	(void)argv;
 	if (argc == 1)
 	{
-		atexit(ft_leaks);
+		//atexit(ft_leaks);
 		shell = NULL;
 		initialize_minishell(&shell, env);
 		copy_env_to_data(shell, env);

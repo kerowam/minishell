@@ -44,7 +44,7 @@ char	**list_to_array(t_list *list)
 	i = ft_lstsize(list);
 	tmp = NULL;
 	array = (char **)malloc(sizeof(char *) * (i + 1));
-	printf("25.array pointer = %p\n", array);
+	//printf("25.array pointer = %p\n", array);
 	if (!array)
 	{
 		put_error(MEMPROBLEM, 1);
@@ -55,7 +55,7 @@ char	**list_to_array(t_list *list)
 	while (tmp)
 	{
 		array[i] = ft_strdup(tmp->content);
-		printf("26.array[%d] pointer = %p\n", i, array[i]);
+		//printf("26.array[%d] pointer = %p\n", i, array[i]);
 		i++;
 		tmp = tmp->next;
 	}

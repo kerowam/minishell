@@ -63,7 +63,7 @@ void	check_outfile_append(char *tmp_word, t_process *tmp_process)
 
 	if (access(tmp_word, F_OK) == -1 || access(tmp_word, F_OK) != -1)
 	{
-		file = open(tmp_word, O_WRONLY | O_CREAT | O_APPEND, S_IRUSR | S_IWUSR);
+		file = open(tmp_word, O_WRONLY | O_CREAT | O_APPEND, S_IRUSR | S_IWUSR); ////??
 		if (file < 0)
 		{
 			put_error(OPENERROR, 1);

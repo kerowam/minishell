@@ -22,7 +22,7 @@ char	*set_key(char *str, int i)
 	tmp = ft_substr(str, i, len);
 	if (tmp == NULL)
 		return (NULL);
-	printf("6.tmp pointer = %p\n", tmp);
+	//printf("6.tmp pointer = %p\n", tmp);
 	return (tmp);
 }
 

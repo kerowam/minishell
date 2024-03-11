@@ -89,7 +89,7 @@ char	**new_split_version(char *s, char d)
 	new_str = ft_calloc(wordscount(s, d) + 1, sizeof(char *));
 	if (!new_str)
 		return (NULL);
-	printf("25.0.new_str pointer = %p\n", new_str);
+	//printf("25.0.new_str pointer = %p\n", new_str);
 	while (*s)
 	{
 		split_iterator(&s, d, &aux, &flag);
@@ -97,7 +97,7 @@ char	**new_split_version(char *s, char d)
 		{
 			word_len = wordlen(s, d, flag, aux);
 			new_str[++i] = ft_calloc(word_len + 1, sizeof(char));
-			printf("25.0.1.new_str[%i] pointer = %p\n", i, new_str);
+			//printf("25.0.1.new_str[%i] pointer = %p\n", i, new_str);
 			if (!new_str[i])
 				return (free_split(new_str), NULL);
 			ft_strlcpy(new_str[i], s, word_len + 1);
