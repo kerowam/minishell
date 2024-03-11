@@ -17,8 +17,33 @@ void	print_split(char **line_splited)
 
 	i = 0;
 	while (line_splited[i] != NULL)
-	{
-		printf("36.line_splited[%d] = %s\n", i, line_splited[i]);
 		i++;
+}
+
+int	ft_strcmp(char *s1, char *s2)
+{
+	while (*s1 != '\0' && *s2 != '\0' && *s1 == *s2)
+	{
+		s1++;
+		s2++;
 	}
+	return (*s1 - *s2);
+}
+
+int	ft_strends(const char *str, const char *end)
+{
+	size_t	len_str;
+	size_t	len_end;
+
+	len_str = ft_strlen(str);
+	len_end = ft_strlen(end);
+	if (len_end > len_str)
+		return (0);
+	return (ft_strncmp(str + len_str - len_end, end, len_end) == 0);
+}
+
+void	free_commands(t_process *process)
+{
+	free(process->path_env);
+	free_string_array(process->env);
 }

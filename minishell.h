@@ -135,10 +135,11 @@ bool	is_builtin(t_process *process, t_data *shell);
 void	execute_local_command(t_process *process);
 
 //executor.c
-int		execute_command(t_process *process, int input_fd, int output_fd);
-bool	is_single_command(t_process *process);
 int		main_executor(t_data *shell, t_process *process);
 void	execute_multiple_commands(t_process *process, t_data *shell);
+
+//executor2.c
+int		execute_command(t_process *process, int input_fd, int output_fd);
 
 //expander_utils.c
 int		get_len_word(char *str, int i);
@@ -270,7 +271,6 @@ int		check_closed_quotes(char *line, int q, int i, char in_quot);
 //redirections.c
 void	redirect_infile(t_process *process);
 void	redirect_outfile(t_process *process);
-void	redirect_outfile_append(t_process *process);
 
 //signals.c
 void	signals_handler(int sign);
@@ -291,5 +291,7 @@ char	*ft_strndup(const char *str, size_t n);
 char	*obtain_env_name(char *fullenv);
 char	*obtain_env_value(char *fullenv);
 
+//utils3.c
+void	free_elements(char *temp, char *full_path);
 
 #endif

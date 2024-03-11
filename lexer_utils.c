@@ -34,14 +34,14 @@ char	*get_tmp_split(int target_index, char *tmp_word, int i)
 
 	if (target_index > 0)
 	{
-		tmp_split = ft_substr(tmp_word, i, target_index - i); ////******
+		tmp_split = ft_substr(tmp_word, i, target_index - i);
 		if (tmp_split == NULL)
 			return (free(tmp_split), NULL);
 	}
 	else
 	{
 		end = get_end_index(tmp_word, i);
-		tmp_split = ft_substr(tmp_word, i, end); ////********
+		tmp_split = ft_substr(tmp_word, i, end);
 		if (tmp_split == NULL)
 			return (free(tmp_split), NULL);
 	}
