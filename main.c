@@ -44,7 +44,7 @@ void	start_minishell(t_data *shell, char **env)
 		system("leaks -q minishell");
 		shell->line = readline("Minishell@ ~ ");
 		printf("shell->line: %s\n", shell->line);
-		if (shell->line)
+		if (shell->line && *shell->line)
 		{
 			redir_splited = (t_list **)malloc(sizeof(t_list *));
 			if (!redir_splited)
