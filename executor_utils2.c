@@ -41,15 +41,6 @@ static void	execute_child_process(t_process *process,
         exit(EXIT_FAILURE);
     }
     waitpid(process->pid, &process->status, 0);
-
-    // Liberar la memoria de cmd_argv después de que el proceso hijo termina
-    /*int i = 0;
-    while (cmd_argv[i] != NULL)
-    {
-        free(cmd_argv[i]);
-        i++;
-    }
-    free(cmd_argv);*/
 }
 
 void	execute_local_command(t_process *process)
