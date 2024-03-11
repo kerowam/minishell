@@ -55,8 +55,11 @@ void	clean_str_quot(char *str, t_list **list)
 			}
 		}
 	}
-	if (end_str)
+	if (end_str != NULL)
+	{
 		update_list_content(list, end_str);
+		//ft_free_char(end_str);
+	}
 	return ;
 }
 

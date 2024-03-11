@@ -42,21 +42,25 @@ void	start_minishell(t_data *shell, char **env)
 	{
 		setup_signal_handlers();
 		system("leaks -q minishell");
-		redir_splited = (t_list **)malloc(sizeof(t_list *));
-		if (!redir_splited)
-		{
-			put_error(MEMPROBLEM, 1);
-			return ;
-		}
-		process = (t_process *)malloc(sizeof(t_process));
-		if (!process)
-		{
-			put_error(MEMPROBLEM, 1);
-			return ;
-		}
 		shell->line = readline("Minishell@ ~ ");
-		printf("24.1.start minishell shell->line pointer = %p\n", shell->line);
-		printf("24.2.start minishell readline = %p\n", readline);
+		printf("shell->line: %s\n", shell->line);
+		if (shell->line)
+		{
+			redir_splited = (t_list **)malloc(sizeof(t_list *));
+			if (!redir_splited)
+			{
+				put_error(MEMPROBLEM, 1);
+				return ;
+			}
+			process = (t_process *)malloc(sizeof(t_process));
+			if (!process)
+			{
+				put_error(MEMPROBLEM, 1);
+				return ;
+			}
+		}
+		//printf("24.1.start minishell shell->line pointer = %p\n", shell->line);
+		//printf("24.2.start minishell readline = %p\n", readline);
 		if (shell->line == NULL)
 			printf("\n");
 		else
@@ -65,10 +69,12 @@ void	start_minishell(t_data *shell, char **env)
 			if (q % 2 != 0)
 			{
 				printf("error: dequoted line\n");
+				free (redir_splited);
+				free (process);
 				//free(shell->line);
 				rl_replace_line("", 0);
 			}
-			if (shell->line && *shell->line)
+			else if (shell->line && *shell->line)
 			{
 				lexer(shell, redir_splited);
 				print_list_splited(redir_splited);
