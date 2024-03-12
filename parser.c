@@ -6,9 +6,17 @@ void	handle_redirection(t_list **tmp, t_process *tmp_process)
 	char	*tmp_word_next;
 	char	*tmp_word;
 
+	if ((*tmp)->content == NULL)
+		return ;
 	tmp_word = ft_strdup((*tmp)->content);
-	tmp_next = (*tmp)->next;
-	tmp_word_next = ft_strdup(tmp_next->content);
+	if ((*tmp)->next != NULL)
+		tmp_next = (*tmp)->next;
+	else
+		tmp_next = NULL;
+	if (tmp_next && tmp_next->content != NULL)
+		tmp_word_next = ft_strdup(tmp_next->content);
+	else
+		tmp_word_next = NULL;
 	if (check_redir(tmp_word_next) == 0)
 	{
 		if (ft_strncmp(tmp_word, ">", 2) == 0)
@@ -77,6 +85,8 @@ void	handle_command(t_process **tmp_process, t_list *tmp)
 
 int	is_redir(char *tmp_word)
 {
+	if (tmp_word == NULL)
+		return (0);
 	if (ft_strncmp(tmp_word, ">", 2) == 0
 		|| ft_strncmp(tmp_word, ">>", 3) == 0
 		|| ft_strncmp(tmp_word, "<<", 3) == 0

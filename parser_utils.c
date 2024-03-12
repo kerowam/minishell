@@ -65,6 +65,8 @@ char	**list_to_array(t_list *list)
 
 int	check_redir(char *tmp_word)
 {
+	if (tmp_word == NULL)
+		return (0);
 	if (ft_strncmp(tmp_word, "|", 2) == 0
 		|| ft_strncmp(tmp_word, ">", 2) == 0
 		|| ft_strncmp(tmp_word, ">>", 3) == 0
