@@ -41,7 +41,9 @@ void	start_minishell(t_data *shell, char **env)
 	while (1)
 	{
 		setup_signal_handlers();
-		//system("leaks -q minishell");
+		system("leaks -q minishell");
+		if (shell->line)
+			free(shell->line);
 		shell->line = readline("Minishell@ ~ ");
 		//printf("shell->line: %s\n", shell->line);
 		if (shell->line && *shell->line)
@@ -59,8 +61,8 @@ void	start_minishell(t_data *shell, char **env)
 				return ;
 			}
 		}
-		//printf("24.1.start minishell shell->line pointer = %p\n", shell->line);
-		//printf("24.2.start minishell readline = %p\n", readline);
+		printf("24.1.start minishell shell->line pointer = %p\n", shell->line);
+		printf("24.2.start minishell readline = %p\n", readline);
 		if (shell->line == NULL)
 			printf("\n");
 		else

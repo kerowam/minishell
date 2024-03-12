@@ -46,9 +46,9 @@ OBJS = ${SRCS:.c=.o}
 all: ${LIBFT}/libft.a $(NAME)
 
 $(NAME): $(OBJS)
-	gcc $(CFLAGS) $(SRCS) ${LIBFT}/libft.a -lreadline -o $(NAME)
+	gcc $(CFLAGS) -lreadline -L/Users/gfredes-/.brew/opt/readline/lib -I/Users/gfredes-/.brew/opt/readline/include $(SRCS) ${LIBFT}/libft.a -o $(NAME)
 
-#	gcc $(CFLAGS) -lreadline -L/Users/gfredes-/.brew/opt/readline/lib -I/Users/gfredes-/.brew/opt/readline/include $(SRCS) ${LIBFT}/libft.a ${LEAK}/memory_leaks.a -o $(NAME)
+#	gcc $(CFLAGS) $(SRCS) ${LIBFT}/libft.a -lreadline -o $(NAME)
 	
 #	@$(CC) $(CFLAGS) $(SRCS) ${LIBFT}/libft.a ${LEAK}/memory_leaks.a -o $(NAME) -lreadline
 	
