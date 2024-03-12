@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-static void	help_child(t_process *process, int input_fd, int output_fd)
+void	help_child(t_process *process, int input_fd, int output_fd)
 {
 	redirect_infile(process);
 	redirect_outfile(process);
@@ -35,7 +35,7 @@ static char	**create_argv(t_process *process, char **argv)
 	return (argv);
 }
 
-static void	father_process(t_process *process, int input_fd, int output_fd)
+void	father_process(t_process *process, int input_fd, int output_fd)
 {
 	waitpid(process->pid, &process->status, 0);
 	if (input_fd != STDIN_FILENO)
@@ -44,7 +44,7 @@ static void	father_process(t_process *process, int input_fd, int output_fd)
 		close(output_fd);
 }
 
-static void	child_process(t_process *process, char *full_path)
+void	child_process(t_process *process, char *full_path)
 {
 	char	**argv;
 
@@ -62,7 +62,7 @@ int	execute_command(t_process *process, int input_fd, int output_fd)
 	char	*full_path;
 
 	i = 0;
-	while (process->env[i] != NULL)
+	while (process->env[i++] != NULL)
 	{
 		temp = ft_strjoin(process->env[i], "/");
 		full_path = ft_strjoin(temp, process->command);
@@ -79,7 +79,7 @@ int	execute_command(t_process *process, int input_fd, int output_fd)
 			return (EXIT_FAILURE);
 		}
 		free_elements(temp, full_path);
-		i++;
 	}
+	no_path(process, input_fd, output_fd);
 	return (EXIT_SUCCESS);
 }

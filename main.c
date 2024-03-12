@@ -1,7 +1,10 @@
 
 #include "minishell.h"
+<<<<<<< HEAD
 //#include "memory-leaks/include/memory_leaks.h"
 
+=======
+>>>>>>> nm
 void	ft_header(void)
 {
 	printf("\n");
@@ -36,6 +39,7 @@ void	start_minishell(t_data *shell, char **env)
 	int			q;
 	t_list		**redir_splited;
 	t_process	*process;
+	int			i;
 
 	(void)env;
 	while (1)
@@ -46,6 +50,14 @@ void	start_minishell(t_data *shell, char **env)
 			free(shell->line);
 		shell->line = readline("Minishell@ ~ ");
 		//printf("shell->line: %s\n", shell->line);
+		i = 0;
+		while (shell->line[i] == ' ')
+			i++;
+		if (shell->line[i] == '\0')
+		{
+			free(shell->line);
+			shell->line = NULL;
+		}
 		if (shell->line && *shell->line)
 		{
 			redir_splited = (t_list **)malloc(sizeof(t_list *));
@@ -74,7 +86,7 @@ void	start_minishell(t_data *shell, char **env)
 				free (redir_splited);
 				free (process);
 				//free(shell->line);
-				rl_replace_line("", 0);
+				//rl_replace_line("", 0);
 			}
 			else if (shell->line && *shell->line)
 			{
@@ -116,7 +128,7 @@ int	main(int argc, char **argv, char **env)
 	(void)argv;
 	if (argc == 1)
 	{
-		//atexit(ft_leaks);
+		atexit(ft_leaks);
 		shell = NULL;
 		initialize_minishell(&shell, env);
 		copy_env_to_data(shell, env);

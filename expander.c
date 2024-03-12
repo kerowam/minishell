@@ -125,6 +125,8 @@ void	expander(t_env *env, t_list **line_splited)
 	while (*tmp_list != NULL)
 	{
 		tmp_str = ft_strdup((*tmp_list)->content);
+		if (tmp_str == NULL)
+			return ;
 		if (ft_strchr(tmp_str, '$') != 0)
 		{
 			free((*tmp_list)->content);

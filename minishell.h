@@ -182,6 +182,11 @@ int		main_executor(t_data *shell, t_process *process);
 void	handle_redirections_and_pipes(t_process *process);
 void	execute_local_command(t_process *process);
 
+//executor2.c
+void	father_process(t_process *process, int input_fd, int output_fd);
+void	child_process(t_process *process, char *full_path);
+void	help_child(t_process *process, int input_fd, int output_fd);
+
 //executor_utils.c
 void	free_string_array(char **array);
 int		starts_with_dot_slash(char *str);
@@ -308,6 +313,9 @@ void	signals_handler(int sign);
 void	rl_replace_line(const char *text, int clear_undo);
 void	setup_signal_handlers(void);
 
+//utils3.c
 void	free_elements(char *temp, char *full_path);
+void	exit_command(t_process *process, t_data *shell);
+void	no_path(t_process *process, int input_fd, int output_fd);
 
 #endif
