@@ -2,7 +2,6 @@ NAME = minishell
 
 CFLAGS = -g -Wextra -Wall -Werror
 LIBFT = ./libft
-LEAK = ./memory-leaks
 
 SRCS = main.c\
 		enviroment.c\
@@ -26,7 +25,6 @@ SRCS = main.c\
 		executor.c\
 		utils2.c\
 		executor_utils.c\
-		utils3.c\
 		executor_utils2.c\
 		redirections.c\
 		here_doc.c\
@@ -37,16 +35,20 @@ SRCS = main.c\
 		free2.c\
 		parser_utils3.c\
 		quote_cleaner_utils.c\
-		signals.c
+		signals.c\
+		executor2.c\
+		utils3.c\
 
 CC = gcc
 
 OBJS = ${SRCS:.c=.o}
 
-all: ${LIBFT}/libft.a ${LEAKD}/memory_leaks.a $(NAME)
+all: ${LIBFT}/libft.a $(NAME)
 
 $(NAME): $(OBJS)
-	gcc $(CFLAGS) -lreadline -L/Users/gfredes-/.brew/opt/readline/lib -I/Users/gfredes-/.brew/opt/readline/include $(SRCS) ${LIBFT}/libft.a ${LEAK}/memory_leaks.a -o $(NAME)
+	gcc $(CFLAGS) $(SRCS) ${LIBFT}/libft.a -lreadline -o $(NAME)
+
+#	gcc $(CFLAGS) -lreadline -L/Users/gfredes-/.brew/opt/readline/lib -I/Users/gfredes-/.brew/opt/readline/include $(SRCS) ${LIBFT}/libft.a ${LEAK}/memory_leaks.a -o $(NAME)
 	
 #	@$(CC) $(CFLAGS) $(SRCS) ${LIBFT}/libft.a ${LEAK}/memory_leaks.a -o $(NAME) -lreadline
 	
@@ -56,9 +58,6 @@ $(NAME): $(OBJS)
 
 $(LIBFT)/libft.a:
 	@${MAKE} -C ${LIBFT}
-
-${LEAKD}/memory_leaks.a:
-	@${MAKE} -C ${LEAK}
 
 clean:
 	@rm -rf $(OBJS)

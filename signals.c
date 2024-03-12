@@ -5,7 +5,6 @@ int	g_exit_status;
 void	signals_handler(int sign)
 {
 	if (sign == SIGINT)
-	
 	{
 		g_exit_status = 1;
 		ioctl(STDIN_FILENO, TIOCSTI, "\n");

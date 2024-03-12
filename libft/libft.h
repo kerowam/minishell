@@ -19,7 +19,7 @@
 # include <stdlib.h>
 # include <string.h>
 # include <unistd.h>
-# include "../memory-leaks/include/memory_leaks.h"
+//# include "../memory-leaks/include/memory_leaks.h"
 # define BUFFER_SIZE 42
 
 int				ft_isalpha(int c);

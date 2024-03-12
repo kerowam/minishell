@@ -41,22 +41,26 @@ void	start_minishell(t_data *shell, char **env)
 	while (1)
 	{
 		setup_signal_handlers();
-		system("leaks -q minishell");
-		redir_splited = (t_list **)malloc(sizeof(t_list *));
-		if (!redir_splited)
-		{
-			put_error(MEMPROBLEM, 1);
-			return ;
-		}
-		process = (t_process *)malloc(sizeof(t_process));
-		if (!process)
-		{
-			put_error(MEMPROBLEM, 1);
-			return ;
-		}
+		//system("leaks -q minishell");
 		shell->line = readline("Minishell@ ~ ");
-		printf("24.1.start minishell shell->line pointer = %p\n", shell->line);
-		printf("24.2.start minishell readline = %p\n", readline);
+		//printf("shell->line: %s\n", shell->line);
+		if (shell->line && *shell->line)
+		{
+			redir_splited = (t_list **)malloc(sizeof(t_list *));
+			if (!redir_splited)
+			{
+				put_error(MEMPROBLEM, 1);
+				return ;
+			}
+			process = (t_process *)malloc(sizeof(t_process));
+			if (!process)
+			{
+				put_error(MEMPROBLEM, 1);
+				return ;
+			}
+		}
+		//printf("24.1.start minishell shell->line pointer = %p\n", shell->line);
+		//printf("24.2.start minishell readline = %p\n", readline);
 		if (shell->line == NULL)
 			printf("\n");
 		else
@@ -65,16 +69,18 @@ void	start_minishell(t_data *shell, char **env)
 			if (q % 2 != 0)
 			{
 				printf("error: dequoted line\n");
+				free (redir_splited);
+				free (process);
 				//free(shell->line);
 				rl_replace_line("", 0);
 			}
-			if (shell->line && *shell->line)
+			else if (shell->line && *shell->line)
 			{
 				lexer(shell, redir_splited);
-				print_list_splited(redir_splited);
+				//print_list_splited(redir_splited);
 				parse(process, redir_splited);
 				ft_free_list(redir_splited);
-				print_process(process);
+				//print_process(process);
 				shell->echo = ft_split(shell->line, ' ');
 				if (shell->echo && shell->echo[0] != NULL)
 				{
@@ -108,7 +114,7 @@ int	main(int argc, char **argv, char **env)
 	(void)argv;
 	if (argc == 1)
 	{
-		atexit(ft_leaks);
+		//atexit(ft_leaks);
 		shell = NULL;
 		initialize_minishell(&shell, env);
 		copy_env_to_data(shell, env);

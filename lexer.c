@@ -15,7 +15,7 @@ static int	len_split(char *line, int i)
 void	init_list(t_list **list)
 {
 	*list = (t_list *)ft_calloc(0, sizeof(t_list));
-	printf("21.0.init_list list pointer = %p\n", *list);
+	//printf("21.0.init_list list pointer = %p\n", *list);
 	if (*list == NULL)
 	{
 		put_error(MEMPROBLEM, 1);

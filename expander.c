@@ -3,28 +3,30 @@
 char	*get_expanded_value(t_env *env, char *key)
 {
 	char	*value;
-	t_env	*tmp;
+	t_env	**tmp;
 	char	*name;
 
-	tmp = (t_env *)malloc(sizeof(t_env));
-	*tmp = *env;
+	tmp = NULL;
+	tmp = init_tmp_env(tmp);
+	*tmp = env;
 	name = NULL;
-	while (tmp->name)
+	while (*tmp != NULL)
 	{
-		name = ft_strdup(tmp->name);
+		name = ft_strdup((*tmp)->name);
 		if (ft_strncmp(key, name, ft_strlen(name)) == 0)
 		{
-			value = ft_strdup(tmp->value);
-			return (value);
+			value = ft_strdup((*tmp)->value);
+			return (free ((*tmp)->value), free ((*tmp)->name),
+				free(tmp), free (name), value);
 		}
 		free(name);
-		if (tmp->next)
-			*tmp = *tmp->next;
+		if ((*tmp)->next)
+			*tmp = (*tmp)->next;
 		else
-			break ;
+			*tmp = NULL;
 	}
 	value = ft_strdup("");
-	return (value);
+	return (free(tmp), value);
 }
 
 char	*expand_value(char *str, int i, t_env *env, char *end_str)
@@ -103,23 +105,24 @@ void	expander(t_env *env, t_list **line_splited)
 	char	*tmp_str;
 
 	tmp_env = (t_env **)ft_calloc(0, sizeof(t_env *));
-	if (tmp_env == NULL)
-		return ;
-	*tmp_env = env;
 	tmp_list = (t_list **)ft_calloc(0, sizeof(t_list *));
+	if (tmp_env == NULL || tmp_list == NULL)
+	{
+		put_error(MEMPROBLEM, 1);
+		return ;
+	}
+	*tmp_env = env;
 	*tmp_list = *line_splited;
 	while (*tmp_list != NULL)
 	{
 		tmp_str = ft_strdup((*tmp_list)->content);
 		if (ft_strchr(tmp_str, '$') != 0)
-			(*tmp_list)->content = expand(tmp_str, *tmp_env);
-		if ((*tmp_list)->next)
 		{
-			*tmp_list = (*tmp_list)->next;
-			ft_free_char(tmp_str);
+			free((*tmp_list)->content);
+			(*tmp_list)->content = expand(tmp_str, *tmp_env);
 		}
-		else
-			*tmp_list = NULL;
+		ft_free_char(tmp_str);
+		*tmp_list = list_next(tmp_list);
 	}
-	free_expander(tmp_env, tmp_list, tmp_str);
+	free_expander(tmp_env, tmp_list);
 }

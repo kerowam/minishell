@@ -97,9 +97,7 @@ void	handle_redirections(t_list **list, int i, t_list **redir_splited)
 		else
 			ft_lstadd_back(redir_splited, ft_lstnew(tmp_word));
 	}
-	if (tmp_word != NULL)
-		free(tmp_word);
-	tmp_word = NULL;
+	ft_free_char(tmp_word);
 	return ;
 }
 

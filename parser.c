@@ -36,7 +36,7 @@ void	handle_pipe(t_process **tmp_process, t_list *tmp)
 		put_error(MEMPROBLEM, 1);
 		return ;
 	}
-	printf("27.2.next_pr pointer = %p\n", next_pr);
+	//printf("27.2.next_pr pointer = %p\n", next_pr);
 	(*tmp_process)->args = list_to_array((*tmp_process)->argv);
 	if (!(next_pr))
 	{
@@ -47,7 +47,7 @@ void	handle_pipe(t_process **tmp_process, t_list *tmp)
 	(*tmp_process)->next_process = next_pr;
 	*tmp_process = (*tmp_process)->next_process;
 	tmp_word = ft_strdup(tmp->next->content);
-	printf("27.3.tmp_word pointer = %p\n", tmp_word);
+	//printf("27.3.tmp_word pointer = %p\n", tmp_word);
 	check_pipe(tmp_word);
 	free(tmp_word);
 	tmp_word = NULL;
@@ -61,7 +61,7 @@ void	handle_command(t_process **tmp_process, t_list *tmp)
 	if ((*tmp_process)->command == NULL)
 	{
 		(*tmp_process)->command = ft_strdup(tmp_word);
-		printf("27.4.(*tmp_process)->command pointer = %p\n", tmp_word);
+		//printf("27.4.(*tmp_process)->command pointer = %p\n", tmp_word);
 	}
 	else
 	{
