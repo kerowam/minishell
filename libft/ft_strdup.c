@@ -15,21 +15,23 @@
 
 char	*ft_strdup(const char *s1)
 {
+	char	*ptr;
 	int		i;
-	char	*copy;
 
-	i = 0;
-	while (s1[i])
-		i++;
-	copy = malloc(sizeof(char) * i + 1);
-	if (!copy)
-		return (0);
-	i = 0;
-	while (s1[i])
+	if (!s1)
+		return (NULL);
+	ptr = (char *)malloc(ft_strlen(s1) + 1);
+	if (!ptr)
 	{
-		copy[i] = s1[i];
+		printf("Error: ft_strdup malloc failed\n");
+		return (NULL);
+	}
+	i = 0;
+	while (s1[i] != '\0')
+	{
+		ptr[i] = s1[i];
 		i++;
 	}
-	copy[i] = '\0';
-	return (copy);
+	ptr[i] = '\0';
+	return (ptr);
 }
