@@ -30,7 +30,8 @@ void	handle_redirection(t_list **tmp, t_process *tmp_process)
 	}
 	ft_free_char(tmp_word_next);
 	ft_free_char (tmp_word);
-	*tmp = tmp_next;
+	if (tmp_next != NULL)
+		*tmp = tmp_next;
 }
 
 void	handle_pipe(t_process **tmp_process, t_list *tmp)
