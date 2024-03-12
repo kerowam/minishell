@@ -79,7 +79,7 @@ void	handle_pipes(t_list **list, int i, t_list **pipes_splited)
 	int		n_pipes;
 
 	tmp_word = ft_strdup((*list)->content);
-	printf("16.4.handle_pipes tmp_word pointer = %p\n", tmp_word);
+	//printf("16.4.handle_pipes tmp_word pointer = %p\n", tmp_word);
 	len = ft_strlen(tmp_word);
 	n_pipes = get_pipe_nbr(tmp_word, i);
 	if (len > 0 && n_pipes > 0)
@@ -104,7 +104,7 @@ void	split_pipes(t_list **list, t_list **pipes_splited)
 
 	tmp = (t_list **)ft_calloc(0, sizeof(t_list *));
 	*tmp = *list;
-	printf("17.split_pipes tmp pointer = %p\n", tmp);
+	//printf("17.split_pipes tmp pointer = %p\n", tmp);
 	while (*tmp != NULL)
 	{
 		handle_pipes(tmp, 0, pipes_splited);

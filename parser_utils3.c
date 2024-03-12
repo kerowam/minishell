@@ -22,6 +22,8 @@ void	parse_final(t_process **process, t_list **tmp)
 
 void	handle_command_pipe_redir(t_process **tmp_process, t_list **tmp)
 {
+	if ((*tmp)->content == NULL)
+		return ;
 	if (is_redir((*tmp)->content) == 1)
 		handle_redirection(tmp, *tmp_process);
 	else if (ft_strncmp((*tmp)->content, "|", 2) == 0)

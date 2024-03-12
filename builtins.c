@@ -7,7 +7,7 @@ void	env_command(t_data *shell)
 	head = shell->env;
 	while (head)
 	{
-		if (head != NULL)
+		if (head != NULL && head->value)
 			printf("%s=%s\n", head->name, head->value);
 		head = head->next;
 	}
@@ -90,10 +90,7 @@ void	export_command(char **cmd, t_data *shell)
 		while (cmd[i])
 		{
 			if (check_args(cmd[i], cmd[0]))
-			{
-				printf("Exporting: %s\n", cmd[i]);
 				create_variable(cmd[i], shell);
-			}
 			i++;
 		}
 	}
