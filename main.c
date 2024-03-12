@@ -61,8 +61,8 @@ void	start_minishell(t_data *shell, char **env)
 				return ;
 			}
 		}
-		printf("24.1.start minishell shell->line pointer = %p\n", shell->line);
-		printf("24.2.start minishell readline = %p\n", readline);
+		//printf("24.1.start minishell shell->line pointer = %p\n", shell->line);
+		//printf("24.2.start minishell readline = %p\n", readline);
 		if (shell->line == NULL)
 			printf("\n");
 		else

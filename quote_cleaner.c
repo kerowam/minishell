@@ -7,7 +7,8 @@ char	*handle_quoted_string(char *str, int *i, char *end_str)
 	start = *i + 1;
 	*i = search_end_quoted_string(str[*i], str, *i + 1);
 	end_str = add_quot_substr(start, *i, str, end_str);
-	(*i)++;
+	if (str[*i] == '\'' || str[*i] == '\"')
+		(*i)++;
 	return (end_str);
 }
 
