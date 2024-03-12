@@ -16,18 +16,16 @@
 
 char	*ft_strchr(const char *s, int c)
 {
-	int				i;
-	unsigned char	*ptr_s;
+	unsigned char	c_unsigned;
 
-	i = 0;
-	ptr_s = (unsigned char *) s;
-	while (ptr_s[i] != '\0')
+	c_unsigned = (unsigned char)c;
+	if (c_unsigned == '\0')
+		return ((char *)&s[ft_strlen(s)]);
+	while (*s != '\0')
 	{
-		if (ptr_s[i] == (unsigned char)c)
-			return ((char *)&ptr_s[i]);
-		i++;
+		if (*s == c_unsigned)
+			return ((char *)s);
+		s++;
 	}
-	if (c == '\0' || c == 1024)
-		return ((char *)&ptr_s[i]);
-	return (0);
+	return (NULL);
 }

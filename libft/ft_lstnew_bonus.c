@@ -20,7 +20,13 @@ t_list	*ft_lstnew(void *content)
 	new_l = (t_list *)malloc(sizeof(t_list));
 	if (!new_l)
 		return (NULL);
-	new_l -> content = content;
-	new_l -> next = NULL;
+	new_l->content = ft_strdup(content);
+	//free(content);
+	if (!new_l->content)
+	{
+		free(new_l);
+		return (NULL);
+	}
+	new_l->next = NULL;
 	return (new_l);
 }
