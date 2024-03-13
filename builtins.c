@@ -1,5 +1,7 @@
 #include "minishell.h"
 
+int	g_status;
+
 void	env_command(t_data *shell)
 {
 	t_env	*head;
@@ -21,19 +23,11 @@ void	pwd_command(t_data *shell)
 		perror("getcwd");
 }
 
-void	echo_command(t_process *process)
+void	echo_command(char **str, int exists)
 {
+	int	str_size;
 	int	i;
 
-	i = 1;
-	printf("COMANDO: %s\n", process->command);
-	if (process->args)
-		printf("ARGUMENTOS: %s\n", process->args[0]);
-	/*if (!process->command)
-	{
-		write(1, "\n", 1);
-		return ;
-	}
 	str_size = 0;
 	while (str[str_size])
 		str_size++;
@@ -54,7 +48,7 @@ void	echo_command(t_process *process)
 		}
 	}
 	if (exists == 0)
-		printf("\n");*/
+		printf("\n");
 }
 
 void	unset_command(t_data *shell, char *name)

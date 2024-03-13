@@ -61,7 +61,7 @@ void	execute_builtin(t_process *process, t_data *shell)
 		pwd_command(shell);
 	if (ft_strncmp(process->command, "echo\0", 5) == 0
 		|| ft_strncmp(process->command, "ECHO\0", 5) == 0)
-		echo_command(process);
+		echo_command(shell->echo, 0);
 	if (ft_strncmp(&process->command[0], "unset\0", 6) == 0
 		|| ft_strncmp(&process->command[0], "UNSET\0", 6) == 0)
 		unset_command(shell, shell->echo[1]);
@@ -86,8 +86,8 @@ bool	is_builtin(t_process *process, t_data *shell)
 		|| ft_strcmp(process->command, "ENV") == 0
 		|| ft_strcmp(shell->line, "pwd") == 0
 		|| ft_strcmp(shell->line, "PWD") == 0
-		|| ft_strcmp(process->command, "echo") == 0
-		|| ft_strcmp(process->command, "ECHO") == 0
+		|| ft_strcmp(shell->line, "echo") == 0
+		|| ft_strcmp(shell->line, "ECHO") == 0
 		|| ft_strcmp(&process->command[0], "unset") == 0
 		|| ft_strcmp(&process->command[0], "UNSET") == 0
 		|| ft_strcmp(*shell->echo, "cd") == 0
