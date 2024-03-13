@@ -12,11 +12,6 @@ char	*get_expanded_value(t_env *env, char *key)
 	tmp = init_tmp_env(tmp);
 	*tmp = env;
 	name = NULL;
-	if (ft_strcmp(key, "?") == 0)
-	{
-		value = ft_itoa(g_status);
-		return (free(tmp), value);
-	}
 	while (*tmp != NULL)
 	{
 		name = ft_strdup((*tmp)->name);
@@ -36,14 +31,28 @@ char	*get_expanded_value(t_env *env, char *key)
 	return (free(tmp), value);
 }
 
+char	*get_status(char *str)
+{
+	char	*value;
+
+	value = ft_itoa(g_status);
+	if (str[1])
+	{
+		value = ft_strjoin(value, str + 1);
+	}
+	return (value);
+}
+
 char	*expand_value(char *str, int i, t_env *env, char *end_str)
 {
 	char	*value;
 	char	*tmp;
 
 	tmp = set_key(str, i);
-	if (ft_strncmp(tmp, "$", 1) != 0)
+	if (ft_strncmp(tmp, "$", 1) != 0 && ft_strncmp(tmp, "?", 1) != 0)
 		value = get_expanded_value(env, tmp);
+	else if (ft_strncmp(tmp, "?", 1) == 0)
+		value = get_status(tmp);
 	else
 		value = ft_strdup(tmp);
 	if (!end_str)
@@ -95,8 +104,6 @@ char	*expand(char *str, t_env *env)
 		else if (str[i] == '$')
 		{
 			i++;
-			//if (str[i] == '?')
-			//if (str[i] == '\"' || str[i] == ' ' || !str[i])
 			end_str = expand_value(str, i, env, end_str);
 			while (str[i] && str[i] != '$' && str[i] != ' ' && str[i] != '\"')
 				i++;
