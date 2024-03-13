@@ -1,5 +1,7 @@
 #include "minishell.h"
 
+int	g_status;
+
 void	free_elements(char *temp, char *full_path)
 {
 	free(temp);
@@ -22,6 +24,18 @@ static void	print_exit(t_data *shell)
 	exit(EXIT_SUCCESS);
 }
 
+static void	print_num_exit(t_process *process)
+{
+	char	*arg;
+
+	arg = process->argv->content;
+	if (ft_atoi(arg) == 0 && arg[0] != '0')
+		put_error2(NUMARG, 255);
+	else
+		g_status = ft_atoi(arg);
+	exit(g_status);
+}
+
 void	exit_command(t_process *process, t_data *shell)
 {
 	char	*arg;
@@ -30,21 +44,17 @@ void	exit_command(t_process *process, t_data *shell)
 	{
 		arg = process->argv->content;
 		if (process->argv->next == NULL)
-		{
-			if (ft_atoi(arg) == 0 && arg[0] != '0')
-				printf("bash: exit: a: numeric argument required.\n");
-			exit(EXIT_SUCCESS);
-		}
+			print_num_exit(process);
 		if (ft_atoi(arg) == 0 && arg[0] != '0')
 		{
-			printf("bash: exit: a: numeric argument required.\n");
-			exit(EXIT_FAILURE);
+			put_error2(NUMARG, 255);
+			exit(g_status);
 		}
 		if (process->argv->next != NULL)
 		{
-			printf("bash: exit: too many arguments\n");
+			put_error2(TOMANYARG, 1);
 			if (ft_atoi(arg) == 0 && arg[0] != '0')
-				exit(EXIT_FAILURE);
+				exit(g_status);
 		}
 	}
 	else
@@ -60,7 +70,7 @@ void	no_path(t_process *process, int input_fd, int output_fd)
 		full_path = ft_strdup(process->command);
 	else
 	{
-		printf("Command not found: %s\n", process->command);
+		put_error(NOTCOMMAND, 127);
 		return ;
 	}
 	process->pid = fork();

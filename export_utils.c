@@ -1,5 +1,7 @@
 #include "minishell.h"
 
+int	g_status;
+
 void	only_export(t_data *shell)
 {
 	t_env	*current;
@@ -41,7 +43,7 @@ bool	check_args(char *arg, char *cmd)
 	name = obtain_env_name(arg);
 	if (ft_isdigit(name[i]) || name[i] == '-')
 	{
-		printf("%s: is not a valid identifier\n", name);
+		put_error2(NOTVALID, 1);
 		return (free(name), false);
 	}
 	while (name[i])
@@ -50,7 +52,7 @@ bool	check_args(char *arg, char *cmd)
 			i++;
 		else
 		{
-			printf("%s: not a valid identifier\n", name);
+			put_error2(NOTVALID, 1);
 			return (free(name), false);
 		}
 	}

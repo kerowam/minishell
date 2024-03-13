@@ -93,7 +93,10 @@ enum	e_error
 	MEMPROBLEM = 9, //g_exit_status = ? Por si falla malloc
 	ISDIR = 10, //g_exit_status = 126
 	NOTDIR = 11, //g_exit_status = 1
-	OPENERROR = 12 //g_exit_status = 1? Por si falla open (fd < 0)
+	OPENERROR = 12, //g_exit_status = 1? Por si falla open (fd < 0)
+	NUMARG = 13, //para la salida, g_Status == 255
+	TOMANYARG = 14, //para la salida, g_status = 1
+	NOTVALID = 15 //para export, si el nombre no es valido, g_status = 1
 };
 
 //builtins.c
@@ -310,12 +313,14 @@ void	handle_command_pipe_redir(t_process **tmp_process, t_list **tmp);
 
 //signals.c
 void	signals_handler(int sign);
-void	rl_replace_line(const char *text, int clear_undo);
+//void	rl_replace_line(const char *text, int clear_undo);
 void	setup_signal_handlers(void);
 
 //utils3.c
 void	free_elements(char *temp, char *full_path);
 void	exit_command(t_process *process, t_data *shell);
 void	no_path(t_process *process, int input_fd, int output_fd);
+
+void	put_error2(int error_type, int error_code);
 
 #endif

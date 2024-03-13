@@ -10,7 +10,10 @@ void	env_command(t_data *shell)
 	while (head)
 	{
 		if (head != NULL && head->value)
+		{
 			printf("%s=%s\n", head->name, head->value);
+			g_status = 0;
+		}
 		head = head->next;
 	}
 }
@@ -18,9 +21,10 @@ void	env_command(t_data *shell)
 void	pwd_command(t_data *shell)
 {
 	if (getcwd(shell->cwd, sizeof(shell->cwd)) != NULL)
+	{
 		printf("%s\n", shell->cwd);
-	else
-		perror("getcwd");
+		g_status = 0;
+	}
 }
 
 void	echo_command(char **str, int exists)
@@ -73,7 +77,6 @@ void	unset_command(t_data *shell, char *name)
 			free(del->name);
 			free(del->value);
 			free(del);
-			return ;
 		}
 		prev = aux;
 		aux = aux->next;
