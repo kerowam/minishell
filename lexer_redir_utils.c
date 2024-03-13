@@ -60,6 +60,8 @@ int	get_redirection_nbr(char *line, int i)
 	char	redir;
 
 	redirection_nbr = 0;
+	if (line == NULL)
+		return (EXIT_FAILURE);
 	while (line[i])
 	{
 		if (line[i] == '\'' || line[i] == '\"')

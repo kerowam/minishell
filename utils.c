@@ -44,6 +44,8 @@ int	ft_strends(const char *str, const char *end)
 
 void	free_commands(t_process *process)
 {
-	free(process->path_env);
-	free_string_array(process->env);
+	if (process->path_env)
+		free(process->path_env);
+	if (process->env)
+		free_string_array(process->env);
 }

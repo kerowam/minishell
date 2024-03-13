@@ -5,6 +5,8 @@ int	get_pipe_nbr(char *line, int i)
 	int		pipe_nbr;
 
 	pipe_nbr = 0;
+	if (line == NULL)
+		return (EXIT_FAILURE);
 	while (line[i])
 	{
 		if (line[i] == '\'' || line[i] == '\"')

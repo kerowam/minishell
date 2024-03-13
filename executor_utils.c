@@ -18,10 +18,10 @@ void	free_string_array(char **array)
 	free(array);
 }
 
-int	starts_with_dot_slash(char *str)
+/*int	starts_with_dot_slash(char *str)
 {
 	return (str && str[0] == '.' && str[1] == '/');
-}
+}*/
 
 int	find_path(t_process *process, t_data *shell)
 {
@@ -43,6 +43,8 @@ int	find_path(t_process *process, t_data *shell)
 		}
 		current_env = current_env->next;
 	}
+	process->path_env = NULL;
+	process->env = NULL;
 	return (EXIT_FAILURE);
 }
 
@@ -50,23 +52,16 @@ void	execute_builtin(t_process *process, t_data *shell)
 {
 	if (ft_strncmp(shell->echo[0], "exit\0", 5) == 0
 		|| ft_strncmp(shell->echo[0], "EXIT\0", 5) == 0)
-	{
-		printf("exit\n");
-		free_echo(shell->echo);
-		free(shell->line);
-		if (process)
-			free_process(process);
-		exit(EXIT_SUCCESS);
-	}
+		exit_command(process, shell);
 	if (ft_strncmp(shell->echo[0], "env\0", 4) == 0
 		|| ft_strncmp(shell->echo[0], "ENV\0", 4) == 0)
 		env_command(shell);
 	if (ft_strncmp(shell->line, "pwd\0", 4) == 0
 		|| ft_strncmp(shell->line, "PWD\0", 4) == 0)
 		pwd_command(shell);
-	if (ft_strncmp(shell->echo[0], "echo\0", 5) == 0
-		|| ft_strncmp(shell->echo[0], "ECHO\0", 5) == 0)
-		echo_command(shell->echo, 0);
+	if (ft_strncmp(process->command, "echo\0", 5) == 0
+		|| ft_strncmp(process->command, "ECHO\0", 5) == 0)
+		echo_command(&process->command, 0);
 	if (ft_strncmp(&process->command[0], "unset\0", 6) == 0
 		|| ft_strncmp(&process->command[0], "UNSET\0", 6) == 0)
 		unset_command(shell, shell->echo[1]);
@@ -75,7 +70,7 @@ void	execute_builtin(t_process *process, t_data *shell)
 		cd_command(shell->echo, shell);
 	if (ft_strncmp(shell->echo[0], "export\0", 7) == 0
 		|| ft_strncmp(shell->echo[0], "EXPORT\0", 7) == 0)
-		export_command(shell->echo, shell);
+		export_command(process, shell);
 }
 
 bool	is_builtin(t_process *process, t_data *shell)
