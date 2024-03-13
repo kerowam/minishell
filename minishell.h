@@ -93,7 +93,9 @@ enum	e_error
 	MEMPROBLEM = 9, //g_exit_status = ? Por si falla malloc
 	ISDIR = 10, //g_exit_status = 126
 	NOTDIR = 11, //g_exit_status = 1
-	OPENERROR = 12 //g_exit_status = 1? Por si falla open (fd < 0)
+	OPENERROR = 12, //g_exit_status = 1? Por si falla open (fd < 0)
+	ARGS = 13, //g_exit_status = 1
+	CLOSEERROR = 14, //g_exit_status = 1
 };
 
 //builtins.c

@@ -1,12 +1,14 @@
 #include "minishell.h"
 
+extern int g_status;
+
 int	get_pipe_nbr(char *line, int i)
 {
 	int		pipe_nbr;
 
 	pipe_nbr = 0;
 	if (line == NULL)
-		return (EXIT_FAILURE);
+		return (-1);
 	while (line[i])
 	{
 		if (line[i] == '\'' || line[i] == '\"')

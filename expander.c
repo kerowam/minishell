@@ -51,9 +51,9 @@ char	*expand_value(char *str, int i, t_env *env, char *end_str)
 		end_str = ft_strdup(value);
 	else
 		end_str = ft_strjoin(end_str, value);
-	/*if (tmp != NULL)
+	if (tmp != NULL)
 		free(tmp);
-	tmp = NULL;*/
+	tmp = NULL;
 	free(value);
 	value = NULL;
 	return (end_str);
