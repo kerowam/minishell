@@ -19,18 +19,38 @@ int	insert_redirs(char redir, t_list **list, char *tmp_word, int i)
 {
 	if (tmp_word[i + 1] == redir)
 	{
-		if (redir == '>')
-			ft_lstadd_back(list, ft_lstnew(">>"));
+		if (!(*list)->content)
+		{
+			if (redir == '>')
+				(*list)->content = ft_strdup(">>");
+			else
+				(*list)->content = ft_strdup("<<");
+		}
 		else
-			ft_lstadd_back(list, ft_lstnew("<<"));
+		{
+			if (redir == '>')
+				ft_lstadd_back(list, ft_lstnew(">>"));
+			else
+				ft_lstadd_back(list, ft_lstnew("<<"));
+		}
 		i += 2;
 	}
 	else
 	{
-		if (redir == '>')
-			ft_lstadd_back(list, ft_lstnew(">"));
+		if (!(*list)->content)
+		{
+			if (redir == '>')
+				(*list)->content = ft_strdup(">");
+			else
+				(*list)->content = ft_strdup("<");
+		}
 		else
-			ft_lstadd_back(list, ft_lstnew("<"));
+		{
+			if (redir == '>')
+				ft_lstadd_back(list, ft_lstnew(">"));
+			else
+				ft_lstadd_back(list, ft_lstnew("<"));
+		}
 		i++;
 	}
 	return (i);
@@ -40,17 +60,37 @@ void	set_redir(t_list **list, char redir, char *tmp_word, int i)
 {
 	if (tmp_word[i + 1] == redir)
 	{
-		if (redir == '>')
-			ft_lstadd_back(list, ft_lstnew(">>"));
+		if (!(*list)->content)
+		{
+			if (redir == '>')
+				(*list)->content = ft_strdup(">>");
+			else
+				(*list)->content = ft_strdup("<<");
+		}
 		else
-			ft_lstadd_back(list, ft_lstnew("<<"));
+		{
+			if (redir == '>')
+				ft_lstadd_back(list, ft_lstnew(">>"));
+			else
+				ft_lstadd_back(list, ft_lstnew("<<"));
+		}
 	}
 	else
 	{
-		if (redir == '>')
-			ft_lstadd_back(list, ft_lstnew(">"));
+		if (!(*list)->content)
+		{
+			if (redir == '>')
+				(*list)->content = ft_strdup(">");
+			else
+				(*list)->content = ft_strdup("<");
+		}
 		else
-			ft_lstadd_back(list, ft_lstnew("<"));
+		{
+			if (redir == '>')
+				ft_lstadd_back(list, ft_lstnew(">"));
+			else
+				ft_lstadd_back(list, ft_lstnew("<"));
+		}
 	}
 }
 

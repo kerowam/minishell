@@ -6,7 +6,7 @@ void	redirect_infile(t_process *process)
 
 	if (process->infile != NULL)
 	{
-		printf("HOLA\n");
+		//printf("HOLA\n");
 		fd = open(process->infile, O_RDONLY);
 		if (fd == -1)
 		{
