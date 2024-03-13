@@ -1,9 +1,10 @@
 #include "minishell.h"
 
+int	g_status;
+
 void	put_error(int error_type, int error_code)
 {
-	//g_status = error_code;
-	(void)error_code;
+	g_status = error_code;
 	if (error_type == DEQUOTE)
 		perror("minishell: error: dequoted line\n");
 	else if (error_type == NOTFILEORDIR)

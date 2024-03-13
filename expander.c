@@ -1,5 +1,7 @@
 #include "minishell.h"
 
+int	g_status;
+
 char	*get_expanded_value(t_env *env, char *key)
 {
 	char	*value;
@@ -10,6 +12,11 @@ char	*get_expanded_value(t_env *env, char *key)
 	tmp = init_tmp_env(tmp);
 	*tmp = env;
 	name = NULL;
+	if (ft_strcmp(key, "?") == 0)
+	{
+		value = ft_itoa(g_status);
+		return (free(tmp), value);
+	}
 	while (*tmp != NULL)
 	{
 		name = ft_strdup((*tmp)->name);
@@ -19,7 +26,8 @@ char	*get_expanded_value(t_env *env, char *key)
 			return (free ((*tmp)->value), free ((*tmp)->name),
 				free(tmp), free (name), value);
 		}
-		free(name);
+		if (name)
+			free(name);
 		if ((*tmp)->next)
 			*tmp = (*tmp)->next;
 		else
@@ -90,7 +98,6 @@ char	*expand(char *str, t_env *env)
 			i++;
 			//if (str[i] == '?')
 			//if (str[i] == '\"' || str[i] == ' ' || !str[i])
-		
 			end_str = expand_value(str, i, env, end_str);
 			while (str[i] && str[i] != '$' && str[i] != ' ' && str[i] != '\"')
 				i++;

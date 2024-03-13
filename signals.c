@@ -8,7 +8,7 @@ void	signals_handler(int sign)
 	{
 		g_exit_status = 1;
 		ioctl(STDIN_FILENO, TIOCSTI, "\n");
-		//rl_replace_line("", 0);
+		rl_replace_line("", 0);
 		rl_on_new_line();
 	}
 	/*else if (sign == SIGCHLD)
