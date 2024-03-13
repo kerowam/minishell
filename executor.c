@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-int	g_status;
+extern int	g_status;
 
 int	execute_single_process(t_process *process, t_data *shell,
 	int input_fd, int output_fd)

@@ -86,7 +86,7 @@ void	start_minishell(t_data *shell, char **env)
 				free (redir_splited);
 				free (process);
 				//free(shell->line);
-				//rl_replace_line("", 0);
+				rl_replace_line("", 0);
 			}
 			else if (shell->line && *shell->line)
 			{

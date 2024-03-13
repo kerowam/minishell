@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-int	g_status;
+extern int	g_status;
 
 char	*get_expanded_value(t_env *env, char *key)
 {
@@ -34,11 +34,14 @@ char	*get_expanded_value(t_env *env, char *key)
 char	*get_status(char *str)
 {
 	char	*value;
+	char	*join;
 
 	value = ft_itoa(g_status);
 	if (str[1])
 	{
-		value = ft_strjoin(value, str + 1);
+		join = ft_strjoin(value, str + 1);
+		free (value);
+		return (join);
 	}
 	return (value);
 }
@@ -59,8 +62,8 @@ char	*expand_value(char *str, int i, t_env *env, char *end_str)
 		end_str = ft_strdup(value);
 	else
 		end_str = ft_strjoin(end_str, value);
-	/*if (tmp != NULL)
-		free(tmp);*/
+	if (tmp != NULL)
+		free(tmp);
 	tmp = NULL;
 	free(value);
 	value = NULL;
