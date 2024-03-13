@@ -27,9 +27,10 @@ void	create_variable(char *variable, t_data *shell)
 	{
 		new_env = new_node(name, value);
 		env_add_back(&shell->env, new_env);
+		free(name);
 	}
+	
 	free(value);
-	value = NULL;
 }
 
 bool	check_args(char *arg, char *cmd)
@@ -37,8 +38,8 @@ bool	check_args(char *arg, char *cmd)
 	int		i;
 	char	*name;
 
-	(void)cmd;
 	i = 0;
+	(void)cmd;
 	name = obtain_env_name(arg);
 	if (ft_isdigit(name[i]) || name[i] == '-')
 	{

@@ -44,6 +44,8 @@ void	start_minishell(t_data *shell, char **env)
 		if (shell->line)
 			free(shell->line);
 		shell->line = readline("Minishell@ ~ ");
+		if (shell->line == NULL)
+			exit(EXIT_FAILURE);
 		//printf("shell->line: %s\n", shell->line);
 		i = 0;
 		while (shell->line[i] == ' ')

@@ -10,8 +10,6 @@ int	execute_single_process(t_process *process, t_data *shell,
 		return (EXIT_FAILURE);
 	if (process->command == NULL || process->command[0] == '\0')
 	{
-		if (ft_strcmp(shell->line, "$?") == 0)
-			printf("zsh: command not found: %d\n", g_status);
 		if (process->next_process != NULL)
 			free_commands(process);
 		return (EXIT_SUCCESS);

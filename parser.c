@@ -1,5 +1,7 @@
 #include "minishell.h"
 
+extern int g_status;
+
 void	handle_redirection(t_list **tmp, t_process *tmp_process)
 {
 	t_list	*tmp_next;
@@ -30,7 +32,8 @@ void	handle_redirection(t_list **tmp, t_process *tmp_process)
 	}
 	ft_free_char(tmp_word_next);
 	ft_free_char (tmp_word);
-	*tmp = tmp_next;
+	if (tmp_next != NULL)
+		*tmp = tmp_next;
 }
 
 void	handle_pipe(t_process **tmp_process, t_list *tmp)
@@ -38,6 +41,14 @@ void	handle_pipe(t_process **tmp_process, t_list *tmp)
 	t_process	*next_pr;
 	char		*tmp_word;
 
+	if (tmp->next == NULL)
+	{
+		put_error(UNEXPECTEDTOKEN, 258);
+		//exit(g_status);
+		return;
+	}
+	tmp_word = ft_strdup(tmp->next->content);
+	check_pipe(tmp_word);
 	next_pr = (t_process *)malloc(sizeof(t_process));
 	if (!next_pr)
 	{
@@ -54,9 +65,7 @@ void	handle_pipe(t_process **tmp_process, t_list *tmp)
 	init_process(next_pr);
 	(*tmp_process)->next_process = next_pr;
 	*tmp_process = (*tmp_process)->next_process;
-	tmp_word = ft_strdup(tmp->next->content);
 	//printf("27.3.tmp_word pointer = %p\n", tmp_word);
-	check_pipe(tmp_word);
 	free(tmp_word);
 	tmp_word = NULL;
 }

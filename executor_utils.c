@@ -61,7 +61,7 @@ void	execute_builtin(t_process *process, t_data *shell)
 		pwd_command(shell);
 	if (ft_strncmp(process->command, "echo\0", 5) == 0
 		|| ft_strncmp(process->command, "ECHO\0", 5) == 0)
-		echo_command(&process->command, 0);
+		echo_command(process);
 	if (ft_strncmp(&process->command[0], "unset\0", 6) == 0
 		|| ft_strncmp(&process->command[0], "UNSET\0", 6) == 0)
 		unset_command(shell, shell->echo[1]);
@@ -70,15 +70,13 @@ void	execute_builtin(t_process *process, t_data *shell)
 		cd_command(shell->echo, shell);
 	if (ft_strncmp(shell->echo[0], "export\0", 7) == 0
 		|| ft_strncmp(shell->echo[0], "EXPORT\0", 7) == 0)
-		export_command(shell->echo, shell);
+		export_command(process, shell);
 }
 
 bool	is_builtin(t_process *process, t_data *shell)
 {
 	bool	is_builtin_command;
-	char	*trimmed_command;
 
-	trimmed_command = ft_strtrim(shell->line, " \t\n\r\f\v");
 	if (!process->command)
 		return (false);
 	is_builtin_command = false;
@@ -88,8 +86,8 @@ bool	is_builtin(t_process *process, t_data *shell)
 		|| ft_strcmp(process->command, "ENV") == 0
 		|| ft_strcmp(shell->line, "pwd") == 0
 		|| ft_strcmp(shell->line, "PWD") == 0
-		|| ft_strcmp(trimmed_command, "echo") == 0
-		|| ft_strcmp(trimmed_command, "ECHO") == 0
+		|| ft_strcmp(process->command, "echo") == 0
+		|| ft_strcmp(process->command, "ECHO") == 0
 		|| ft_strcmp(&process->command[0], "unset") == 0
 		|| ft_strcmp(&process->command[0], "UNSET") == 0
 		|| ft_strcmp(*shell->echo, "cd") == 0
@@ -97,6 +95,5 @@ bool	is_builtin(t_process *process, t_data *shell)
 		|| ft_strcmp(process->command, "export") == 0
 		|| ft_strcmp(process->command, "EXPORT") == 0)
 		is_builtin_command = true;
-	free(trimmed_command);
 	return (is_builtin_command);
 }

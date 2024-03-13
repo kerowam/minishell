@@ -99,9 +99,9 @@ enum	e_error
 //builtins.c
 void	env_command(t_data *shell);
 void	pwd_command(t_data *shell);
-void	echo_command(char **str, int exists);
+void	echo_command(t_process *process);
 void	unset_command(t_data *shell, char *name);
-void	export_command(char **cmd, t_data *shell);
+void	export_command(t_process *process, t_data *shell);
 
 //cd_utils.c
 void	update_pwd(t_data *shell);

@@ -21,11 +21,19 @@ void	pwd_command(t_data *shell)
 		perror("getcwd");
 }
 
-void	echo_command(char **str, int exists)
+void	echo_command(t_process *process)
 {
-	int	str_size;
 	int	i;
 
+	i = 1;
+	printf("COMANDO: %s\n", process->command);
+	if (process->args)
+		printf("ARGUMENTOS: %s\n", process->args[0]);
+	/*if (!process->command)
+	{
+		write(1, "\n", 1);
+		return ;
+	}
 	str_size = 0;
 	while (str[str_size])
 		str_size++;
@@ -46,7 +54,7 @@ void	echo_command(char **str, int exists)
 		}
 	}
 	if (exists == 0)
-		printf("\n");
+		printf("\n");*/
 }
 
 void	unset_command(t_data *shell, char *name)
@@ -78,20 +86,20 @@ void	unset_command(t_data *shell, char *name)
 	}
 }
 
-void	export_command(char **cmd, t_data *shell)
+void	export_command(t_process *process, t_data *shell)
 {
-	int	i;
+	int		i;
 
 	i = 1;
-	if (!cmd[1])
+	if (process->command && !process->args)
 		only_export(shell);
 	else
 	{
-		while (cmd[i])
+		while (process->argv->content)
 		{
-			if (check_args(cmd[i], cmd[0]))
-				create_variable(cmd[i], shell);
-			i++;
+			if (check_args(process->argv->content, process->argv->content))
+				create_variable(process->argv->content, shell);
+			break ;
 		}
 	}
 }
