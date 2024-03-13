@@ -27,9 +27,7 @@ void	create_variable(char *variable, t_data *shell)
 	{
 		new_env = new_node(name, value);
 		env_add_back(&shell->env, new_env);
-		free(name);
 	}
-	
 	free(value);
 }
 
