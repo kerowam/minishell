@@ -41,6 +41,7 @@ static void	execute_child_process(t_process *process,
 		exit(EXIT_FAILURE);
 	}
 	waitpid(process->pid, &process->status, 0);
+	free_argv(cmd_argv);
 }
 
 void	execute_local_command(t_process *process)
