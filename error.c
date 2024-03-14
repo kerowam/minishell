@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-int	g_status;
+extern int	g_status;
 
 void	put_error(int error_type, int error_code)
 {
@@ -27,8 +27,6 @@ void	put_error(int error_type, int error_code)
 		printf("minishell: error: Is a directory\n");
 	else if (error_type == NOTDIR)
 		printf("minishell: error: Not a directory\n");
-	else if (error_type == OPENERROR)
-		printf("minishell: error: open failed\n");
 }
 
 void	put_error2(int error_type, int error_code)
@@ -40,4 +38,10 @@ void	put_error2(int error_type, int error_code)
 		printf("minishell: exit: too many arguments\n");
 	else if (error_type == NOTVALID)
 		printf("minishell: is not a valid identifier\n");
+	else if (error_type == OPENERROR)
+		printf("minishell: error: open failed\n");
+	else if (error_type == ARGS)
+		printf("minishell: error: wrong number of arguments\n");
+	else if (error_type == CLOSEERROR)
+		printf("minishell: error: close failed\n");
 }

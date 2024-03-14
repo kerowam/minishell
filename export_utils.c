@@ -1,7 +1,5 @@
 #include "minishell.h"
 
-int	g_status;
-
 void	only_export(t_data *shell)
 {
 	t_env	*current;
@@ -48,7 +46,7 @@ bool	check_args(char *arg, char *cmd)
 	}
 	while (name[i])
 	{
-		if (ft_isalnum(name[i]) || name[i] == '-')
+		if (ft_isalnum(name[i]))
 			i++;
 		else
 		{

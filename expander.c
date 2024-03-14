@@ -12,12 +12,6 @@ char	*get_expanded_value(t_env *env, char *key)
 	tmp = init_tmp_env(tmp);
 	*tmp = env;
 	name = NULL;
-	if (ft_strcmp(key, "?") == 0)
-	{
-		value = ft_itoa(g_status);
-		free(tmp);
-		return (value);
-	}
 	while (*tmp != NULL)
 	{
 		name = ft_strdup((*tmp)->name);
@@ -26,7 +20,8 @@ char	*get_expanded_value(t_env *env, char *key)
 			value = ft_strdup((*tmp)->value);
 			return (free(tmp), free (name), value);
 		}
-		free(name);
+		if (name)
+			free(name);
 		if ((*tmp)->next)
 			*tmp = (*tmp)->next;
 		else
@@ -36,22 +31,39 @@ char	*get_expanded_value(t_env *env, char *key)
 	return (free(tmp), value);
 }
 
+char	*get_status(char *str)
+{
+	char	*value;
+	char	*join;
+
+	value = ft_itoa(g_status);
+	if (str[1])
+	{
+		join = ft_strjoin(value, str + 1);
+		free (value);
+		return (join);
+	}
+	return (value);
+}
+
 char	*expand_value(char *str, int i, t_env *env, char *end_str)
 {
 	char	*value;
 	char	*tmp;
 
 	tmp = set_key(str, i);
-	if (ft_strncmp(tmp, "$", 1) != 0)
+	if (ft_strncmp(tmp, "$", 1) != 0 && ft_strncmp(tmp, "?", 1) != 0)
 		value = get_expanded_value(env, tmp);
+	else if (ft_strncmp(tmp, "?", 1) == 0)
+		value = get_status(tmp);
 	else
 		value = ft_strdup(tmp);
 	if (!end_str)
 		end_str = ft_strdup(value);
 	else
 		end_str = ft_strjoin(end_str, value);
-	/*if (tmp != NULL)
-	free(tmp);*/
+	if (tmp && tmp != NULL && *tmp != '\0')
+		free(tmp);
 	tmp = NULL;
 	free(value);
 	value = NULL;
@@ -95,9 +107,6 @@ char	*expand(char *str, t_env *env)
 		else if (str[i] == '$')
 		{
 			i++;
-			//if (str[i] == '?')
-			//if (str[i] == '\"' || str[i] == ' ' || !str[i])
-		
 			end_str = expand_value(str, i, env, end_str);
 			while (str[i] && str[i] != '$' && str[i] != ' ' && str[i] != '\"')
 				i++;
@@ -140,6 +149,7 @@ void	expander(t_env *env, t_list **line_splited)
 			(*tmp_list)->content = expand(tmp_str, *tmp_env);
 		}
 		ft_free_char(tmp_str);
+		tmp_str = NULL;
 		*tmp_list = list_next(tmp_list);
 	}
 	free_expander(tmp_env, tmp_list);

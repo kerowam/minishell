@@ -50,7 +50,7 @@ void	clean_str_quot(char *str, t_list **list)
 			end_str = handle_unquoted_string(str, &i, end_str);
 			if (!end_str)
 			{
-				printf("Error: clean_str_quot add_substr failed\n");
+				//printf("Error: clean_str_quot add_substr failed\n");
 				ft_free_char (end_str);
 				break ;
 			}

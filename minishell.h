@@ -29,7 +29,7 @@
 # define Q			'\''
 # define DQ			'\"'
 
-//int		g_exit_status;
+int		g_exit_status;
 
 typedef struct s_env
 {
@@ -94,14 +94,16 @@ enum	e_error
 	ISDIR = 10, //g_exit_status = 126
 	NOTDIR = 11, //g_exit_status = 1
 	OPENERROR = 12, //g_exit_status = 1? Por si falla open (fd < 0)
-	NUMARG = 13, //para la salida, g_Status == 255
-	TOMANYARG = 14, //para la salida, g_status = 1
-	NOTVALID = 15 //para export, si el nombre no es valido, g_status = 1
+	ARGS = 13, //g_exit_status = 1
+	CLOSEERROR = 14,
+	NUMARG = 15, //para la salida, g_Status == 255
+	TOMANYARG = 16, //para la salida, g_status = 1
+	NOTVALID = 17 //g_exit_status = 1
 };
 
 //builtins.c
 void	env_command(t_data *shell);
-void	pwd_command(t_data *shell);
+void	pwd_command(t_data *shell, t_process *process);
 void	echo_command(char **str, int exists);
 void	unset_command(t_data *shell, char *name);
 void	export_command(t_process *process, t_data *shell);
@@ -201,7 +203,7 @@ bool	is_builtin(t_process *process, t_data *shell);
 void	execute_local_command(t_process *process);
 
 //executor2.c
-int		execute_command(t_process *process, int input_fd, int output_fd);
+//int		execute_command(t_process *process, int input_fd, int output_fd);
 
 //expander_utils.c
 int		get_len_word(char *str, int i);
@@ -313,7 +315,7 @@ void	handle_command_pipe_redir(t_process **tmp_process, t_list **tmp);
 
 //signals.c
 void	signals_handler(int sign);
-//void	rl_replace_line(const char *text, int clear_undo);
+void	rl_replace_line(const char *text, int clear_undo);
 void	setup_signal_handlers(void);
 
 //utils3.c
@@ -322,5 +324,7 @@ void	exit_command(t_process *process, t_data *shell);
 void	no_path(t_process *process, int input_fd, int output_fd);
 
 void	put_error2(int error_type, int error_code);
+
+int	execute_command(t_process *process, t_data *shell, int input_fd, int output_fd);
 
 #endif

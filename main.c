@@ -1,6 +1,6 @@
 
 #include "minishell.h"
-void	ft_header(void)
+/*void	ft_header(void)
 {
 	printf("\n");
 	printf("               ╔╗ ╔╦═══╗ \n");
@@ -16,16 +16,19 @@ void	ft_header(void)
 	printf("   ║║║║║╠╣╠╣║ ║║╠╣╠╣╚═╝║║ ║║╚══╣╚═╝║╚═╝║ \n");
 	printf("   ╚╝╚╝╚╩══╩╝ ╚═╩══╩═══╩╝ ╚╩═══╩═══╩═══╝ \n");
 	printf("\n");
-}
+}*/
+
+int	g_status;
 
 void	initialize_minishell(t_data **shell, char **env)
 {
 	(void)env;
+	g_status = 0;
 	*shell = (t_data *)malloc(sizeof(t_data));
 	if (!*shell)
 	{
-		perror("Error al asignar memoria para t_data");
-		exit(EXIT_FAILURE);
+		put_error(MEMPROBLEM, 1);
+		exit(g_status);
 	}
 }
 
@@ -79,11 +82,11 @@ void	start_minishell(t_data *shell, char **env)
 			q = check_quotes(shell->line, 0, 0);
 			if (q % 2 != 0)
 			{
-				printf("error: dequoted line\n");
+				put_error(DEQUOTE, 1);
 				free (redir_splited);
 				free (process);
 				//free(shell->line);
-				//rl_replace_line("", 0);
+				rl_replace_line("", 0);
 			}
 			else if (shell->line && *shell->line)
 			{
@@ -132,7 +135,7 @@ int	main(int argc, char **argv, char **env)
 		shell->line = NULL;
 		if (argc == 1)
 		{
-			ft_header();
+			//ft_header();
 			start_minishell(shell, env);
 		}
 		free(shell->line);
@@ -141,7 +144,7 @@ int	main(int argc, char **argv, char **env)
 		clear_history();
 		return (EXIT_SUCCESS);
 	}
-	printf("Error de argumentos\n");
+	put_error(ARGS, 1);
 }
 
 void	ft_leaks(void)

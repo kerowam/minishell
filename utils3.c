@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-int	g_status;
+extern int	g_status;
 
 void	free_elements(char *temp, char *full_path)
 {
@@ -17,10 +17,11 @@ t_list	*list_next(t_list **tmp_list)
 	return (*tmp_list);
 }
 
-static void	print_exit(t_data *shell)
+static void	print_exit(t_data *shell, t_process *process)
 {
 	printf("exit\n");
 	free(shell->line);
+	free_process(process);
 	exit(EXIT_SUCCESS);
 }
 
@@ -58,7 +59,7 @@ void	exit_command(t_process *process, t_data *shell)
 		}
 	}
 	else
-		print_exit(shell);
+		print_exit(shell, process);
 }
 
 void	no_path(t_process *process, int input_fd, int output_fd)
@@ -70,7 +71,7 @@ void	no_path(t_process *process, int input_fd, int output_fd)
 		full_path = ft_strdup(process->command);
 	else
 	{
-		put_error(NOTCOMMAND, 127);
+		printf("Command not found: %s\n", process->command);
 		return ;
 	}
 	process->pid = fork();

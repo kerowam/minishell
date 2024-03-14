@@ -24,7 +24,7 @@ char	*add_substr(int start, int i, char *str, char *end_str)
 	//printf("33.0.add_substr tmp_str pointer = %p\n", tmp_str);
 	if (!tmp_str)
 	{
-		printf("Error: add_substr ft_substr failed\n"); //Gestionar errores
+		put_error(MEMPROBLEM, 1);
 		return (NULL);
 	}
 	if (!end_str)

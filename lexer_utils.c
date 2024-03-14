@@ -21,7 +21,10 @@ void	insert_node(t_list **list, char *content)
 	new_node = ft_lstnew(content);
 	//printf("19.0.new_node pointer = %p\n", new_node);
 	if (!new_node)
+	{
+		put_error(MEMPROBLEM, 1);
 		return ;
+	}
 	tmp = (*list)->next;
 	(*list)->next = new_node;
 	new_node->next = tmp;
