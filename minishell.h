@@ -96,6 +96,7 @@ enum	e_error
 	OPENERROR = 12, //g_exit_status = 1? Por si falla open (fd < 0)
 	ARGS = 13, //g_exit_status = 1
 	CLOSEERROR = 14, //g_exit_status = 1
+	SINTAXERROR = 15 //g_exit_status = 2
 };
 
 //builtins.c

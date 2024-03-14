@@ -25,9 +25,23 @@ void	handle_command_pipe_redir(t_process **tmp_process, t_list **tmp)
 	if ((*tmp)->content == NULL)
 		return ;
 	if (is_redir((*tmp)->content) == 1)
+	{
+		if ((*tmp)->next == NULL)
+		{
+			put_error(SINTAXERROR, 2);
+			return ;
+		}
 		handle_redirection(tmp, *tmp_process);
+	}
 	else if (ft_strncmp((*tmp)->content, "|", 2) == 0)
+	{
+		if ((*tmp)->next == NULL)
+		{
+			put_error(SINTAXERROR, 2);
+			return ;
+		}
 		handle_pipe(tmp_process, *tmp);
+	}
 	else
 		handle_command(tmp_process, *tmp);
 }

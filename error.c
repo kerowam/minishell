@@ -33,4 +33,6 @@ void	put_error(int error_type, int error_code)
 		printf("minishell: error: wrong number of arguments\n");
 	else if (error_type == CLOSEERROR)
 		printf("minishell: error: close failed\n");
+	else if (error_type == SINTAXERROR)
+		printf("minishell: error sintáctico cerca del elemento inesperado `newline'\n");
 }

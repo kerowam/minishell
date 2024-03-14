@@ -50,6 +50,7 @@ char	*expand_value(char *str, int i, t_env *env, char *end_str)
 {
 	char	*value;
 	char	*tmp;
+	char	*join;
 
 	tmp = set_key(str, i);
 	if (ft_strncmp(tmp, "$", 1) != 0 && ft_strncmp(tmp, "?", 1) != 0)
@@ -59,21 +60,29 @@ char	*expand_value(char *str, int i, t_env *env, char *end_str)
 	else
 		value = ft_strdup(tmp);
 	if (!end_str)
+	{
 		end_str = ft_strdup(value);
+		if (tmp && tmp != NULL && *tmp != '\0')
+			ft_free_char(tmp);
+		ft_free_char(value);
+		return (end_str);
+	}
 	else
-		end_str = ft_strjoin(end_str, value);
-	if (tmp && tmp != NULL && *tmp != '\0')
-		free(tmp);
-	tmp = NULL;
-	free(value);
-	value = NULL;
-	return (end_str);
+	{
+		join = ft_strjoin(end_str, value);
+		ft_free_char(value);
+		ft_free_char(end_str);
+		if (tmp && tmp != NULL && *tmp != '\0')
+			ft_free_char(tmp);
+		return (join);
+	}
 }
 
 char	*join_expand(char *str, int i, char *end_str)
 {
 	char	*tmp;
 	int		start;
+	char	*join;
 
 	start = i;
 	while (str[i] && str[i] != '$')
@@ -85,12 +94,18 @@ char	*join_expand(char *str, int i, char *end_str)
 	}
 	tmp = ft_substr(str, start, i - start);
 	if (!end_str)
+	{
 		end_str = ft_strdup(tmp);
+		ft_free_char(tmp);
+		return (end_str);
+	}
 	else
-		end_str = ft_strjoin(end_str, tmp);
-	free(tmp);
-	tmp = NULL;
-	return (end_str);
+	{
+		join = ft_strjoin(end_str, tmp);
+		ft_free_char(end_str);
+		ft_free_char(tmp);
+		return (join);
+	}
 }
 
 char	*expand(char *str, t_env *env)
