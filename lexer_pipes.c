@@ -9,7 +9,10 @@ int	split_pipe_2(int i, char *tmp_word, t_list **pipes_splited)
 	pipe_index = get_pipe_index(tmp_word, i);
 	if (pipe_index == 0)
 	{
-		ft_lstadd_back(pipes_splited, ft_lstnew("|"));
+		if (!(*pipes_splited)->content)
+			(*pipes_splited)->content = ft_strdup("|");
+		else
+			ft_lstadd_back(pipes_splited, ft_lstnew("|"));
 		i++;
 	}
 	else

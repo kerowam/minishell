@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-int	g_status;
+extern int	g_status;
 
 void	env_command(t_data *shell)
 {
@@ -82,9 +82,9 @@ void	unset_command(t_data *shell, char *name)
 
 void	export_command(t_process *process, t_data *shell)
 {
-	int		i;
+	//int		i;
 
-	i = 1;
+	//i = 1;
 	if (process->command && !process->args)
 		only_export(shell);
 	else
