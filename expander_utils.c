@@ -26,7 +26,7 @@ char	*set_key(char *str, int i)
 			return (NULL);
 	}
 	else
-		tmp = "$";
+		tmp = ft_strdup("$");
 	//printf("6.tmp pointer = %p\n", tmp);
 	return (tmp);
 }

@@ -62,7 +62,7 @@ char	*expand_value(char *str, int i, t_env *env, char *end_str)
 		end_str = ft_strdup(value);
 	else
 		end_str = ft_strjoin(end_str, value);
-	if (tmp != NULL)
+	if (tmp && tmp != NULL && *tmp != '\0')
 		free(tmp);
 	tmp = NULL;
 	free(value);
@@ -149,6 +149,7 @@ void	expander(t_env *env, t_list **line_splited)
 			(*tmp_list)->content = expand(tmp_str, *tmp_env);
 		}
 		ft_free_char(tmp_str);
+		tmp_str = NULL;
 		*tmp_list = list_next(tmp_list);
 	}
 	free_expander(tmp_env, tmp_list);

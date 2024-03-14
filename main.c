@@ -43,7 +43,7 @@ void	start_minishell(t_data *shell, char **env)
 	while (1)
 	{
 		setup_signal_handlers();
-		//system("leaks -q minishell");
+		system("leaks -q minishell");
 		if (shell->line)
 			free(shell->line);
 		shell->line = readline("Minishell@ ~ ");
@@ -128,7 +128,7 @@ int	main(int argc, char **argv, char **env)
 	(void)argv;
 	if (argc == 1)
 	{
-		//atexit(ft_leaks);
+		atexit(ft_leaks);
 		shell = NULL;
 		initialize_minishell(&shell, env);
 		copy_env_to_data(shell, env);
