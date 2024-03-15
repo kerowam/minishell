@@ -29,7 +29,7 @@
 # define Q			'\''
 # define DQ			'\"'
 
-//int		g_exit_status;
+int		g_exit_status;
 
 typedef struct s_env
 {
@@ -97,11 +97,15 @@ enum	e_error
 	ARGS = 13, //g_exit_status = 1
 	CLOSEERROR = 14, //g_exit_status = 1
 	SINTAXERROR = 15 //g_exit_status = 2
+	TOMANYARG = 16, //para la salida, g_status = 1
+	NOTVALID = 17 //g_exit_status = 1
+	CLOSEERROR = 18,
+	NUMARG = 19, //para la salida, g_Status == 255
 };
 
 //builtins.c
 void	env_command(t_data *shell);
-void	pwd_command(t_data *shell);
+void	pwd_command(t_data *shell, t_process *process);
 void	echo_command(char **str, int exists);
 void	unset_command(t_data *shell, char *name);
 void	export_command(t_process *process, t_data *shell);
@@ -201,7 +205,7 @@ bool	is_builtin(t_process *process, t_data *shell);
 void	execute_local_command(t_process *process);
 
 //executor2.c
-int		execute_command(t_process *process, int input_fd, int output_fd);
+//int		execute_command(t_process *process, int input_fd, int output_fd);
 
 //expander_utils.c
 int		get_len_word(char *str, int i);
@@ -320,5 +324,9 @@ void	setup_signal_handlers(void);
 void	free_elements(char *temp, char *full_path);
 void	exit_command(t_process *process, t_data *shell);
 void	no_path(t_process *process, int input_fd, int output_fd);
+
+void	put_error2(int error_type, int error_code);
+
+int	execute_command(t_process *process, t_data *shell, int input_fd, int output_fd);
 
 #endif

@@ -55,13 +55,19 @@ void	child_process(t_process *process, char *full_path)
 	exit(EXIT_FAILURE);
 }
 
-int	execute_command(t_process *process, int input_fd, int output_fd)
+int	execute_command(t_process *process, t_data *shell, int input_fd, int output_fd)
 {
 	int		i;
 	char	*temp;
 	char	*full_path;
 
 	i = 0;
+	find_path(process, shell);
+	if (process->env == NULL)
+	{
+		no_path(process, input_fd, output_fd);
+		return (EXIT_SUCCESS);
+	}
 	while (process->env[i++] != NULL)
 	{
 		temp = ft_strjoin(process->env[i], "/");

@@ -41,16 +41,16 @@ bool	check_args(char *arg, char *cmd)
 	name = obtain_env_name(arg);
 	if (ft_isdigit(name[i]) || name[i] == '-')
 	{
-		printf("%s: is not a valid identifier\n", name);
+		put_error2(NOTVALID, 1);
 		return (free(name), false);
 	}
 	while (name[i])
 	{
-		if (ft_isalnum(name[i]) || name[i] == '-')
+		if (ft_isalnum(name[i]))
 			i++;
 		else
 		{
-			printf("%s: not a valid identifier\n", name);
+			put_error2(NOTVALID, 1);
 			return (free(name), false);
 		}
 	}

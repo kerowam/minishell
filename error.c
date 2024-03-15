@@ -27,6 +27,17 @@ void	put_error(int error_type, int error_code)
 		printf("minishell: error: Is a directory\n");
 	else if (error_type == NOTDIR)
 		printf("minishell: error: Not a directory\n");
+}
+
+void	put_error2(int error_type, int error_code)
+{
+	g_status = error_code;
+	if (error_type == NUMARG)
+		printf("minishell: exit: a: numeric argument required.\n");
+	else if (error_type == TOMANYARG)
+		printf("minishell: exit: too many arguments\n");
+	else if (error_type == NOTVALID)
+		printf("minishell: is not a valid identifier\n");
 	else if (error_type == OPENERROR)
 		printf("minishell: error: open failed\n");
 	else if (error_type == ARGS)

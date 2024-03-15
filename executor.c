@@ -5,16 +5,13 @@ extern int	g_status;
 int	execute_single_process(t_process *process, t_data *shell,
 	int input_fd, int output_fd)
 {
-	find_path(process, shell);
-	if (process->env == NULL)
-		return (EXIT_FAILURE);
 	if (process->command == NULL || process->command[0] == '\0')
 	{
 		if (process->next_process != NULL)
 			free_commands(process);
 		return (EXIT_SUCCESS);
 	}
-	if (!execute_command(process, input_fd, output_fd))
+	if (!execute_command(process, shell, input_fd, output_fd))
 	{
 		if (process->next_process != NULL)
 			free_commands(process);
@@ -59,8 +56,11 @@ void	execute_multiple_commands(t_process *process, t_data *shell)
 		}
 		else
 		{
-			execute_single_process(process, shell, input_fd, STDOUT_FILENO);
-			free_commands(process);
+			if (g_status != 258)
+			{
+				execute_single_process(process, shell, input_fd, STDOUT_FILENO);
+				free_commands(process);
+			}
 			process = process->next_process;
 		}
 	}
