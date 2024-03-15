@@ -29,8 +29,6 @@
 # define Q			'\''
 # define DQ			'\"'
 
-int		g_exit_status;
-
 typedef struct s_env
 {
 	char			*name;
@@ -96,11 +94,10 @@ enum	e_error
 	OPENERROR = 12, //g_exit_status = 1? Por si falla open (fd < 0)
 	ARGS = 13, //g_exit_status = 1
 	CLOSEERROR = 14, //g_exit_status = 1
-	SINTAXERROR = 15 //g_exit_status = 2
+	SINTAXERROR = 15, //g_exit_status = 2
 	TOMANYARG = 16, //para la salida, g_status = 1
-	NOTVALID = 17 //g_exit_status = 1
-	CLOSEERROR = 18,
-	NUMARG = 19, //para la salida, g_Status == 255
+	NOTVALID = 17, //g_exit_status = 1
+	NUMARG = 18, //para la salida, g_Status == 255
 };
 
 //builtins.c
