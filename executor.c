@@ -56,7 +56,7 @@ void	execute_multiple_commands(t_process *process, t_data *shell)
 				break ;
 			close(pipe_fd[1]);
 			input_fd = pipe_fd[0];
-			//free_commands(process);
+			free_commands(process);
 			process = process->next_process;
 		}
 		else
@@ -82,7 +82,7 @@ int	main_executor(t_data *shell, t_process *process)
 		{
 			if (!process->here_doc)
 			{
-				//g_status = 1;
+				g_status = 1;
 				return (g_status);
 			}
 			else
