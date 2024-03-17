@@ -82,7 +82,7 @@ int	main_executor(t_data *shell, t_process *process)
 		{
 			if (!process->here_doc)
 			{
-				g_status = 1;
+				g_status = 2;
 				return (g_status);
 			}
 			else
