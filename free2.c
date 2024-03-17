@@ -55,7 +55,7 @@ void	free_process(t_process *process)
 		ft_free_char(tmp->outfile);
 		ft_free_char(tmp->outfile_append);
 		free_list_process(tmp->here_doc);
-		free_commands(tmp);
+		//free_commands(tmp);
 		if (tmp->args)
 		{
 			free_echo(tmp->args);
