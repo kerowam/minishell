@@ -8,7 +8,7 @@ void	put_error(int error_type, int error_code)
 	if (error_type == DEQUOTE)
 		printf("minishell: error: dequoted line\n");
 	else if (error_type == NOTFILEORDIR)
-		printf("minishell: error: No such file or directory\n");
+		perror("minishell: error: No such file or directory\n");
 	else if (error_type == NOTPERMISSION)
 		printf("minishell: error: Permission denied\n");
 	else if (error_type == NOTCOMMAND)

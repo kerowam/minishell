@@ -62,7 +62,7 @@ void	execute_builtin(t_process *process, t_data *shell)
 		unset_command(shell, shell->echo[1]);
 	if (ft_strncmp(*shell->echo, "cd\0", 3) == 0
 		|| ft_strncmp(shell->line, "CD\0", 3) == 0)
-		cd_command(shell->echo, shell);
+		cd_command(process, shell);
 	if (ft_strncmp(shell->echo[0], "export\0", 7) == 0
 		|| ft_strncmp(shell->echo[0], "EXPORT\0", 7) == 0)
 		export_command(process, shell);

@@ -117,7 +117,8 @@ void	obtain_env(t_data *shell, char *env_var);
 void	handle_home_directory(t_data *shell);
 void	handle_previous_directory(t_data *shell);
 void	handle_given_directory(char **str, t_data *shell);
-void	cd_command(char **str, t_data *shell);
+void	cd_command(t_process *process, t_data *shell);
+//void	cd_command(char **str, t_data *shell);
 int		handle_directory(t_data *shell, char **str);
 
 //enviroment.c
