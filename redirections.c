@@ -1,23 +1,25 @@
 #include "minishell.h"
 
+extern int	g_status;
+
 void	redirect_infile(t_process *process)
 {
 	int	fd;
 
 	if (process->infile != NULL)
 	{
-		//printf("HOLA\n");
+		printf("HOLA\n");
 		fd = open(process->infile, O_RDONLY);
 		if (fd == -1)
 		{
 			perror("Error opening input file");
-			exit(EXIT_FAILURE);
+			exit(g_status);
 		}
 		dup2(fd, STDIN_FILENO);
 		if (close(fd) == -1)
 		{
 			perror("Error closing input file descriptor");
-			exit(EXIT_FAILURE);
+			exit(g_status);
 		}
 	}
 }
@@ -43,12 +45,12 @@ void	redirect_outfile(t_process *process)
 		if (fd == -1)
 		{
 			perror("Error opening output file");
-			exit(EXIT_FAILURE);
+			exit(g_status);
 		}
 		if (dup2(fd, STDOUT_FILENO) == -1)
 		{
 			perror("Error redirecting output");
-			exit(EXIT_FAILURE);
+			exit(g_status);
 		}
 		close(fd);
 	}

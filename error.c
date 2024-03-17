@@ -10,9 +10,9 @@ void	put_error(int error_type, int error_code)
 	else if (error_type == NOTFILEORDIR)
 		perror("minishell: error: No such file or directory\n");
 	else if (error_type == NOTPERMISSION)
-		printf("minishell: error: Permission denied\n");
+		perror("minishell: error: Permission denied\n");
 	else if (error_type == NOTCOMMAND)
-		printf("minishell: error: command not found\n");
+		perror("minishell: error: command not found\n");
 	else if (error_type == DUPERROR)
 		printf("minishell: error: fd duplication failed\n");
 	else if (error_type == FORKERROR)
@@ -24,7 +24,7 @@ void	put_error(int error_type, int error_code)
 	else if (error_type == MEMPROBLEM)
 		printf("minishell: error: memory allocation failed\n");
 	else if (error_type == ISDIR)
-		printf("minishell: error: Is a directory\n");
+		perror("minishell: error: Is a directory\n");
 	else if (error_type == NOTDIR)
 		printf("minishell: error: Not a directory\n");
 	else

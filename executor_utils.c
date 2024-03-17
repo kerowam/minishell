@@ -1,5 +1,7 @@
 #include "minishell.h"
 
+extern int	g_status;
+
 void	free_string_array(char **array)
 {
 	int	i;
@@ -32,15 +34,16 @@ int	find_path(t_process *process, t_data *shell)
 			if (!process->env || !process->path_env)
 			{
 				perror("Error al dividir o duplicar la cadena");
-				return (EXIT_FAILURE);
+				g_status = 2;
+				return (g_status);
 			}
-			return (EXIT_SUCCESS);
+			return (g_status);
 		}
 		current_env = current_env->next;
 	}
 	process->path_env = NULL;
 	process->env = NULL;
-	return (EXIT_FAILURE);
+	return (g_status);
 }
 
 void	execute_builtin(t_process *process, t_data *shell)

@@ -52,8 +52,8 @@ void	child_process(t_process *process, char *full_path)
 
 	argv = malloc((ft_lstsize(process->argv) + 2) * sizeof(char *));
 	argv = create_argv(process, argv);
-	execve(full_path, argv, process->env);
-	//perror("execve");    ///////????
+	if (execve(full_path, argv, process->env) == -1)
+		put_error(NOTCOMMAND, 127);    ///////????
 	exit(g_status);
 }
 

@@ -48,7 +48,7 @@ void	start_minishell(t_data *shell, char **env)
 			free(shell->line);
 		shell->line = readline("Minishell@ ~ ");
 		if (shell->line == NULL)
-			exit(EXIT_FAILURE);
+			exit(g_status);
 		//printf("shell->line: %s\n", shell->line);
 		i = 0;
 		while (shell->line[i] == ' ')
@@ -142,7 +142,7 @@ int	main(int argc, char **argv, char **env)
 		free(shell->echo);
 		free(shell);
 		clear_history();
-		return (EXIT_SUCCESS);
+		return (g_status);
 	}
 	put_error(ARGS, 1);
 }

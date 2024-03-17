@@ -76,7 +76,7 @@ void	handle_command(t_process **tmp_process, t_list *tmp)
 	char		*tmp_word;
 
 	tmp_word = ft_strdup((tmp->content));
-	if ((*tmp_process)->command == NULL)
+	if ((*tmp_process)->command == NULL || *(*tmp_process)->command == '\0')
 	{
 		(*tmp_process)->command = ft_strdup(tmp_word);
 		//printf("27.4.(*tmp_process)->command pointer = %p\n", tmp_word);
