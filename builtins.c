@@ -25,7 +25,7 @@ void	pwd_command(t_data *shell, t_process *process)
 	path = getcwd(path, 100);
 	printf("%s\n", path);
 	free(path);
-	g_status = 0;
+	//g_status = 0;
 }
 
 void	echo_command(char **str, int exists)
@@ -78,6 +78,7 @@ void	unset_command(t_data *shell, char *name)
 			free(del->name);
 			free(del->value);
 			free(del);
+			//g_status = 0;
 			return ;
 		}
 		prev = aux;

@@ -72,6 +72,8 @@ char	*obtain_env_name(char *fullenv)
 	int	i;
 
 	i = 0;
+	if (fullenv[0] == '=' && !fullenv[1])
+		return (ft_strdup("="));
 	while (fullenv[i] && fullenv[i] != '=' && fullenv[i] != ' ')
 		i++;
 	return (ft_substr(fullenv, 0, i));

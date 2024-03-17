@@ -100,10 +100,10 @@ void	start_minishell(t_data *shell, char **env)
 				{
 					if (*shell->line)
 						add_history(shell->line);
-					if (is_builtin(process, shell))
+					/*if (is_builtin(process, shell))
 						execute_builtin(process, shell);
-					if (!is_builtin(process, shell))
-						main_executor(shell, process);
+					if (!is_builtin(process, shell))*/
+					main_executor(shell, process);
 					free_echo(shell->echo);
 					free(shell->line);
 					shell->line = NULL;

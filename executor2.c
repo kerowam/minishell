@@ -1,5 +1,7 @@
 #include "minishell.h"
 
+extern int	g_status;
+
 void	help_child(t_process *process, int input_fd, int output_fd)
 {
 	redirect_infile(process);
@@ -37,11 +39,11 @@ static char	**create_argv(t_process *process, char **argv)
 
 void	father_process(t_process *process, int input_fd, int output_fd)
 {
-	waitpid(process->pid, &process->status, 0);
 	if (input_fd != STDIN_FILENO)
 		close(input_fd);
 	if (output_fd != STDOUT_FILENO)
 		close(output_fd);
+	waitpid(process->pid, &process->status, 0);
 }
 
 void	child_process(t_process *process, char *full_path)
@@ -51,8 +53,8 @@ void	child_process(t_process *process, char *full_path)
 	argv = malloc((ft_lstsize(process->argv) + 2) * sizeof(char *));
 	argv = create_argv(process, argv);
 	execve(full_path, argv, process->env);
-	perror("execve");
-	exit(EXIT_FAILURE);
+	//perror("execve");    ///////????
+	exit(g_status);
 }
 
 int	execute_command(t_process *process, t_data *shell, int input_fd, int output_fd)
@@ -66,7 +68,7 @@ int	execute_command(t_process *process, t_data *shell, int input_fd, int output_
 	if (process->env == NULL)
 	{
 		no_path(process, input_fd, output_fd);
-		return (EXIT_SUCCESS);
+		return (g_status);
 	}
 	while (process->env[i++] != NULL)
 	{
@@ -82,10 +84,10 @@ int	execute_command(t_process *process, t_data *shell, int input_fd, int output_
 			}
 			father_process(process, input_fd, output_fd);
 			free_elements(temp, full_path);
-			return (EXIT_FAILURE);
+			return (g_status);
 		}
 		free_elements(temp, full_path);
 	}
 	no_path(process, input_fd, output_fd);
-	return (EXIT_SUCCESS);
+	return (g_status);
 }

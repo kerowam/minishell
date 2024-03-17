@@ -31,7 +31,7 @@ static void	print_num_exit(t_process *process)
 
 	arg = process->argv->content;
 	if (ft_atoi(arg) == 0 && arg[0] != '0')
-		put_error2(NUMARG, 255);
+		put_error2(NUMARG, 2);
 	else
 		g_status = ft_atoi(arg);
 	exit(g_status);
@@ -48,7 +48,7 @@ void	exit_command(t_process *process, t_data *shell)
 			print_num_exit(process);
 		if (ft_atoi(arg) == 0 && arg[0] != '0')
 		{
-			put_error2(NUMARG, 255);
+			put_error2(NUMARG, 2);
 			exit(g_status);
 		}
 		if (process->argv->next != NULL)
@@ -71,7 +71,7 @@ void	no_path(t_process *process, int input_fd, int output_fd)
 		full_path = ft_strdup(process->command);
 	else
 	{
-		printf("Command not found: %s\n", process->command);
+		//printf("Command not found: %s\n", process->command);
 		return ;
 	}
 	process->pid = fork();

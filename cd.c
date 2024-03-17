@@ -64,7 +64,7 @@ int	handle_directory(t_data *shell, char **str)
 	}
 	else
 	{
-		perror("cd");
+		//perror("cd");
 		return (-1);
 	}
 }
