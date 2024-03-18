@@ -1,5 +1,7 @@
 #include "minishell.h"
 
+extern int	g_status;
+
 void	help_child(t_process *process, int input_fd, int output_fd)
 {
 	redirect_infile(process);
@@ -50,7 +52,7 @@ void	child_process(t_process *process, char *full_path)
 
 	argv = malloc((ft_lstsize(process->argv) + 2) * sizeof(char *));
 	argv = create_argv(process, argv);
-	execve(full_path, argv, process->env);
+	g_status = execve(full_path, argv, process->env);
 	perror("execve");
 	exit(EXIT_FAILURE);
 }
@@ -68,7 +70,7 @@ int	execute_command(t_process *process, t_data *shell, int input_fd, int output_
 		no_path(process, input_fd, output_fd);
 		return (EXIT_SUCCESS);
 	}
-	while (process->env[i++] != NULL)
+	while (process->env[i] != NULL)
 	{
 		temp = ft_strjoin(process->env[i], "/");
 		full_path = ft_strjoin(temp, process->command);
@@ -85,6 +87,7 @@ int	execute_command(t_process *process, t_data *shell, int input_fd, int output_
 			return (EXIT_FAILURE);
 		}
 		free_elements(temp, full_path);
+		i++;
 	}
 	no_path(process, input_fd, output_fd);
 	return (EXIT_SUCCESS);

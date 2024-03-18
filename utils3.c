@@ -22,7 +22,7 @@ static void	print_exit(t_data *shell, t_process *process)
 	printf("exit\n");
 	free(shell->line);
 	free_process(process);
-	exit(EXIT_SUCCESS);
+	exit(g_status);
 }
 
 static void	print_num_exit(t_process *process)
@@ -71,7 +71,7 @@ void	no_path(t_process *process, int input_fd, int output_fd)
 		full_path = ft_strdup(process->command);
 	else
 	{
-		printf("Command not found: %s\n", process->command);
+		put_error(NOTCOMMAND, 127);
 		return ;
 	}
 	process->pid = fork();

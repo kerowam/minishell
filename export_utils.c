@@ -22,6 +22,12 @@ void	create_variable(char *variable, t_data *shell)
 	char	*value;
 
 	name = obtain_env_name(variable);
+	if (ft_strcmp(name, "=") == 0)
+	{
+		put_error(NOTVALID, 1);
+		ft_free_char(name);
+		return ;
+	}
 	value = obtain_env_value(variable);
 	if (!check_if_exists(name, value, shell))
 	{

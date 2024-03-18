@@ -15,7 +15,6 @@ static int	len_split(char *line, int i)
 void	init_list(t_list **list)
 {
 	*list = (t_list *)ft_calloc(0, sizeof(t_list));
-	//printf("21.0.init_list list pointer = %p\n", *list);
 	if (*list == NULL)
 	{
 		put_error(MEMPROBLEM, 1);
@@ -41,7 +40,6 @@ void	create_line_splited(char *line, t_list **list)
 			start = i;
 			i = len_split(line, i);
 			tmp_word = ft_substr(line, start, i - start);
-			//printf("21.create_line_splited ft_substr tmp_word pointer = %p\n", tmp_word);
 			if ((*list)->content == NULL)
 				(*list)->content = ft_strdup(tmp_word);
 			else

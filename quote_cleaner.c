@@ -7,8 +7,6 @@ char	*handle_quoted_string(char *str, int *i, char *end_str)
 	start = *i + 1;
 	*i = search_end_quoted_string(str[*i], str, *i + 1);
 	end_str = add_quot_substr(start, *i, str, end_str);
-	if (str[*i] == '\'' || str[*i] == '\"')
-		(*i)++;
 	return (end_str);
 }
 
@@ -50,17 +48,13 @@ void	clean_str_quot(char *str, t_list **list)
 			end_str = handle_unquoted_string(str, &i, end_str);
 			if (!end_str)
 			{
-				//printf("Error: clean_str_quot add_substr failed\n");
 				ft_free_char (end_str);
 				break ;
 			}
 		}
 	}
 	if (end_str != NULL)
-	{
 		update_list_content(list, end_str);
-		//ft_free_char(end_str);
-	}
 	return ;
 }
 

@@ -19,7 +19,6 @@ void	insert_node(t_list **list, char *content)
 	t_list	*tmp;
 
 	new_node = ft_lstnew(content);
-	//printf("19.0.new_node pointer = %p\n", new_node);
 	if (!new_node)
 	{
 		put_error(MEMPROBLEM, 1);
@@ -48,7 +47,6 @@ char	*get_tmp_split(int target_index, char *tmp_word, int i)
 		if (tmp_split == NULL)
 			return (free(tmp_split), NULL);
 	}
-	//printf("19.get_tmp_split tmp_split pointer = %p\n", tmp_split);
 	return (tmp_split);
 }
 
@@ -58,4 +56,12 @@ int	search_end_quoted_string(char q, char *line, int i)
 		i++;
 	i++;
 	return (i);
+}
+
+void	add_node(t_list **list, char *tmp_word, char *tmp_split)
+{
+	if ((*list)->content == NULL)
+		(*list)->content = ft_strdup(tmp_word);
+	else
+		ft_lstadd_back(list, ft_lstnew(tmp_split));
 }

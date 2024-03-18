@@ -20,20 +20,18 @@ int	execute_single_process(t_process *process, t_data *shell,
 	return (EXIT_FAILURE);
 }
 
-void	wait_for_children(void)
+static void	more_commands(t_process *process, t_data *shell,
+	int input_fd, int output_fd)
 {
-	while (wait(NULL) > 0)
-		;
-}
-
-int	create_pipe(int pipe_fd[2])
-{
-	if (pipe(pipe_fd) == -1)
+	if (g_status != 258)
 	{
-		perror("pipe");
-		exit(EXIT_FAILURE);
+		execute_single_process(process, shell, input_fd, output_fd);
+		if (check_f_d(process) == 0)
+			g_status = 1;
+		else
+			g_status = 0;
+		free_commands(process);
 	}
-	return (pipe_fd[0]);
 }
 
 void	execute_multiple_commands(t_process *process, t_data *shell)
@@ -52,15 +50,12 @@ void	execute_multiple_commands(t_process *process, t_data *shell)
 			close(pipe_fd[1]);
 			input_fd = pipe_fd[0];
 			free_commands(process);
+			comprobate_status(process);
 			process = process->next_process;
 		}
 		else
 		{
-			if (g_status != 258)
-			{
-				execute_single_process(process, shell, input_fd, STDOUT_FILENO);
-				free_commands(process);
-			}
+			more_commands(process, shell, input_fd, STDOUT_FILENO);
 			process = process->next_process;
 		}
 	}
@@ -92,4 +87,3 @@ int	main_executor(t_data *shell, t_process *process)
 	}
 	return (EXIT_SUCCESS);
 }
-

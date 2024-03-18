@@ -1,0 +1,2 @@
+echo -n ola > ho >> hol < hola << feoisjfo | grep -l hola < ho > hol >> hola << foiesf
+echo -n ola >ho>>hol<hola<<fe|grep -l hola<ho>hol>>hola<<foiesf

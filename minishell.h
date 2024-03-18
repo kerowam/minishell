@@ -8,6 +8,7 @@
 # include <string.h>
 # include <sys/types.h>
 # include <sys/wait.h>
+# include <sys/stat.h>
 # include <signal.h>
 # include <unistd.h>
 # include <stdbool.h>
@@ -28,8 +29,6 @@
 
 # define Q			'\''
 # define DQ			'\"'
-
-int		g_exit_status;
 
 typedef struct s_env
 {
@@ -95,18 +94,22 @@ enum	e_error
 	NOTDIR = 11, //g_exit_status = 1
 	OPENERROR = 12, //g_exit_status = 1? Por si falla open (fd < 0)
 	ARGS = 13, //g_exit_status = 1
-	CLOSEERROR = 14,
-	NUMARG = 15, //para la salida, g_Status == 255
+	CLOSEERROR = 14, //g_exit_status = 1
+	SINTAXERROR = 15, //g_exit_status = 2
 	TOMANYARG = 16, //para la salida, g_status = 1
-	NOTVALID = 17 //g_exit_status = 1
+	NOTVALID = 17, //g_exit_status = 1
+	NUMARG = 18, //para la salida, g_Status == 255
 };
 
 //builtins.c
 void	env_command(t_data *shell);
 void	pwd_command(t_data *shell, t_process *process);
 void	echo_command(char **str, int exists);
-void	unset_command(t_data *shell, char *name);
 void	export_command(t_process *process, t_data *shell);
+
+//unset.c
+void	unset_command(t_data *shell, char *name);
+void	unset2(t_env *del, t_env *aux, t_env *prev, t_data *shell);
 
 //cd_utils.c
 void	update_pwd(t_data *shell);
@@ -119,6 +122,7 @@ void	handle_home_directory(t_data *shell);
 void	handle_previous_directory(t_data *shell);
 void	handle_given_directory(char **str, t_data *shell);
 void	cd_command(char **str, t_data *shell);
+//void	cd_command(char **str, t_data *shell);
 int		handle_directory(t_data *shell, char **str);
 
 //enviroment.c
@@ -162,6 +166,7 @@ void	insert_node(t_list **list, char *content);
 int		get_end_index(char *line, int i);
 char	*get_tmp_split(int target_index, char *tmp_word, int i);
 int		search_end_quoted_string(char q, char *line, int i);
+void	add_node(t_list **list, char *tmp_word, char *tmp_split);
 
 // lexer_pipes_utils.c
 int		get_pipe_nbr(char *line, int i);
@@ -172,7 +177,7 @@ int		get_redir_index(char *line, int i);
 int		insert_redirs(char redir, t_list **list, char *tmp_word, int i);
 void	set_redir(t_list **list, char redir, char *tmp_word, int i);
 int		get_redirection_nbr(char *line, int i);
-void	add_node(t_list **list, char *tmp_word, char *tmp_split);
+void	insert_redirs2(char redir, t_list **list);
 
 //parser.c
 void	parse(t_process *process, t_list **words_splited);
@@ -188,9 +193,10 @@ void	handle_redirections_and_pipes(t_process *process);
 void	execute_local_command(t_process *process);
 
 //executor2.c
-void	father_process(t_process *process, int input_fd, int output_fd);
 void	child_process(t_process *process, char *full_path);
 void	help_child(t_process *process, int input_fd, int output_fd);
+void	fork_command(t_process *process, char *full_path, int input_fd,
+			int output_fd);
 
 //executor_utils.c
 void	free_string_array(char **array);
@@ -201,6 +207,7 @@ bool	is_builtin(t_process *process, t_data *shell);
 
 //executor_utils2.c
 void	execute_local_command(t_process *process);
+void	father_process(t_process *process, int input_fd, int output_fd);
 
 //executor2.c
 //int		execute_command(t_process *process, int input_fd, int output_fd);
@@ -212,10 +219,16 @@ t_env	**init_tmp_env(t_env **tmp);
 
 //expander.c
 char	*get_expanded_value(t_env *env, char *key);
+char	*get_status(char *str);
+char	*join_expand_value(char *value, char *end_str, char *tmp);
 char	*expand_value(char *str, int i, t_env *env, char *end_str);
 char	*join_expand(char *str, int i, char *end_str);
+
+//expander2.c
 char	*expand(char *str, t_env *env);
 void	expander(t_env *env, t_list **line_splited);
+int		search_end_str(char *str, int i);
+int		check_memory(t_env **tmp_env, t_list **tmp_list);
 
 //free.c
 void	free_temp(char **temp);
@@ -291,7 +304,9 @@ void	init_process(t_process *process);
 int		ft_lstsize(t_list *lst);
 char	**list_to_array(t_list *list);
 int		check_redir(char *tmp_word);
-void	free_list_p(t_list **tmp);
+//void	free_list_p(t_list **tmp);
+int		check_mem(char **str);
+
 
 //parser_utils2.c
 void	check_pipe(char *tmp_word);
@@ -312,6 +327,9 @@ void	free_list_process(t_list *list);
 void	add_heredoc(t_list **here_doc, char *word);
 void	parse_final(t_process **process, t_list **tmp);
 void	handle_command_pipe_redir(t_process **tmp_process, t_list **tmp);
+void	check_redirs(char *tmp_word, char *tmp_word_next,
+			t_process *tmp_process);
+int		check_parser_pipe(t_list **tmp, t_process **tmp_process);
 
 //signals.c
 void	signals_handler(int sign);
@@ -326,5 +344,12 @@ void	no_path(t_process *process, int input_fd, int output_fd);
 void	put_error2(int error_type, int error_code);
 
 int	execute_command(t_process *process, t_data *shell, int input_fd, int output_fd);
+
+
+int	check_f_d(t_process *process);
+
+void	wait_for_children(void);
+int		create_pipe(int pipe_fd[2]);
+void	comprobate_status(t_process *process);
 
 #endif

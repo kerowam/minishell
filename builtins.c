@@ -13,6 +13,7 @@ void	env_command(t_data *shell)
 			printf("%s=%s\n", head->name, head->value);
 		head = head->next;
 	}
+	g_status = 0;
 }
 
 void	pwd_command(t_data *shell, t_process *process)
@@ -78,6 +79,7 @@ void	unset_command(t_data *shell, char *name)
 			free(del->name);
 			free(del->value);
 			free(del);
+			g_status = 0;
 			return ;
 		}
 		prev = aux;
@@ -88,13 +90,19 @@ void	unset_command(t_data *shell, char *name)
 void	export_command(t_process *process, t_data *shell)
 {
 	if (process->command && !process->args)
+	{
 		only_export(shell);
+		g_status = 0;
+	}
 	else
 	{
 		while (process->argv->content)
 		{
 			if (check_args(process->argv->content, process->argv->content))
+			{
 				create_variable(process->argv->content, shell);
+				g_status = 0;
+			}
 			break ;
 		}
 	}
