@@ -105,8 +105,11 @@ enum	e_error
 void	env_command(t_data *shell);
 void	pwd_command(t_data *shell, t_process *process);
 void	echo_command(char **str, int exists);
-void	unset_command(t_data *shell, char *name);
 void	export_command(t_process *process, t_data *shell);
+
+//unset.c
+void	unset_command(t_data *shell, char *name);
+void	unset2(t_env *del, t_env *aux, t_env *prev, t_data *shell);
 
 //cd_utils.c
 void	update_pwd(t_data *shell);
@@ -189,9 +192,10 @@ void	handle_redirections_and_pipes(t_process *process);
 void	execute_local_command(t_process *process);
 
 //executor2.c
-void	father_process(t_process *process, int input_fd, int output_fd);
 void	child_process(t_process *process, char *full_path);
 void	help_child(t_process *process, int input_fd, int output_fd);
+void	fork_command(t_process *process, char *full_path, int input_fd,
+			int output_fd);
 
 //executor_utils.c
 void	free_string_array(char **array);
@@ -202,6 +206,7 @@ bool	is_builtin(t_process *process, t_data *shell);
 
 //executor_utils2.c
 void	execute_local_command(t_process *process);
+void	father_process(t_process *process, int input_fd, int output_fd);
 
 //executor2.c
 //int		execute_command(t_process *process, int input_fd, int output_fd);
@@ -213,10 +218,16 @@ t_env	**init_tmp_env(t_env **tmp);
 
 //expander.c
 char	*get_expanded_value(t_env *env, char *key);
+char	*get_status(char *str);
+char	*join_expand_value(char *value, char *end_str, char *tmp);
 char	*expand_value(char *str, int i, t_env *env, char *end_str);
 char	*join_expand(char *str, int i, char *end_str);
+
+//expander2.c
 char	*expand(char *str, t_env *env);
 void	expander(t_env *env, t_list **line_splited);
+int		search_end_str(char *str, int i);
+int		check_memory(t_env **tmp_env, t_list **tmp_list);
 
 //free.c
 void	free_temp(char **temp);

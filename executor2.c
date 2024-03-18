@@ -37,15 +37,6 @@ static char	**create_argv(t_process *process, char **argv)
 	return (argv);
 }
 
-void	father_process(t_process *process, int input_fd, int output_fd)
-{
-	if (input_fd != STDIN_FILENO)
-		close(input_fd);
-	if (output_fd != STDOUT_FILENO)
-		close(output_fd);
-	waitpid(process->pid, &process->status, 0);
-}
-
 void	child_process(t_process *process, char *full_path)
 {
 	char	**argv;
@@ -53,11 +44,24 @@ void	child_process(t_process *process, char *full_path)
 	argv = malloc((ft_lstsize(process->argv) + 2) * sizeof(char *));
 	argv = create_argv(process, argv);
 	if (execve(full_path, argv, process->env) == -1)
-		put_error(NOTCOMMAND, 127);    ///////????
+		put_error(NOTCOMMAND, 127);
 	exit(g_status);
 }
 
-int	execute_command(t_process *process, t_data *shell, int input_fd, int output_fd)
+void	fork_command(t_process *process, char *full_path, int input_fd,
+	int output_fd)
+{
+	process->pid = fork();
+	if (process->pid == 0)
+	{
+		help_child(process, input_fd, output_fd);
+		child_process(process, full_path);
+	}
+	father_process(process, input_fd, output_fd);
+}
+
+int	execute_command(t_process *process, t_data *shell, int input_fd,
+	int output_fd)
 {
 	int		i;
 	char	*temp;
@@ -76,13 +80,7 @@ int	execute_command(t_process *process, t_data *shell, int input_fd, int output_
 		full_path = ft_strjoin(temp, process->command);
 		if (access(full_path, F_OK | X_OK) != -1)
 		{
-			process->pid = fork();
-			if (process->pid == 0)
-			{
-				help_child(process, input_fd, output_fd);
-				child_process(process, full_path);
-			}
-			father_process(process, input_fd, output_fd);
+			fork_command(process, full_path, input_fd, output_fd);
 			free_elements(temp, full_path);
 			return (g_status);
 		}

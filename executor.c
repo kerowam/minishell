@@ -51,18 +51,16 @@ void	execute_multiple_commands(t_process *process, t_data *shell)
 				break ;
 			close(pipe_fd[1]);
 			input_fd = pipe_fd[0];
-			free_commands(process);
-			process = process->next_process;
 		}
 		else
 		{
 			if (g_status != 258)
-			{
 				execute_single_process(process, shell, input_fd, STDOUT_FILENO);
-				free_commands(process);
-			}
-			process = process->next_process;
 		}
+		if ((process->next_process && process->outfile == NULL)
+			|| g_status == 258)
+			free_commands(process);
+		process = process->next_process;
 	}
 	wait_for_children();
 }

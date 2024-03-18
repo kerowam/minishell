@@ -38,6 +38,8 @@ SRCS = main.c\
 		signals.c\
 		executor2.c\
 		utils3.c\
+		unset.c\
+		expander2.c\
 
 CC = gcc
 

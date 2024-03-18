@@ -59,36 +59,6 @@ void	echo_command(char **str, int exists)
 		printf("\n");
 }
 
-void	unset_command(t_data *shell, char *name)
-{
-	t_env	*aux;
-	t_env	*del;
-	t_env	*prev;
-
-	if (!name)
-		return ;
-	aux = shell->env;
-	prev = NULL;
-	while (aux)
-	{
-		if (strcmp(aux->name, name) == 0)
-		{
-			del = aux;
-			if (prev)
-				prev->next = aux->next;
-			else
-				shell->env = aux->next;
-			free(del->name);
-			free(del->value);
-			free(del);
-			//g_status = 0;
-			return ;
-		}
-		prev = aux;
-		aux = aux->next;
-	}
-}
-
 void	export_command(t_process *process, t_data *shell)
 {
 	if (process->command && !process->args)

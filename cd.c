@@ -56,8 +56,6 @@ int	handle_directory(t_data *shell, char **str)
 
 	getcwd(dir, sizeof(dir));
 	flag = chdir(str[0]);
-	/*if (str[1])
-		put_error(TOMANYARG, 1);*/
 	if (flag == 0)
 	{
 		update_oldpwd_again(shell, dir);
@@ -66,7 +64,6 @@ int	handle_directory(t_data *shell, char **str)
 	}
 	else
 	{
-		//perror("cd");
 		put_error(NOTFILEORDIR, 1);
 		return (-1);
 	}

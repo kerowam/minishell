@@ -10,18 +10,15 @@ static void	prepare_command_arguments(t_process *process, char ***cmd_argv)
 	*cmd_argv = malloc((ft_lstsize(process->argv) + 2) * sizeof(char *));
 	if (!*cmd_argv)
 	{
-		//perror("Error al asignar memoria para cmd_argv");
 		put_error(MEMPROBLEM, 1);
 		exit(g_status);
 	}
 	(*cmd_argv)[0] = ft_strdup(process->command);
-	//printf("2. prepare_command_arguments cmd_argv pointer = %p\n", *cmd_argv);
 	current = process->argv;
 	j = 1;
 	while (current)
 	{
 		(*cmd_argv)[j] = ft_strdup(current->content);
-		//printf("3. prepare_command_arguments cmd_argv[%d] pointer = %p\n", j, (*cmd_argv)[j]);
 		current = current->next;
 		j++;
 	}
@@ -34,14 +31,12 @@ static void	execute_child_process(t_process *process,
 	process->pid = fork();
 	if (process->pid == -1)
 	{
-		//perror("Error al crear el proceso hijo");
 		put_error(FORKERROR, 1);
 		exit(g_status);
 	}
 	else if (process->pid == 0)
 	{
 		execve(full_path, cmd_argv, process->env);
-		//perror("Error al ejecutar el comando\n");
 		put_error(NOTCOMMAND, 127);
 		exit(g_status);
 	}
@@ -66,4 +61,13 @@ void	execute_local_command(t_process *process)
 		return ;
 	}
 	free(cwd);
+}
+
+void	father_process(t_process *process, int input_fd, int output_fd)
+{
+	if (input_fd != STDIN_FILENO)
+		close(input_fd);
+	if (output_fd != STDOUT_FILENO)
+		close(output_fd);
+	waitpid(process->pid, &process->status, 0);
 }
