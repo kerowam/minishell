@@ -1,6 +1,5 @@
 #include "minishell.h"
 
-//void	free_expander(t_env **tmp_env, t_list **tmp_list, char *tmp_str)
 void	free_expander(t_env **tmp_env, t_list **tmp_list)
 {
 	if (tmp_env != NULL)
@@ -9,9 +8,6 @@ void	free_expander(t_env **tmp_env, t_list **tmp_list)
 	if (tmp_list != NULL)
 		free (tmp_list);
 	tmp_list = NULL;
-	/*if (tmp_str != NULL)
-		free (tmp_str);*/
-	//tmp_str = NULL;
 }
 
 void	ft_free_char(char *str)
@@ -55,7 +51,6 @@ void	free_process(t_process *process)
 		ft_free_char(tmp->outfile);
 		ft_free_char(tmp->outfile_append);
 		free_list_process(tmp->here_doc);
-		//free_commands(tmp);
 		if (tmp->args)
 		{
 			free_echo(tmp->args);

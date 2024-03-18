@@ -69,7 +69,6 @@ void	free_list(t_list **list)
 			next = NULL;
 		if ((*list)->content != NULL)
 		{
-			//printf("freeing content: %s\n", (*list)->content);
 			free((*list)->content);
 			(*list)->content = NULL;
 			free(*list);

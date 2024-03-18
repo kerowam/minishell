@@ -11,18 +11,23 @@ char	*expand(char *str, t_env *env)
 {
 	int		i;
 	char	*end_str;
+	int		start;
 
 	i = 0;
 	end_str = NULL;
 	while (str[i])
 	{
 		if (str[i] == '\'')
+		{
+			start = i;
 			i = search_end_quoted_string(str[i], str, i + 1);
+			end_str = join_expand(str, start, end_str);
+		}
 		else if (str[i] == '$')
 		{
 			i++;
 			end_str = expand_value(str, i, env, end_str);
-			while (str[i] && str[i] != '$' && str[i] != ' ' && str[i] != '\"')
+			while (str[i] && str[i] != '$' && str[i] != ' ' && str[i] != '\'' && str[i] != '\"')
 				i++;
 		}
 		else

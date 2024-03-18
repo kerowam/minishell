@@ -166,6 +166,7 @@ void	insert_node(t_list **list, char *content);
 int		get_end_index(char *line, int i);
 char	*get_tmp_split(int target_index, char *tmp_word, int i);
 int		search_end_quoted_string(char q, char *line, int i);
+void	add_node(t_list **list, char *tmp_word, char *tmp_split);
 
 // lexer_pipes_utils.c
 int		get_pipe_nbr(char *line, int i);
@@ -176,7 +177,7 @@ int		get_redir_index(char *line, int i);
 int		insert_redirs(char redir, t_list **list, char *tmp_word, int i);
 void	set_redir(t_list **list, char redir, char *tmp_word, int i);
 int		get_redirection_nbr(char *line, int i);
-void	add_node(t_list **list, char *tmp_word, char *tmp_split);
+void	insert_redirs2(char redir, t_list **list);
 
 //parser.c
 void	parse(t_process *process, t_list **words_splited);
