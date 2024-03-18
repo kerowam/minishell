@@ -1,109 +1,88 @@
 #include "minishell.h"
 
-int	check_command_access(t_process *process)
-{
-	int		i;
-	char	*full_path;
-	char	*temp;
-	char	**cmd_argv;
-	t_list	*current;
-	int		j;
-	int		k;
-	int		original_stdout;
+extern int	g_status;
 
-	i = 0;
-	original_stdout = dup(STDOUT_FILENO);
-	cmd_argv = malloc((ft_lstsize(process->argv) + 2) * sizeof(char *));
-	if (!cmd_argv)
+int	execute_single_process(t_process *process, t_data *shell,
+	int input_fd, int output_fd)
+{
+	if (process->command == NULL || process->command[0] == '\0')
 	{
-		perror("Error allocating memory for cmd_argv");
-		exit(EXIT_FAILURE);
+		if (process->next_process != NULL)
+			free_commands(process);
+		return (EXIT_SUCCESS);
 	}
-	while (process->env[++i] != NULL)
+	if (!execute_command(process, shell, input_fd, output_fd))
 	{
-		temp = ft_strjoin(process->env[i], "/");
-		full_path = ft_strjoin(temp, process->command);
-		if (access(full_path, F_OK | X_OK) != -1)
+		if (process->next_process != NULL)
+			free_commands(process);
+		return (EXIT_SUCCESS);
+	}
+	return (EXIT_FAILURE);
+}
+
+static void	more_commands(t_process *process, t_data *shell,
+	int input_fd, int output_fd)
+{
+	if (execute_single_process(process, shell, input_fd, output_fd))
+	{
+		if (check_f_d(process) == 0)
+			g_status = 1;
+		else
+			g_status = 0;
+	}
+	free_commands(process);
+}
+
+void	execute_multiple_commands(t_process *process, t_data *shell)
+{
+	int	input_fd;
+	int	pipe_fd[2];
+
+	input_fd = STDIN_FILENO;
+	while (process)
+	{
+		if ((process->next_process && process->outfile == NULL))
 		{
-			redirect_outfile_append(process);
-			redirect_outfile(process);
-			cmd_argv[0] = ft_strdup(process->command);
-			current = process->argv;
-			j = 1;
-			while (current)
-			{
-				cmd_argv[j] = ft_strdup(current->content);
-				current = current->next;
-				j++;
-			}
-			cmd_argv[j] = NULL;
-			process->pid = fork();
-			if (process->pid == -1)
-			{
-				perror("Error al crear el proceso hijo");
-				exit(EXIT_FAILURE);
-			}
-			else if (process->pid == 0)
-			{
-				redirect_infile(process);
-				execve(full_path, cmd_argv, process->env);
-				perror("Error al ejecutar el comando\n");
-				exit(EXIT_FAILURE);
-			}
-			waitpid(process->pid, &process->status, 0);
-			if (ft_strcmp(process->command, "cat") == 0)
-				printf("\n");
-			dup2(original_stdout, STDOUT_FILENO);
-			close(original_stdout);
-			free(temp);
-			free(full_path);
-			k = 0;
-			while (k <= j)
-			{
-				free(cmd_argv[k]);
-				k++;
-			}
-			free(cmd_argv);
-			return (1);
+			create_pipe(pipe_fd);
+			if (!execute_single_process(process, shell, input_fd, pipe_fd[1]))
+				break ;
+			close(pipe_fd[1]);
+			input_fd = pipe_fd[0];
+			free_commands(process);
+			comprobate_status(process);
+			process = process->next_process;
 		}
 		else
-			free(full_path);
-		free(temp);
+		{
+			more_commands(process, shell, input_fd, STDOUT_FILENO);
+			process = process->next_process;
+		}
 	}
-	free(cmd_argv);
-	return (0);
+	wait_for_children();
 }
 
 int	main_executor(t_data *shell, t_process *process)
 {
 	if (!process)
-		exit(EXIT_FAILURE);
-	if (is_builtin(process, shell))
-		execute_builtin(process, shell);
-	else if (!is_builtin(process, shell))
+		return (EXIT_FAILURE);
+	if (!is_builtin(process, shell))
 	{
-		if (!process->command)
+		if (!process->command || (process->command && process->here_doc))
 		{
 			if (!process->here_doc)
 				return (EXIT_FAILURE);
 			else
+			{
 				handle_heredoc(process);
-		}
-		find_path(process, shell);
-		if (!check_command_access(process) && process->command
-			&& !(starts_with_dot_slash(process->command)))
-		{
-			printf("zsh: command not found: %s\n", process->command);
-			return (EXIT_FAILURE);
+				return (EXIT_SUCCESS);
+			}
 		}
 		if (process->command)
 		{
 			if (ft_strncmp(process->command, "clear", 5) == 0)
 				printf("\033[H\033[J");
 		}
-		if (starts_with_dot_slash(process->command))
-			execute_local_command(process);
-		return (EXIT_SUCCESS);
+		execute_multiple_commands(process, shell);
 	}
-	exit(EXIT_FAILURE);
+	return (EXIT_SUCCESS);
 }

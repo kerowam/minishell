@@ -20,7 +20,10 @@ void	insert_node(t_list **list, char *content)
 
 	new_node = ft_lstnew(content);
 	if (!new_node)
+	{
+		put_error(MEMPROBLEM, 1);
 		return ;
+	}
 	tmp = (*list)->next;
 	(*list)->next = new_node;
 	new_node->next = tmp;
@@ -35,16 +38,15 @@ char	*get_tmp_split(int target_index, char *tmp_word, int i)
 	{
 		tmp_split = ft_substr(tmp_word, i, target_index - i);
 		if (tmp_split == NULL)
-			return (NULL);
+			return (free(tmp_split), NULL);
 	}
 	else
 	{
 		end = get_end_index(tmp_word, i);
 		tmp_split = ft_substr(tmp_word, i, end);
 		if (tmp_split == NULL)
-			return (NULL);
+			return (free(tmp_split), NULL);
 	}
-	printf("19.get_tmp_split tmp_split pointer = %p\n", tmp_split);
 	return (tmp_split);
 }
 
@@ -54,4 +56,12 @@ int	search_end_quoted_string(char q, char *line, int i)
 		i++;
 	i++;
 	return (i);
+}
+
+void	add_node(t_list **list, char *tmp_word, char *tmp_split)
+{
+	if ((*list)->content == NULL)
+		(*list)->content = ft_strdup(tmp_word);
+	else
+		ft_lstadd_back(list, ft_lstnew(tmp_split));
 }

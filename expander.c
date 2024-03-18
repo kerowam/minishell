@@ -1,55 +1,95 @@
 #include "minishell.h"
 
+extern int	g_status;
+
 char	*get_expanded_value(t_env *env, char *key)
 {
 	char	*value;
-	t_env	*tmp;
+	t_env	**tmp;
 	char	*name;
 
-	tmp = (t_env *)malloc(sizeof(t_env));
-	*tmp = *env;
+	tmp = NULL;
+	tmp = init_tmp_env(tmp);
+	*tmp = env;
 	name = NULL;
-	while (tmp->name)
+	while (*tmp != NULL)
 	{
-		name = ft_strdup(tmp->name);
+		name = ft_strdup((*tmp)->name);
 		if (ft_strncmp(key, name, ft_strlen(name)) == 0)
 		{
-			value = ft_strdup(tmp->value);
-			printf("7.value pointer = %p\n", value);
-			return (value);
+			value = ft_strdup((*tmp)->value);
+			return (free(tmp), free (name), value);
 		}
-		free(name);
-		if (tmp->next)
-			*tmp = *tmp->next;
+		if (name)
+			free(name);
+		if ((*tmp)->next)
+			*tmp = (*tmp)->next;
 		else
-			break ;
+			*tmp = NULL;
 	}
 	value = ft_strdup("");
-	printf("8.value pointer = %p\n", value);
+	return (free(tmp), value);
+}
+
+char	*get_status(char *str)
+{
+	char	*value;
+	char	*join;
+
+	value = ft_itoa(g_status);
+	if (str[1])
+	{
+		join = ft_strjoin(value, str + 1);
+		free (value);
+		return (join);
+	}
 	return (value);
+}
+
+char	*join_expand_value(char *value, char *end_str, char *tmp)
+{
+	char	*join;
+
+	join = ft_strjoin(end_str, value);
+	ft_free_char(value);
+	ft_free_char(end_str);
+	ft_free_char(tmp);
+	return (join);
 }
 
 char	*expand_value(char *str, int i, t_env *env, char *end_str)
 {
 	char	*value;
 	char	*tmp;
+	char	*join;
 
 	tmp = set_key(str, i);
-	value = get_expanded_value(env, tmp);
-	if (!end_str)
-		end_str = ft_strdup(value);
+	if (ft_strncmp(tmp, "$", 1) != 0 && ft_strncmp(tmp, "?", 1) != 0)
+		value = get_expanded_value(env, tmp);
+	else if (ft_strncmp(tmp, "?", 1) == 0)
+		value = get_status(tmp);
 	else
-		end_str = ft_strjoin(end_str, value);
-	printf("9.expand value end_str pointer = %p\n", end_str);
-	free(tmp);
-	free(value);
-	return (end_str);
+		value = ft_strdup(tmp);
+	if (!end_str)
+	{
+		end_str = ft_strdup(value);
+		if (tmp && tmp != NULL && *tmp != '\0')
+			ft_free_char(tmp);
+		ft_free_char(value);
+		return (end_str);
+	}
+	else
+	{
+		join = join_expand_value(value, end_str, tmp);
+		return (join);
+	}
 }
 
 char	*join_expand(char *str, int i, char *end_str)
 {
 	char	*tmp;
 	int		start;
+	char	*join;
 
 	start = i;
 	while (str[i] && str[i] != '$')
@@ -61,69 +101,15 @@ char	*join_expand(char *str, int i, char *end_str)
 	}
 	tmp = ft_substr(str, start, i - start);
 	if (!end_str)
+	{
 		end_str = ft_strdup(tmp);
+		ft_free_char(tmp);
+		return (end_str);
+	}
 	else
-		end_str = ft_strjoin(end_str, tmp);
-	printf("10.join expand end_str pointer = %p\n", end_str);
-	free(tmp);
-	return (end_str);
-}
-
-char	*expand(char *str, t_env *env)
-{
-	int		i;
-	char	*end_str;
-
-	i = 0;
-	end_str = NULL;
-	while (str[i])
 	{
-		if (str[i] == '\'')
-			i = search_end_quoted_string(str[i], str, i + 1);
-		else if (str[i] == '$')
-		{
-			i++;
-			end_str = expand_value(str, i, env, end_str);
-			while (str[i] && str[i] != '$' && str[i] != ' ' && str[i] != '\"')
-				i++;
-		}
-		else
-		{
-			end_str = join_expand(str, i, end_str);
-			while (str[i] && str[i] != '$' && str[i] != '\'')
-				i++;
-		}
+		join = ft_strjoin(end_str, tmp);
+		ft_free_char(end_str);
+		return (ft_free_char(tmp), join);
 	}
-	return (end_str);
-}
-
-void	expander(t_env *env, t_list **line_splited)
-{
-	t_env	*tmp_env;
-	t_list	**tmp_list;
-	char	*tmp_str;
-
-	tmp_env = (t_env *)malloc(sizeof(t_env));
-	*tmp_env = *env;
-	printf("11.tmp_env pointer: %p\n", tmp_env);
-	tmp_list = (t_list **)malloc(sizeof(t_list *));
-	*tmp_list = *line_splited;
-	printf("12.tmp_list pointer: %p\n", tmp_list);
-	while (*tmp_list)
-	{
-		tmp_str = ft_strdup((*tmp_list)->content);
-		if (ft_strchr(tmp_str, '$') != 0)
-			(*tmp_list)->content = expand(tmp_str, tmp_env);
-		if ((*tmp_list)->next)
-			*tmp_list = (*tmp_list)->next;
-		else
-			break ;
-	}
-	if (tmp_env)
-		free (tmp_env);
-	//*tmp_list = *line_splited;
-	if (tmp_list)
-		free (tmp_list);
-	if (tmp_str)
-		free (tmp_str);
 }

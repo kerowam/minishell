@@ -1,5 +1,7 @@
 #include "minishell.h"
 
+extern int	g_status;
+
 void	env_command(t_data *shell)
 {
 	t_env	*head;
@@ -7,45 +9,50 @@ void	env_command(t_data *shell)
 	head = shell->env;
 	while (head)
 	{
-		if (head != NULL)
+		if (head != NULL && head->value)
 			printf("%s=%s\n", head->name, head->value);
 		head = head->next;
 	}
+	g_status = 0;
 }
 
-void	pwd_command(t_data *shell)
+void	pwd_command(t_data *shell, t_process *process)
 {
-	if (getcwd(shell->cwd, sizeof(shell->cwd)) != NULL)
-		printf("%s\n", shell->cwd);
-	else
-		perror("getcwd");
+	char	*path;
+
+	(void)process;
+	(void)shell;
+	path = malloc(sizeof(char) * 100);
+	path = getcwd(path, 100);
+	printf("%s\n", path);
+	free(path);
+	g_status = 0;
 }
 
-void	echo_command(char **str, int exists)
+void	echo_command(t_process *process, int exists)
 {
-	int	str_size;
-	int	i;
+	int		i;
+	char	*arg;
+	t_list	*aux;
 
-	str_size = 0;
-	while (str[str_size])
-		str_size++;
-	if (str_size > 1)
+	aux = process->argv;
+	while (aux != NULL)
 	{
-		str_size = 0;
-		while (str[++str_size] && !ft_strncmp(str[str_size], "-n", 2))
+		arg = (char *)aux->content;
+		if (ft_strncmp(arg, "-n", 2) == 0)
 			exists = 1;
-		while (str[str_size])
+		i = 0;
+		while (arg[i] != '\0')
 		{
-			i = -1;
-			while (str[str_size][++i])
-				if (str[str_size][i] != '\'' && str[str_size][i] != '\"')
-					printf("%c", str[str_size][i]);
-			if (str[str_size + 1] || str[str_size][0] == '\0')
-				printf(" ");
-			str_size++;
+			if (arg[i] != '\'' && arg[i] != '\"')
+				printf("%c", arg[i]);
+			i++;
 		}
+		if (aux->next != NULL)
+			printf(" ");
+		aux = aux->next;
 	}
-	if (exists == 0)
+	if (!exists)
 		printf("\n");
 }
 
@@ -71,6 +78,7 @@ void	unset_command(t_data *shell, char *name)
 			free(del->name);
 			free(del->value);
 			free(del);
+			g_status = 0;
 			return ;
 		}
 		prev = aux;
@@ -78,23 +86,23 @@ void	unset_command(t_data *shell, char *name)
 	}
 }
 
-void	export_command(char **cmd, t_data *shell)
+void	export_command(t_process *process, t_data *shell)
 {
-	int	i;
-
-	i = 1;
-	if (!cmd[1])
+	if (process->command && !process->args)
+	{
 		only_export(shell);
+		g_status = 0;
+	}
 	else
 	{
-		while (cmd[i])
+		while (process->argv->content)
 		{
-			if (check_args(cmd[i], cmd[0]))
+			if (check_args(process->argv->content, process->argv->content))
 			{
-				printf("Exporting: %s\n", cmd[i]);
-				create_variable(cmd[i], shell);
+				create_variable(process->argv->content, shell);
+				g_status = 0;
 			}
-			i++;
+			break ;
 		}
 	}
 }

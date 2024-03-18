@@ -1,30 +1,51 @@
 #include "minishell.h"
 
+extern int	g_status;
+
 void	put_error(int error_type, int error_code)
 {
-	g_exit_status = error_code;
+	g_status = error_code;
 	if (error_type == DEQUOTE)
-		perror("minishell: error: dequoted line\n");
+		printf("minishell: error: dequoted line\n");
 	else if (error_type == NOTFILEORDIR)
-		perror("minishell: error: No such file or directory\n");
+		perror("minishell: error: No such file or directory");
 	else if (error_type == NOTPERMISSION)
-		perror("minishell: error: Permission denied\n");
+		perror("minishell: error: Permission denied");
 	else if (error_type == NOTCOMMAND)
-		perror("minishell: error: command not found\n");
+		perror("minishell: error: command not found");
 	else if (error_type == DUPERROR)
-		perror("minishell: error: fd duplication failed\n");
+		printf("minishell: error: fd duplication failed\n");
 	else if (error_type == FORKERROR)
-		perror("minishell: error: fork failed\n");
+		printf("minishell: error: fork failed\n");
 	else if (error_type == PIPEERROR)
-		perror("minishell: error: pipe failed\n");
+		printf("minishell: error: pipe failed\n");
 	else if (error_type == UNEXPECTEDTOKEN)
-		perror("minishell: error: syntax error near unexpected token\n");
+		perror("minishell: error: syntax error near unexpected token");
 	else if (error_type == MEMPROBLEM)
-		perror("minishell: error: memory allocation failed\n");
+		printf("minishell: error: memory allocation failed\n");
 	else if (error_type == ISDIR)
-		perror("minishell: error: Is a directory\n");
+		perror("minishell: error: Is a directory");
 	else if (error_type == NOTDIR)
-		perror("minishell: error: Not a directory\n");
+		printf("minishell: error: Not a directory\n");
+	else
+		put_error2(error_type, error_code);
+}
+
+void	put_error2(int error_type, int error_code)
+{
+	g_status = error_code;
+	if (error_type == NUMARG)
+		perror("minishell: exit: a: numeric argument required.");
+	else if (error_type == TOMANYARG)
+		perror("minishell: exit: too many arguments");
+	else if (error_type == NOTVALID)
+		perror("minishell: is not a valid identifier");
 	else if (error_type == OPENERROR)
-		perror("minishell: error: open failed\n");
+		printf("minishell: error: open failed\n");
+	else if (error_type == ARGS)
+		printf("minishell: error: wrong number of arguments\n");
+	else if (error_type == CLOSEERROR)
+		printf("minishell: error: close failed\n");
+	else if (error_type == SINTAXERROR)
+		perror("minishell: error sintáctico cerca del elemento inesperado `newline'");
 }

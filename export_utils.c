@@ -1,7 +1,5 @@
 #include "minishell.h"
 
-#include "minishell.h"
-
 void	only_export(t_data *shell)
 {
 	t_env	*current;
@@ -9,7 +7,10 @@ void	only_export(t_data *shell)
 	current = shell->env;
 	while (current)
 	{
-		printf("declare -x \"%s%s\"\n", current->name, current->value);
+		printf("declare -x %s", current->name);
+		if (current->value)
+			printf("=\"%s\"", current->value);
+		printf("\n");
 		current = current->next;
 	}
 }
@@ -21,6 +22,12 @@ void	create_variable(char *variable, t_data *shell)
 	char	*value;
 
 	name = obtain_env_name(variable);
+	if (ft_strcmp(name, "=") == 0)
+	{
+		put_error(NOTVALID, 1);
+		ft_free_char(name);
+		return ;
+	}
 	value = obtain_env_value(variable);
 	if (!check_if_exists(name, value, shell))
 	{
@@ -35,21 +42,21 @@ bool	check_args(char *arg, char *cmd)
 	int		i;
 	char	*name;
 
-	(void)cmd;
 	i = 0;
+	(void)cmd;
 	name = obtain_env_name(arg);
-	if (ft_isdigit(name[i]))
+	if (ft_isdigit(name[i]) || name[i] == '-')
 	{
-		printf("%s: is not a valid identifier\n", name);
+		put_error2(NOTVALID, 1);
 		return (free(name), false);
 	}
 	while (name[i])
 	{
-		if (ft_isalnum(name[i]) || name[i] == '-')
+		if (ft_isalnum(name[i]))
 			i++;
 		else
 		{
-			printf("%s: not a valid identifier\n", name);
+			put_error2(NOTVALID, 1);
 			return (free(name), false);
 		}
 	}
@@ -84,8 +91,10 @@ t_env	*new_node(char *name, char *value)
 	if (!env)
 		return (NULL);
 	env->name = ft_strdup(name);
-	env->value = ft_strdup(value);
-	printf("13.new_node env->name pointer = %p\n", env->name);
+	if (value == NULL)
+		env->value = NULL;
+	else
+		env->value = ft_strdup(value);
 	env->next = NULL;
 	return (env);
 }

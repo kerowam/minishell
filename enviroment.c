@@ -18,6 +18,7 @@ t_env	*copy_env_to_list(char **envp, t_data *shell)
 		if (delim)
 		{
 			new_node = create_env_node(name_value, delim + 1, shell->i);
+			//printf("new_node pointer= %p\n", new_node);
 			if (new_node)
 				add_env_node(&head, &current, new_node);
 		}

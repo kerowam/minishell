@@ -1,21 +1,21 @@
 #include "minishell.h"
 
+extern int	g_status;
+
 void	signals_handler(int sign)
 {
-	if (sign == SIGCHLD)
+	if (sign == SIGINT)
 	{
-		// Manejo de cambios en los estados de los hijos
-		// Obtener info adicional o actualizar estado shell
+		g_status = 130;
+		printf("\n");
+		//rl_replace_line("", 0);
+		rl_on_new_line();
+		rl_redisplay();
 	}
-	else if (sign == SIGINT)
-	{
-		// Manejo señal interrupcion (Ctrl + C)
-	}
-	// Mas casos si necesario
 }
 
 void	setup_signal_handlers(void)
 {
-	signal(SIGCHLD, signals_handler);
 	signal(SIGINT, signals_handler);
+	signal(SIGQUIT, SIG_IGN);
 }

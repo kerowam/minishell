@@ -15,26 +15,47 @@ int	get_redir_index(char *line, int i)
 	return (-1);
 }
 
-int	insert_redirs(char redir, t_list **list, char *tmp_word, int i)
+void	insert_redirs2(char redir, t_list **list)
 {
-	if (tmp_word[i + 1] == redir)
+	if (!(*list)->content)
 	{
 		if (redir == '>')
-			ft_lstadd_back(list, ft_lstnew(">>"));
-			//insert_node(&list, ft_strdup(">>"));
+			(*list)->content = ft_strdup(">");
 		else
-			ft_lstadd_back(list, ft_lstnew("<<"));
-			//insert_node(&list, ft_strdup("<<"));
-		i += 2;
+			(*list)->content = ft_strdup("<");
 	}
 	else
 	{
 		if (redir == '>')
 			ft_lstadd_back(list, ft_lstnew(">"));
-			//insert_node(&list, ft_strdup(">"));
 		else
 			ft_lstadd_back(list, ft_lstnew("<"));
-			//insert_node(&list, ft_strdup("<"));
+	}
+}
+
+int	insert_redirs(char redir, t_list **list, char *tmp_word, int i)
+{
+	if (tmp_word[i + 1] == redir)
+	{
+		if (!(*list)->content)
+		{
+			if (redir == '>')
+				(*list)->content = ft_strdup(">>");
+			else
+				(*list)->content = ft_strdup("<<");
+		}
+		else
+		{
+			if (redir == '>')
+				ft_lstadd_back(list, ft_lstnew(">>"));
+			else
+				ft_lstadd_back(list, ft_lstnew("<<"));
+		}
+		i += 2;
+	}
+	else
+	{
+		insert_redirs2(redir, list);
 		i++;
 	}
 	return (i);
@@ -44,22 +65,23 @@ void	set_redir(t_list **list, char redir, char *tmp_word, int i)
 {
 	if (tmp_word[i + 1] == redir)
 	{
-		if (redir == '>')
-			ft_lstadd_back(list, ft_lstnew(">>"));
-			//list->content = ft_strdup(">>");
+		if (!(*list)->content)
+		{
+			if (redir == '>')
+				(*list)->content = ft_strdup(">>");
+			else
+				(*list)->content = ft_strdup("<<");
+		}
 		else
-			ft_lstadd_back(list, ft_lstnew("<<"));
-			//list->content = ft_strdup("<<");
+		{
+			if (redir == '>')
+				ft_lstadd_back(list, ft_lstnew(">>"));
+			else
+				ft_lstadd_back(list, ft_lstnew("<<"));
+		}
 	}
 	else
-	{
-		if (redir == '>')
-			ft_lstadd_back(list, ft_lstnew(">"));
-			//list->content = ft_strdup(">");
-		else
-			ft_lstadd_back(list, ft_lstnew("<"));
-			//list->content = ft_strdup("<");
-	}
+		insert_redirs2(redir, list);
 }
 
 int	get_redirection_nbr(char *line, int i)
@@ -68,6 +90,8 @@ int	get_redirection_nbr(char *line, int i)
 	char	redir;
 
 	redirection_nbr = 0;
+	if (line == NULL)
+		return (EXIT_FAILURE);
 	while (line[i])
 	{
 		if (line[i] == '\'' || line[i] == '\"')

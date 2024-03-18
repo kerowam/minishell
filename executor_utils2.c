@@ -1,62 +1,27 @@
 #include "minishell.h"
 
-static void	prepare_command_arguments(t_process *process, char ***cmd_argv)
-{
-	t_list	*current;
-	int		j;
+extern int	g_status;
 
-	*cmd_argv = malloc((ft_lstsize(process->argv) + 2) * sizeof(char *));
-	if (!*cmd_argv)
-	{
-		perror("Error al asignar memoria para cmd_argv");
-		exit(EXIT_FAILURE);
-	}
-	(*cmd_argv)[0] = ft_strdup(process->command);
-	current = process->argv;
-	j = 1;
-	while (current)
-	{
-		(*cmd_argv)[j] = ft_strdup(current->content);
-		current = current->next;
-		j++;
-	}
-	(*cmd_argv)[j] = NULL;
+void	wait_for_children(void)
+{
+	while (wait(NULL) > 0)
+		;
 }
 
-static void	execute_child_process(t_process *process,
-		char *full_path, char **cmd_argv)
+int	create_pipe(int pipe_fd[2])
 {
-	process->pid = fork();
-	if (process->pid == -1)
+	if (pipe(pipe_fd) == -1)
 	{
-		perror("Error al crear el proceso hijo");
+		perror("pipe");
 		exit(EXIT_FAILURE);
 	}
-	else if (process->pid == 0)
-	{
-		execve(full_path, cmd_argv, process->env);
-		perror("Error al ejecutar el comando\n");
-		exit(EXIT_FAILURE);
-	}
-	waitpid(process->pid, &process->status, 0);
-	free(cmd_argv);
+	return (pipe_fd[0]);
 }
 
-void	execute_local_command(t_process *process)
+void	comprobate_status(t_process *process)
 {
-	char	full_path[1000];
-	char	*cwd;
-	char	**cmd_argv;
-
-	cwd = getcwd(NULL, 0);
-	ft_strlcpy(full_path, cwd, sizeof(full_path));
-	ft_strlcat(full_path, "/", sizeof(full_path));
-	ft_strlcat(full_path, process->command, sizeof(full_path));
-	if (access(full_path, F_OK | X_OK) != -1)
-	{
-		prepare_command_arguments(process, &cmd_argv);
-		execute_child_process(process, full_path, cmd_argv);
-		return ;
-	}
-	free(cwd);
+	if (check_f_d(process) == 0)
+		g_status = 1;
+	else
+		g_status = 0;
 }
