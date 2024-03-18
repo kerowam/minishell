@@ -84,7 +84,7 @@ bool	is_builtin(t_process *process, t_data *shell)
 		|| ft_strcmp(process->command, "ENV") == 0
 		|| ft_strcmp(process->command, "pwd") == 0
 		|| ft_strcmp(process->command, "PWD") == 0
-		|| ft_strcmp(shell->line, "echo") == 0
+		|| ft_strcmp(process->command, "echo") == 0
 		|| ft_strcmp(process->command, "ECHO") == 0
 		|| ft_strcmp(&process->command[0], "unset") == 0
 		|| ft_strcmp(&process->command[0], "UNSET") == 0
