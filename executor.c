@@ -9,20 +9,15 @@ int	execute_single_process(t_process *process, t_data *shell,
 	{
 		if (process->next_process != NULL)
 			free_commands(process);
-		return (g_status);
+		return (EXIT_SUCCESS);
 	}
-	if (is_builtin(process, shell))
-		execute_builtin(process, shell);
-	else
+	if (!execute_command(process, shell, input_fd, output_fd))
 	{
-		if (!execute_command(process, shell, input_fd, output_fd))
-		{
-			if (process->next_process != NULL)
-				free_commands(process);
-			return (g_status);
-		}
+		if (process->next_process != NULL)
+			free_commands(process);
+		return (EXIT_SUCCESS);
 	}
-	return (g_status);
+	return (EXIT_FAILURE);
 }
 
 void	wait_for_children(void)
@@ -35,8 +30,8 @@ int	create_pipe(int pipe_fd[2])
 {
 	if (pipe(pipe_fd) == -1)
 	{
-		put_error(PIPEERROR, 1);
-		exit(g_status);
+		perror("pipe");
+		exit(EXIT_FAILURE);
 	}
 	return (pipe_fd[0]);
 }
@@ -64,7 +59,7 @@ void	execute_multiple_commands(t_process *process, t_data *shell)
 			if (g_status != 258)
 			{
 				execute_single_process(process, shell, input_fd, STDOUT_FILENO);
-				//free_commands(process);
+				free_commands(process);
 			}
 			process = process->next_process;
 		}
@@ -75,20 +70,17 @@ void	execute_multiple_commands(t_process *process, t_data *shell)
 int	main_executor(t_data *shell, t_process *process)
 {
 	if (!process)
-		return (g_status);
-	//if (!is_builtin(process, shell))
-	//{
+		return (EXIT_FAILURE);
+	if (!is_builtin(process, shell))
+	{
 		if (!process->command || (process->command && process->here_doc))
 		{
 			if (!process->here_doc)
-			{
-				g_status = 2;
-				return (g_status);
-			}
+				return (EXIT_FAILURE);
 			else
 			{
 				handle_heredoc(process);
-				return (g_status);
+				return (EXIT_SUCCESS);
 			}
 		}
 		if (process->command)
@@ -97,7 +89,6 @@ int	main_executor(t_data *shell, t_process *process)
 				printf("\033[H\033[J");
 		}
 		execute_multiple_commands(process, shell);
-	//}
-	return (g_status);
+	}
+	return (EXIT_SUCCESS);
 }
-

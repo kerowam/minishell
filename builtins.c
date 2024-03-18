@@ -23,9 +23,12 @@ void	pwd_command(t_data *shell, t_process *process)
 	(void)shell;
 	path = malloc(sizeof(char) * 100);
 	path = getcwd(path, 100);
-	printf("%s\n", path);
-	free(path);
-	//g_status = 0;
+	if (path)
+	{
+		printf("%s\n", path);
+		free(path);
+		g_status = 0;
+	}
 }
 
 void	echo_command(char **str, int exists)
