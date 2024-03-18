@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-extern int g_status;
+//extern int g_status;
 
 void	handle_redirection(t_list **tmp, t_process *tmp_process)
 {
@@ -20,16 +20,7 @@ void	handle_redirection(t_list **tmp, t_process *tmp_process)
 	else
 		tmp_word_next = NULL;
 	if (check_redir(tmp_word_next) == 0)
-	{
-		if (ft_strncmp(tmp_word, ">", 2) == 0)
-			check_outfile(tmp_word_next, tmp_process);
-		else if (ft_strncmp(tmp_word, ">>", 3) == 0)
-			check_outfile_append(tmp_word_next, tmp_process);
-		else if (ft_strncmp(tmp_word, "<<", 3) == 0)
-			add_heredoc(&tmp_process->here_doc, tmp_word_next);
-		else if (ft_strncmp(tmp_word, "<", 2) == 0)
-			check_infile(tmp_word_next, tmp_process);
-	}
+		check_redirs(tmp_word, tmp_word_next, tmp_process);
 	ft_free_char(tmp_word_next);
 	ft_free_char (tmp_word);
 	if (tmp_next != NULL)
@@ -44,9 +35,9 @@ void	handle_pipe(t_process **tmp_process, t_list *tmp)
 	if (tmp->next == NULL)
 	{
 		put_error(UNEXPECTEDTOKEN, 258);
-		//exit(g_status);
-		return;
+		return ;
 	}
+
 	tmp_word = ft_strdup(tmp->next->content);
 	check_pipe(tmp_word);
 	next_pr = (t_process *)malloc(sizeof(t_process));
@@ -55,19 +46,11 @@ void	handle_pipe(t_process **tmp_process, t_list *tmp)
 		put_error(MEMPROBLEM, 1);
 		return ;
 	}
-	//printf("27.2.next_pr pointer = %p\n", next_pr);
 	(*tmp_process)->args = list_to_array((*tmp_process)->argv);
-	if (!(next_pr))
-	{
-		put_error(MEMPROBLEM, 1);
-		return ;
-	}
 	init_process(next_pr);
 	(*tmp_process)->next_process = next_pr;
 	*tmp_process = (*tmp_process)->next_process;
-	//printf("27.3.tmp_word pointer = %p\n", tmp_word);
-	free(tmp_word);
-	tmp_word = NULL;
+	ft_free_char(tmp_word);
 }
 
 void	handle_command(t_process **tmp_process, t_list *tmp)
@@ -75,11 +58,8 @@ void	handle_command(t_process **tmp_process, t_list *tmp)
 	char		*tmp_word;
 
 	tmp_word = ft_strdup((tmp->content));
-	if ((*tmp_process)->command == NULL)
-	{
+	if ((*tmp_process)->command == NULL || *(*tmp_process)->command == '\0')
 		(*tmp_process)->command = ft_strdup(tmp_word);
-		//printf("27.4.(*tmp_process)->command pointer = %p\n", tmp_word);
-	}
 	else
 	{
 		if (!((*tmp_process)->argv))
@@ -104,6 +84,7 @@ int	is_redir(char *tmp_word)
 	return (0);
 }
 
+
 void	parse(t_process *process, t_list **words_splited)
 {
 	t_list		**tmp;
@@ -119,15 +100,13 @@ void	parse(t_process *process, t_list **words_splited)
 	*tmp = *words_splited;
 	init_process(process);
 	*tmp_process = process;
+	if (check_parser_pipe(tmp, tmp_process) == 1)
+		return ;
 	while (*tmp)
 	{
 		handle_command_pipe_redir(tmp_process, tmp);
-		if ((*tmp)->next != NULL)
-			*tmp = (*tmp)->next;
-		else
-		{
-			parse_final(tmp_process, tmp);
-			return ;
-		}
+		*tmp = (*tmp)->next;
 	}
+	parse_final(tmp_process, tmp);
+	return ;
 }

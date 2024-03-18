@@ -9,9 +9,6 @@ void	free_expander(t_env **tmp_env, t_list **tmp_list)
 	if (tmp_list != NULL)
 		free (tmp_list);
 	tmp_list = NULL;
-	/*if (tmp_str != NULL)
-		free (tmp_str);*/
-	//tmp_str = NULL;
 }
 
 void	ft_free_char(char *str)

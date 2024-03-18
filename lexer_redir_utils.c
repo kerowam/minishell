@@ -15,15 +15,14 @@ int	get_redir_index(char *line, int i)
 	return (-1);
 }
 
-int	insert_redirs(char redir, t_list **list, char *tmp_word, int i)
+void	insert_redirs2(char redir, t_list **list)
 {
-	if (tmp_word[i + 1] == redir)
+	if (!(*list)->content)
 	{
 		if (redir == '>')
-			ft_lstadd_back(list, ft_lstnew(">>"));
+			(*list)->content = ft_strdup(">");
 		else
-			ft_lstadd_back(list, ft_lstnew("<<"));
-		i += 2;
+			(*list)->content = ft_strdup("<");
 	}
 	else
 	{
@@ -31,6 +30,32 @@ int	insert_redirs(char redir, t_list **list, char *tmp_word, int i)
 			ft_lstadd_back(list, ft_lstnew(">"));
 		else
 			ft_lstadd_back(list, ft_lstnew("<"));
+	}
+}
+
+int	insert_redirs(char redir, t_list **list, char *tmp_word, int i)
+{
+	if (tmp_word[i + 1] == redir)
+	{
+		if (!(*list)->content)
+		{
+			if (redir == '>')
+				(*list)->content = ft_strdup(">>");
+			else
+				(*list)->content = ft_strdup("<<");
+		}
+		else
+		{
+			if (redir == '>')
+				ft_lstadd_back(list, ft_lstnew(">>"));
+			else
+				ft_lstadd_back(list, ft_lstnew("<<"));
+		}
+		i += 2;
+	}
+	else
+	{
+		insert_redirs2(redir, list);
 		i++;
 	}
 	return (i);
@@ -40,18 +65,23 @@ void	set_redir(t_list **list, char redir, char *tmp_word, int i)
 {
 	if (tmp_word[i + 1] == redir)
 	{
-		if (redir == '>')
-			ft_lstadd_back(list, ft_lstnew(">>"));
+		if (!(*list)->content)
+		{
+			if (redir == '>')
+				(*list)->content = ft_strdup(">>");
+			else
+				(*list)->content = ft_strdup("<<");
+		}
 		else
-			ft_lstadd_back(list, ft_lstnew("<<"));
+		{
+			if (redir == '>')
+				ft_lstadd_back(list, ft_lstnew(">>"));
+			else
+				ft_lstadd_back(list, ft_lstnew("<<"));
+		}
 	}
 	else
-	{
-		if (redir == '>')
-			ft_lstadd_back(list, ft_lstnew(">"));
-		else
-			ft_lstadd_back(list, ft_lstnew("<"));
-	}
+		insert_redirs2(redir, list);
 }
 
 int	get_redirection_nbr(char *line, int i)
@@ -79,12 +109,4 @@ int	get_redirection_nbr(char *line, int i)
 		}
 	}
 	return (redirection_nbr);
-}
-
-void	add_node(t_list **list, char *tmp_word, char *tmp_split)
-{
-	if ((*list)->content == NULL)
-		(*list)->content = ft_strdup(tmp_word);
-	else
-		ft_lstadd_back(list, ft_lstnew(tmp_split));
 }

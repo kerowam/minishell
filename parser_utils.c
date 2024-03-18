@@ -35,6 +35,16 @@ int	ft_lstsize(t_list *lst)
 	return (i);
 }
 
+int	check_mem(char **str)
+{
+	if (!str)
+	{
+		put_error(MEMPROBLEM, 1);
+		return (1);
+	}
+	return (0);
+}
+
 char	**list_to_array(t_list *list)
 {
 	char	**array;
@@ -44,18 +54,18 @@ char	**list_to_array(t_list *list)
 	i = ft_lstsize(list);
 	tmp = NULL;
 	array = (char **)malloc(sizeof(char *) * (i + 1));
-	//printf("25.array pointer = %p\n", array);
-	if (!array)
-	{
-		put_error(MEMPROBLEM, 1);
+	if (check_mem(array) == 1)
 		return (NULL);
-	}
 	i = 0;
 	tmp = list;
+	if (!tmp)
+	{
+		free(array);
+		return (NULL);
+	}
 	while (tmp)
 	{
 		array[i] = ft_strdup(tmp->content);
-		//printf("26.array[%d] pointer = %p\n", i, array[i]);
 		i++;
 		tmp = tmp->next;
 	}

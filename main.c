@@ -1,6 +1,6 @@
 
 #include "minishell.h"
-void	ft_header(void)
+/*void	ft_header(void)
 {
 	printf("\n");
 	printf("               ╔╗ ╔╦═══╗ \n");
@@ -16,16 +16,19 @@ void	ft_header(void)
 	printf("   ║║║║║╠╣╠╣║ ║║╠╣╠╣╚═╝║║ ║║╚══╣╚═╝║╚═╝║ \n");
 	printf("   ╚╝╚╝╚╩══╩╝ ╚═╩══╩═══╩╝ ╚╩═══╩═══╩═══╝ \n");
 	printf("\n");
-}
+}*/
+
+int	g_status;
 
 void	initialize_minishell(t_data **shell, char **env)
 {
 	(void)env;
+	g_status = 0;
 	*shell = (t_data *)malloc(sizeof(t_data));
 	if (!*shell)
 	{
-		perror("Error al asignar memoria para t_data");
-		exit(EXIT_FAILURE);
+		put_error(MEMPROBLEM, 1);
+		exit(g_status);
 	}
 }
 
@@ -45,7 +48,7 @@ void	start_minishell(t_data *shell, char **env)
 			free(shell->line);
 		shell->line = readline("Minishell@ ~ ");
 		if (shell->line == NULL)
-			exit(EXIT_FAILURE);
+			exit(g_status);
 		//printf("shell->line: %s\n", shell->line);
 		i = 0;
 		while (shell->line[i] == ' ')
@@ -79,7 +82,7 @@ void	start_minishell(t_data *shell, char **env)
 			q = check_quotes(shell->line, 0, 0);
 			if (q % 2 != 0)
 			{
-				printf("error: dequoted line\n");
+				put_error(DEQUOTE, 1);
 				free (redir_splited);
 				free (process);
 				//free(shell->line);
@@ -101,7 +104,6 @@ void	start_minishell(t_data *shell, char **env)
 						execute_builtin(process, shell);
 					if (!is_builtin(process, shell))
 						main_executor(shell, process);
-					free_echo(shell->echo);
 					free(shell->line);
 					shell->line = NULL;
 					//free(shell);
@@ -125,23 +127,23 @@ int	main(int argc, char **argv, char **env)
 	(void)argv;
 	if (argc == 1)
 	{
-		atexit(ft_leaks);
+		//atexit(ft_leaks);
 		shell = NULL;
 		initialize_minishell(&shell, env);
 		copy_env_to_data(shell, env);
 		shell->line = NULL;
 		if (argc == 1)
 		{
-			ft_header();
+			//ft_header();
 			start_minishell(shell, env);
 		}
 		free(shell->line);
 		free(shell->echo);
 		free(shell);
 		clear_history();
-		return (EXIT_SUCCESS);
+		return (g_status);
 	}
-	printf("Error de argumentos\n");
+	put_error(ARGS, 1);
 }
 
 void	ft_leaks(void)

@@ -1,34 +1,12 @@
 #include "minishell.h"
 
-static char	**create_argv_for_command(t_process *process)
-{
-	int		argc;
-	char	**argv;
-	t_list	*current;
-	int		j;
-
-	argc = 2;
-	argv = (char **)malloc(sizeof(char *) * (argc + 1));
-	argv[0] = ft_strdup(process->command);
-	current = process->argv;
-	j = 1;
-	while (current)
-	{
-		argv[j] = ft_strdup(current->content);
-		current = current->next;
-		j++;
-	}
-	argv[j] = NULL;
-	return (argv);
-}
-
 static void	execute_command_with_heredoc(t_process *process, int fd_read)
 {
 	char	**argv;
 	int		fd_pipe[2];
 	pid_t	pid;
 
-	argv = create_argv_for_command(process);
+	argv = list_to_array(process->here_doc);
 	pipe(fd_pipe);
 	pid = fork();
 	if (pid == 0)
@@ -48,7 +26,8 @@ static void	execute_command_with_heredoc(t_process *process, int fd_read)
 		close(fd_read);
 		waitpid(pid, NULL, 0);
 	}
-	free_argv(argv);
+	//free_argv(argv);
+	free_echo(argv);
 }
 
 int	handle_heredoc(t_process *process)

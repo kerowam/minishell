@@ -1,5 +1,7 @@
 #include "minishell.h"
 
+extern int	g_status;
+
 void	free_string_array(char **array)
 {
 	int	i;
@@ -17,11 +19,6 @@ void	free_string_array(char **array)
 	}
 	free(array);
 }
-
-/*int	starts_with_dot_slash(char *str)
-{
-	return (str && str[0] == '.' && str[1] == '/');
-}*/
 
 int	find_path(t_process *process, t_data *shell)
 {
@@ -48,6 +45,7 @@ int	find_path(t_process *process, t_data *shell)
 	return (EXIT_FAILURE);
 }
 
+
 void	execute_builtin(t_process *process, t_data *shell)
 {
 	if (ft_strncmp(shell->echo[0], "exit\0", 5) == 0
@@ -56,9 +54,9 @@ void	execute_builtin(t_process *process, t_data *shell)
 	if (ft_strncmp(shell->echo[0], "env\0", 4) == 0
 		|| ft_strncmp(shell->echo[0], "ENV\0", 4) == 0)
 		env_command(shell);
-	if (ft_strncmp(shell->line, "pwd\0", 4) == 0
-		|| ft_strncmp(shell->line, "PWD\0", 4) == 0)
-		pwd_command(shell);
+	if (ft_strncmp(process->command, "pwd\0", 4) == 0
+		|| ft_strncmp(process->command, "PWD\0", 4) == 0)
+		pwd_command(shell, process);
 	if (ft_strncmp(process->command, "echo\0", 5) == 0
 		|| ft_strncmp(process->command, "ECHO\0", 5) == 0)
 		echo_command(shell->echo, 0);
@@ -84,10 +82,10 @@ bool	is_builtin(t_process *process, t_data *shell)
 		|| ft_strcmp(process->command, "EXIT") == 0
 		|| ft_strcmp(process->command, "env") == 0
 		|| ft_strcmp(process->command, "ENV") == 0
-		|| ft_strcmp(shell->line, "pwd") == 0
-		|| ft_strcmp(shell->line, "PWD") == 0
+		|| ft_strcmp(process->command, "pwd") == 0
+		|| ft_strcmp(process->command, "PWD") == 0
 		|| ft_strcmp(shell->line, "echo") == 0
-		|| ft_strcmp(shell->line, "ECHO") == 0
+		|| ft_strcmp(process->command, "ECHO") == 0
 		|| ft_strcmp(&process->command[0], "unset") == 0
 		|| ft_strcmp(&process->command[0], "UNSET") == 0
 		|| ft_strcmp(*shell->echo, "cd") == 0

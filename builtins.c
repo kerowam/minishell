@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-int	g_status;
+extern int	g_status;
 
 void	env_command(t_data *shell)
 {
@@ -13,14 +13,20 @@ void	env_command(t_data *shell)
 			printf("%s=%s\n", head->name, head->value);
 		head = head->next;
 	}
+	g_status = 0;
 }
 
-void	pwd_command(t_data *shell)
+void	pwd_command(t_data *shell, t_process *process)
 {
-	if (getcwd(shell->cwd, sizeof(shell->cwd)) != NULL)
-		printf("%s\n", shell->cwd);
-	else
-		perror("getcwd");
+	char	*path;
+
+	(void)process;
+	(void)shell;
+	path = malloc(sizeof(char) * 100);
+	path = getcwd(path, 100);
+	printf("%s\n", path);
+	free(path);
+	g_status = 0;
 }
 
 void	echo_command(char **str, int exists)
@@ -73,6 +79,7 @@ void	unset_command(t_data *shell, char *name)
 			free(del->name);
 			free(del->value);
 			free(del);
+			g_status = 0;
 			return ;
 		}
 		prev = aux;
@@ -82,17 +89,20 @@ void	unset_command(t_data *shell, char *name)
 
 void	export_command(t_process *process, t_data *shell)
 {
-	int		i;
-
-	i = 1;
 	if (process->command && !process->args)
+	{
 		only_export(shell);
+		g_status = 0;
+	}
 	else
 	{
 		while (process->argv->content)
 		{
 			if (check_args(process->argv->content, process->argv->content))
+			{
 				create_variable(process->argv->content, shell);
+				g_status = 0;
+			}
 			break ;
 		}
 	}

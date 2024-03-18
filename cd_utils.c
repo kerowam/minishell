@@ -73,7 +73,7 @@ void	obtain_env(t_data *shell, char *env_var)
 	{
 		if (ft_strncmp(prov->name, env_var, ft_strlen(prov->name)) == 0)
 		{
-			shell->cd = ft_strdup(prov->value + 1);
+			shell->cd = ft_strdup(prov->value);
 			//printf("0.3 cd_utils shell->cd pointer: %p\n", shell->cd);
 			if (!shell->cd)
 				return ;
