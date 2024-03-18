@@ -45,3 +45,28 @@ void	handle_command_pipe_redir(t_process **tmp_process, t_list **tmp)
 	else
 		handle_command(tmp_process, *tmp);
 }
+
+void	check_redirs(char *tmp_word, char *tmp_word_next,
+			t_process *tmp_process)
+{
+	if (ft_strncmp(tmp_word, ">", 2) == 0)
+		check_outfile(tmp_word_next, tmp_process);
+	else if (ft_strncmp(tmp_word, ">>", 3) == 0)
+		check_outfile_append(tmp_word_next, tmp_process);
+	else if (ft_strncmp(tmp_word, "<<", 3) == 0)
+		add_heredoc(&tmp_process->here_doc, tmp_word_next);
+	else if (ft_strncmp(tmp_word, "<", 2) == 0)
+		check_infile(tmp_word_next, tmp_process);
+}
+
+int	check_parser_pipe(t_list **tmp, t_process **tmp_process)
+{
+	if (ft_strcmp((*tmp)->content, "|") == 0)
+	{
+		put_error(UNEXPECTEDTOKEN, 258);
+		free(tmp);
+		free(tmp_process);
+		return (1);
+	}
+	return (0);
+}

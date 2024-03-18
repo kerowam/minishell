@@ -304,7 +304,9 @@ void	init_process(t_process *process);
 int		ft_lstsize(t_list *lst);
 char	**list_to_array(t_list *list);
 int		check_redir(char *tmp_word);
-void	free_list_p(t_list **tmp);
+//void	free_list_p(t_list **tmp);
+int		check_mem(char **str);
+
 
 //parser_utils2.c
 void	check_pipe(char *tmp_word);
@@ -325,6 +327,9 @@ void	free_list_process(t_list *list);
 void	add_heredoc(t_list **here_doc, char *word);
 void	parse_final(t_process **process, t_list **tmp);
 void	handle_command_pipe_redir(t_process **tmp_process, t_list **tmp);
+void	check_redirs(char *tmp_word, char *tmp_word_next,
+			t_process *tmp_process);
+int		check_parser_pipe(t_list **tmp, t_process **tmp_process);
 
 //signals.c
 void	signals_handler(int sign);

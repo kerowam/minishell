@@ -97,7 +97,6 @@ void	no_path(t_process *process, int input_fd, int output_fd)
 		if (ft_strncmp(process->command, "./", 2) == 0)
 		{
 			put_error(NOTFILEORDIR, 127);
-			//printf("Command not found: %s\n", process->command);
 			return ;
 		} else
 		{

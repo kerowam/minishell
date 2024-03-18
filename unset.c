@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-void unset2(t_env *del, t_env *aux, t_env *prev, t_data *shell)
+void	unset2(t_env *del, t_env *aux, t_env *prev, t_data *shell)
 {
 	del = aux;
 	if (prev)
