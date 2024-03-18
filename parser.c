@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-extern int g_status;
+//extern int g_status;
 
 void	handle_redirection(t_list **tmp, t_process *tmp_process)
 {
@@ -47,6 +47,7 @@ void	handle_pipe(t_process **tmp_process, t_list *tmp)
 		//exit(g_status);
 		return;
 	}
+
 	tmp_word = ft_strdup(tmp->next->content);
 	check_pipe(tmp_word);
 	next_pr = (t_process *)malloc(sizeof(t_process));
@@ -75,7 +76,7 @@ void	handle_command(t_process **tmp_process, t_list *tmp)
 	char		*tmp_word;
 
 	tmp_word = ft_strdup((tmp->content));
-	if ((*tmp_process)->command == NULL)
+	if ((*tmp_process)->command == NULL || *(*tmp_process)->command == '\0')
 	{
 		(*tmp_process)->command = ft_strdup(tmp_word);
 		//printf("27.4.(*tmp_process)->command pointer = %p\n", tmp_word);
@@ -119,6 +120,13 @@ void	parse(t_process *process, t_list **words_splited)
 	*tmp = *words_splited;
 	init_process(process);
 	*tmp_process = process;
+	if (ft_strcmp((*tmp)->content, "|") == 0)
+	{
+		put_error(UNEXPECTEDTOKEN, 258);
+		free(tmp);
+		free(tmp_process);
+		return ;
+	}
 	while (*tmp)
 	{
 		handle_command_pipe_redir(tmp_process, tmp);

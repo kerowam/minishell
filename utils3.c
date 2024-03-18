@@ -1,5 +1,7 @@
 #include "minishell.h"
 
+extern int	g_status;
+
 void	free_elements(char *temp, char *full_path)
 {
 	free(temp);
@@ -15,11 +17,24 @@ t_list	*list_next(t_list **tmp_list)
 	return (*tmp_list);
 }
 
-static void	print_exit(t_data *shell)
+static void	print_exit(t_data *shell, t_process *process)
 {
 	printf("exit\n");
 	free(shell->line);
-	exit(EXIT_SUCCESS);
+	free_process(process);
+	exit(g_status);
+}
+
+static void	print_num_exit(t_process *process)
+{
+	char	*arg;
+
+	arg = process->argv->content;
+	if (ft_atoi(arg) == 0 && arg[0] != '0')
+		put_error2(NUMARG, 2);
+	else
+		g_status = ft_atoi(arg);
+	exit(g_status);
 }
 
 void	exit_command(t_process *process, t_data *shell)
@@ -30,38 +45,65 @@ void	exit_command(t_process *process, t_data *shell)
 	{
 		arg = process->argv->content;
 		if (process->argv->next == NULL)
-		{
-			if (ft_atoi(arg) == 0 && arg[0] != '0')
-				printf("bash: exit: a: numeric argument required.\n");
-			exit(EXIT_SUCCESS);
-		}
+			print_num_exit(process);
 		if (ft_atoi(arg) == 0 && arg[0] != '0')
 		{
-			printf("bash: exit: a: numeric argument required.\n");
-			exit(EXIT_FAILURE);
+			put_error2(NUMARG, 2);
+			exit(g_status);
 		}
 		if (process->argv->next != NULL)
 		{
-			printf("bash: exit: too many arguments\n");
+			put_error2(TOMANYARG, 1);
 			if (ft_atoi(arg) == 0 && arg[0] != '0')
-				exit(EXIT_FAILURE);
+				exit(g_status);
 		}
 	}
 	else
-		print_exit(shell);
+		print_exit(shell, process);
 }
 
 void	no_path(t_process *process, int input_fd, int output_fd)
 {
-	char	*full_path;
+	char		*full_path;
+	struct stat	path_stat;
 
 	full_path = NULL;
-	if (access(process->command, F_OK | X_OK) == 0)
+
+	if (access(process->command, F_OK) == 0)
+	{
+		stat(process->command, &path_stat);
+		if (S_ISDIR(path_stat.st_mode)
+			&& (ft_strncmp(process->command, "./", 2) == 0
+				|| ft_strncmp(process->command, "/", 1) == 0))
+		{
+			put_error(ISDIR, 126);
+			return ;
+		}
+		else if (!S_ISDIR(path_stat.st_mode)
+			&& access(process->command, W_OK) == -1
+			&& access(process->command, X_OK) == -1
+			&& access(process->command, R_OK) == -1)
+		{
+			put_error(NOTPERMISSION, 126);
+			return ;
+		}
+	}
+	if (access(process->command, F_OK | X_OK) == 0 && !S_ISDIR(path_stat.st_mode))
+	{
 		full_path = ft_strdup(process->command);
+	}
 	else
 	{
-		printf("Command not found: %s\n", process->command);
-		return ;
+		if (ft_strncmp(process->command, "./", 2) == 0)
+		{
+			put_error(NOTFILEORDIR, 127);
+			//printf("Command not found: %s\n", process->command);
+			return ;
+		} else
+		{
+			put_error(NOTCOMMAND, 127);
+			return ;
+		}
 	}
 	process->pid = fork();
 	if (process->pid == 0)

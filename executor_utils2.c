@@ -1,5 +1,7 @@
 #include "minishell.h"
 
+extern int	g_status;
+
 static void	prepare_command_arguments(t_process *process, char ***cmd_argv)
 {
 	t_list	*current;
@@ -8,8 +10,9 @@ static void	prepare_command_arguments(t_process *process, char ***cmd_argv)
 	*cmd_argv = malloc((ft_lstsize(process->argv) + 2) * sizeof(char *));
 	if (!*cmd_argv)
 	{
-		perror("Error al asignar memoria para cmd_argv");
-		exit(EXIT_FAILURE);
+		//perror("Error al asignar memoria para cmd_argv");
+		put_error(MEMPROBLEM, 1);
+		exit(g_status);
 	}
 	(*cmd_argv)[0] = ft_strdup(process->command);
 	//printf("2. prepare_command_arguments cmd_argv pointer = %p\n", *cmd_argv);
@@ -31,14 +34,16 @@ static void	execute_child_process(t_process *process,
 	process->pid = fork();
 	if (process->pid == -1)
 	{
-		perror("Error al crear el proceso hijo");
-		exit(EXIT_FAILURE);
+		//perror("Error al crear el proceso hijo");
+		put_error(FORKERROR, 1);
+		exit(g_status);
 	}
 	else if (process->pid == 0)
 	{
 		execve(full_path, cmd_argv, process->env);
-		perror("Error al ejecutar el comando\n");
-		exit(EXIT_FAILURE);
+		//perror("Error al ejecutar el comando\n");
+		put_error(NOTCOMMAND, 127);
+		exit(g_status);
 	}
 	waitpid(process->pid, &process->status, 0);
 	free_argv(cmd_argv);

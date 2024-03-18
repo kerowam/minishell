@@ -5,22 +5,24 @@ extern int	g_status;
 int	execute_single_process(t_process *process, t_data *shell,
 	int input_fd, int output_fd)
 {
-	find_path(process, shell);
-	if (process->env == NULL)
-		return (EXIT_FAILURE);
 	if (process->command == NULL || process->command[0] == '\0')
 	{
 		if (process->next_process != NULL)
 			free_commands(process);
-		return (EXIT_SUCCESS);
+		return (g_status);
 	}
-	if (!execute_command(process, input_fd, output_fd))
+	if (is_builtin(process, shell))
+		execute_builtin(process, shell);
+	else
 	{
-		if (process->next_process != NULL)
-			free_commands(process);
-		return (EXIT_SUCCESS);
+		if (!execute_command(process, shell, input_fd, output_fd))
+		{
+			if (process->next_process != NULL)
+				free_commands(process);
+			return (g_status);
+		}
 	}
-	return (EXIT_FAILURE);
+	return (g_status);
 }
 
 void	wait_for_children(void)
@@ -33,8 +35,8 @@ int	create_pipe(int pipe_fd[2])
 {
 	if (pipe(pipe_fd) == -1)
 	{
-		perror("pipe");
-		exit(EXIT_FAILURE);
+		put_error(PIPEERROR, 1);
+		exit(g_status);
 	}
 	return (pipe_fd[0]);
 }
@@ -59,8 +61,11 @@ void	execute_multiple_commands(t_process *process, t_data *shell)
 		}
 		else
 		{
-			execute_single_process(process, shell, input_fd, STDOUT_FILENO);
-			free_commands(process);
+			if (g_status != 258)
+			{
+				execute_single_process(process, shell, input_fd, STDOUT_FILENO);
+				//free_commands(process);
+			}
 			process = process->next_process;
 		}
 	}
@@ -70,17 +75,20 @@ void	execute_multiple_commands(t_process *process, t_data *shell)
 int	main_executor(t_data *shell, t_process *process)
 {
 	if (!process)
-		return (EXIT_FAILURE);
-	if (!is_builtin(process, shell))
-	{
+		return (g_status);
+	//if (!is_builtin(process, shell))
+	//{
 		if (!process->command || (process->command && process->here_doc))
 		{
 			if (!process->here_doc)
-				return (EXIT_FAILURE);
+			{
+				g_status = 2;
+				return (g_status);
+			}
 			else
 			{
 				handle_heredoc(process);
-				return (EXIT_SUCCESS);
+				return (g_status);
 			}
 		}
 		if (process->command)
@@ -89,7 +97,7 @@ int	main_executor(t_data *shell, t_process *process)
 				printf("\033[H\033[J");
 		}
 		execute_multiple_commands(process, shell);
-	}
-	return (EXIT_SUCCESS);
+	//}
+	return (g_status);
 }
 

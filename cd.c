@@ -36,16 +36,16 @@ void	handle_given_directory(char **str, t_data *shell)
 	}
 }
 
-void	cd_command(char **str, t_data *shell)
+void	cd_command(t_process *process, t_data *shell)
 {
-	if (!ft_strncmp(str[0], "cd\0", 3))
+	if (!ft_strncmp(process->command, "cd\0", 3))
 	{
-		if (!str[1])
+		if (!process->argv)
 			handle_home_directory(shell);
-		else if (!ft_strncmp(str[1], "-\0", 2))
+		else if (!ft_strncmp(process->args[0], "-\0", 2))
 			handle_previous_directory(shell);
 		else
-			handle_given_directory(str, shell);
+			handle_given_directory(process->args, shell);
 	}
 }
 
@@ -55,7 +55,9 @@ int	handle_directory(t_data *shell, char **str)
 	int		flag;
 
 	getcwd(dir, sizeof(dir));
-	flag = chdir(str[1]);
+	flag = chdir(str[0]);
+	if (str[1])
+		put_error(TOMANYARG, 1);
 	if (flag == 0)
 	{
 		update_oldpwd_again(shell, dir);
@@ -64,7 +66,8 @@ int	handle_directory(t_data *shell, char **str)
 	}
 	else
 	{
-		perror("cd");
+		//perror("cd");
+		put_error(NOTFILEORDIR, 1);
 		return (-1);
 	}
 }

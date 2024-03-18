@@ -43,12 +43,12 @@ void	start_minishell(t_data *shell, char **env)
 	while (1)
 	{
 		setup_signal_handlers();
-		system("leaks -q minishell");
+		//system("leaks -q minishell");
 		if (shell->line)
 			free(shell->line);
 		shell->line = readline("Minishell@ ~ ");
 		if (shell->line == NULL)
-			exit(EXIT_FAILURE);
+			exit(g_status);
 		//printf("shell->line: %s\n", shell->line);
 		i = 0;
 		while (shell->line[i] == ' ')
@@ -100,10 +100,10 @@ void	start_minishell(t_data *shell, char **env)
 				{
 					if (*shell->line)
 						add_history(shell->line);
-					if (is_builtin(process, shell))
+					/*if (is_builtin(process, shell))
 						execute_builtin(process, shell);
-					if (!is_builtin(process, shell))
-						main_executor(shell, process);
+					if (!is_builtin(process, shell))*/
+					main_executor(shell, process);
 					free_echo(shell->echo);
 					free(shell->line);
 					shell->line = NULL;
@@ -128,7 +128,7 @@ int	main(int argc, char **argv, char **env)
 	(void)argv;
 	if (argc == 1)
 	{
-		atexit(ft_leaks);
+		//atexit(ft_leaks);
 		shell = NULL;
 		initialize_minishell(&shell, env);
 		copy_env_to_data(shell, env);
@@ -142,7 +142,7 @@ int	main(int argc, char **argv, char **env)
 		free(shell->echo);
 		free(shell);
 		clear_history();
-		return (EXIT_SUCCESS);
+		return (g_status);
 	}
 	put_error(ARGS, 1);
 }
