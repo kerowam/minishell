@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-extern int	g_status;
+int	g_status;
 
 /*void	ft_header(void)
 {
@@ -40,7 +40,7 @@ void	start_minishell(t_data *shell)
 	while (1)
 	{
 		setup_signal_handlers();
-		system("leaks -q minishell");
+		//system("leaks -q minishell");
 		if (shell->line)
 			free(shell->line);
 		shell->line = readline("Minishell@ ~ ");

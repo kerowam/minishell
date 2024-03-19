@@ -1,5 +1,7 @@
 #include "minishell.h"
 
+extern int	g_status;
+
 void	executor(t_process *process, t_data *shell, t_list **redir_splited)
 {
 	lexer(shell, redir_splited);

@@ -101,8 +101,6 @@ enum	e_error
 	REDIRECTOUT = 19 //redireccion outfile, g_status = 1
 };
 
-int	g_status;
-
 //builtins.c
 void	env_command(t_data *shell);
 void	pwd_command(t_data *shell, t_process *process);
@@ -184,6 +182,12 @@ int		search_end_str2(char *str, int i);
 char	*expand_quoted(char *str, t_env *env);
 char	*join_expand_quoted(char *end_str, char *tmp);
 char	*expand(char *str, t_env *env);
+
+//expander3.c
+char	*expand_single_quote(char *str, int *i, char *end_str);
+char	*expand_double_quote(char *str, int *i, t_env *env, char *end_str);
+char	*expand_dollar(char *str, int *i, t_env *env, char *end_str);
+char	*expand_else(char *str, int *i, char *end_str);
 
 //export_utils.c
 void	only_export(t_data *shell);
