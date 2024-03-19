@@ -83,7 +83,7 @@ int	check_redir(char *tmp_word)
 		|| ft_strncmp(tmp_word, "<<", 3) == 0
 		|| ft_strncmp(tmp_word, "<", 2) == 0)
 	{
-		put_error(UNEXPECTEDTOKEN, 258);
+		put_error(UNEXPECTEDTOKEN, 2);
 		return (1);
 	}
 	return (0);

@@ -11,13 +11,11 @@ int	execute_single_process(t_process *process, t_data *shell,
 			free_commands(process);
 		return (EXIT_SUCCESS);
 	}
-	if (!execute_command(process, shell, input_fd, output_fd))
-	{
-		if (process->next_process != NULL)
-			free_commands(process);
-		return (EXIT_SUCCESS);
-	}
-	return (EXIT_FAILURE);
+	if (g_status == 258)
+		return (EXIT_FAILURE);
+	if (execute_command(process, shell, input_fd, output_fd))
+		return (EXIT_FAILURE);
+	return (EXIT_SUCCESS);
 }
 
 static void	more_commands(t_process *process, t_data *shell,
@@ -30,7 +28,8 @@ static void	more_commands(t_process *process, t_data *shell,
 		else
 			g_status = 0;
 	}
-	free_commands(process);
+	if (process)
+		free_commands(process);
 }
 
 void	execute_multiple_commands(t_process *process, t_data *shell)
@@ -44,8 +43,7 @@ void	execute_multiple_commands(t_process *process, t_data *shell)
 		if ((process->next_process && process->outfile == NULL))
 		{
 			create_pipe(pipe_fd);
-			if (!execute_single_process(process, shell, input_fd, pipe_fd[1]))
-				break ;
+			execute_single_process(process, shell, input_fd, pipe_fd[1]);
 			close(pipe_fd[1]);
 			input_fd = pipe_fd[0];
 			free_commands(process);
@@ -63,6 +61,7 @@ void	execute_multiple_commands(t_process *process, t_data *shell)
 
 int	main_executor(t_data *shell, t_process *process)
 {
+	signal(SIGINT, cat_ctrlc);
 	if (!process)
 		return (EXIT_FAILURE);
 	if (!is_builtin(process, shell))
@@ -73,7 +72,7 @@ int	main_executor(t_data *shell, t_process *process)
 				return (EXIT_FAILURE);
 			else
 			{
-				handle_heredoc(process);
+				handle_heredoc(process, shell);
 				return (EXIT_SUCCESS);
 			}
 		}

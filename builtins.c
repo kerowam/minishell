@@ -42,10 +42,9 @@ void	echo_command(t_process *process, int exists)
 		if (ft_strncmp(arg, "-n", 2) == 0)
 			exists = 1;
 		i = 0;
-		while (arg[i] != '\0')
+		while (arg[i] != '\0' && ft_strcmp(&arg[i], "-n") != 0)
 		{
-			//if (arg[i] != '\'' && arg[i] != '\"')
-				printf("%c", arg[i]);
+			printf("%c", arg[i]);
 			i++;
 		}
 		if (aux->next != NULL)
@@ -54,6 +53,7 @@ void	echo_command(t_process *process, int exists)
 	}
 	if (!exists)
 		printf("\n");
+	g_status = 0;
 }
 
 void	unset_command(t_data *shell, char *name)
@@ -68,16 +68,14 @@ void	unset_command(t_data *shell, char *name)
 	prev = NULL;
 	while (aux)
 	{
-		if (strcmp(aux->name, name) == 0)
+		if (ft_strcmp(aux->name, name) == 0)
 		{
 			del = aux;
 			if (prev)
 				prev->next = aux->next;
 			else
 				shell->env = aux->next;
-			free(del->name);
-			free(del->value);
-			free(del);
+			free_unset(del);
 			g_status = 0;
 			return ;
 		}

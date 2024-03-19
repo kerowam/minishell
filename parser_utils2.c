@@ -3,7 +3,7 @@
 void	check_pipe(char *tmp_word)
 {
 	if (ft_strncmp(tmp_word, "|", 2) == 0)
-		put_error(UNEXPECTEDTOKEN, 258);
+		put_error(UNEXPECTEDTOKEN, 2);
 	return ;
 }
 

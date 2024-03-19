@@ -1,6 +1,5 @@
 #include "minishell.h"
 
-//void	free_expander(t_env **tmp_env, t_list **tmp_list, char *tmp_str)
 void	free_expander(t_env **tmp_env, t_list **tmp_list)
 {
 	if (tmp_env != NULL)

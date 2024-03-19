@@ -34,10 +34,9 @@ void	handle_pipe(t_process **tmp_process, t_list *tmp)
 
 	if (tmp->next == NULL)
 	{
-		put_error(UNEXPECTEDTOKEN, 258);
+		put_error(UNEXPECTEDTOKEN, 2);
 		return ;
 	}
-
 	tmp_word = ft_strdup(tmp->next->content);
 	check_pipe(tmp_word);
 	next_pr = (t_process *)malloc(sizeof(t_process));
@@ -83,7 +82,6 @@ int	is_redir(char *tmp_word)
 		return (1);
 	return (0);
 }
-
 
 void	parse(t_process *process, t_list **words_splited)
 {

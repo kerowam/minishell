@@ -63,7 +63,7 @@ int	check_parser_pipe(t_list **tmp, t_process **tmp_process)
 {
 	if (ft_strcmp((*tmp)->content, "|") == 0)
 	{
-		put_error(UNEXPECTEDTOKEN, 258);
+		put_error(UNEXPECTEDTOKEN, 2);
 		free(tmp);
 		free(tmp_process);
 		return (1);

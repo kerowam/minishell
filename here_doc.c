@@ -1,36 +1,36 @@
 #include "minishell.h"
 
-static void	execute_command_with_heredoc(t_process *process, int fd_read)
+static void	execute_command_with_heredoc(t_process *process, int fd_read,
+		t_data *shell)
 {
 	char	**argv;
 	int		fd_pipe[2];
 	pid_t	pid;
+	char	*full_path;
+	int		i;
 
-	argv = list_to_array(process->here_doc);
-	pipe(fd_pipe);
-	pid = fork();
-	if (pid == 0)
+	i = 0;
+	find_path(process, shell);
+	while (process->env[i++] != NULL)
 	{
-		close(fd_pipe[1]);
-		dup2(fd_pipe[0], STDIN_FILENO);
-		close(fd_pipe[0]);
-		execvp(process->command, argv);
-		perror("Error en execvp");
-		exit(EXIT_FAILURE);
+		process->temp = ft_strjoin(process->env[i], "/");
+		full_path = ft_strjoin(process->temp, process->command);
+		if (access(full_path, F_OK | X_OK) != -1)
+		{
+			argv = create_argv2(argv, process);
+			pipe(fd_pipe);
+			pid = fork();
+			if (pid == 0)
+				child_process2(process, fd_pipe, full_path, argv);
+			else
+				father_process2(fd_pipe, fd_read, pid);
+			free_things(process, argv);
+		}
+		free_elements(process->temp, full_path);
 	}
-	else
-	{
-		close(fd_pipe[0]);
-		write_temp_file_to_pipe(fd_pipe[1], fd_read);
-		close(fd_pipe[1]);
-		close(fd_read);
-		waitpid(pid, NULL, 0);
-	}
-	//free_argv(argv);
-	free_echo(argv);
 }
 
-int	handle_heredoc(t_process *process)
+int	handle_heredoc(t_process *process, t_data *shell)
 {
 	char	*filename;
 	int		fd_write;
@@ -39,14 +39,13 @@ int	handle_heredoc(t_process *process)
 	if (!process->here_doc)
 		return (0);
 	filename = "here_doc.tmp";
-	//printf("Creating temporary file: %s\n", filename);
 	fd_write = create_temp_file(filename);
 	read_lines_until_delimiter(fd_write, process->here_doc->content);
 	close(fd_write);
 	fd_read = open_temp_file_read(filename);
 	if ((process->command || (process->command && process->args))
 		&& process->here_doc)
-		execute_command_with_heredoc(process, fd_read);	
+		execute_command_with_heredoc(process, fd_read, shell);
 	close(fd_read);
 	unlink(filename);
 	return (1);

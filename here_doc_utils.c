@@ -13,7 +13,7 @@ int	create_temp_file(const char *filename)
 	return (fd);
 }
 
-void	read_lines_until_delimiter(int fd, const char *delimiter)
+void	read_lines_until_delimiter(int fd, char *delimiter)
 {
 	char	*line;
 	size_t	delimiter_len;
@@ -28,7 +28,7 @@ void	read_lines_until_delimiter(int fd, const char *delimiter)
 			perror("Error reading from standard input");
 			exit(EXIT_FAILURE);
 		}
-		if (ft_strncmp(delimiter, line, delimiter_len) == 0)
+		if (ft_strncmp(delimiter, line, ft_strlen(line) - 1) == 0)
 		{
 			free(line);
 			break ;
