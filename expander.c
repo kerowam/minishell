@@ -87,57 +87,9 @@ char	*expand_value(char *str, int i, t_env *env, char *end_str)
 
 char	*join_expand(char *str, int start, char *end_str, int i)
 {
-	char *tmp;
-	char *join;
-
-	tmp = ft_substr(str, start, i - start);
-	if (!end_str)
-	{
-		end_str = ft_strdup(tmp);
-		ft_free_char(tmp);
-		return (end_str);
-	}
-	else
-	{
-		join = ft_strjoin(end_str, tmp);
-		ft_free_char(end_str);
-		return (ft_free_char(tmp), join);
-	}
-}
-
-char	*join_expand2(char *str, int i, char *end_str)
-{
 	char	*tmp;
-	int		start;
 	char	*join;
 
-	start = i;
-	while (str[i] && str[i] != '$' && str[i] != '\'' && str[i] != '\"')
-			i++;
-	tmp = ft_substr(str, start, i - start);
-	if (!end_str)
-	{
-		end_str = ft_strdup(tmp);
-		ft_free_char(tmp);
-		return (end_str);
-	}
-	else
-	{
-		join = ft_strjoin(end_str, tmp);
-		ft_free_char(end_str);
-		return (ft_free_char(tmp), join);
-	}
-}
-
-char	*join_expand3(char *str, int i, char *end_str)
-{
-	char	*tmp;
-	int		start;
-	char	*join;
-
-	start = i;
-	while (str[i] && str[i] != '$')
-			i++;
 	tmp = ft_substr(str, start, i - start);
 	if (!end_str)
 	{

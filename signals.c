@@ -7,10 +7,22 @@ void	signals_handler(int sign)
 	if (sign == SIGINT)
 	{
 		g_status = 130;
-		printf("\n");
-		//rl_replace_line("", 0);
 		rl_on_new_line();
 		rl_redisplay();
+		write(1, "   \n", 4);
+		rl_replace_line("", 0);
+		rl_on_new_line();
+		rl_redisplay();
+	}
+}
+
+void	cat_ctrlc(int sig)
+{
+	if (sig == SIGINT)
+	{
+		printf("\033[K\n");
+		rl_on_new_line();
+		rl_replace_line("", 0);
 	}
 }
 

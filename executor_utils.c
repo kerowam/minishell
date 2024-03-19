@@ -45,7 +45,6 @@ int	find_path(t_process *process, t_data *shell)
 	return (EXIT_FAILURE);
 }
 
-
 void	execute_builtin(t_process *process, t_data *shell)
 {
 	if (ft_strncmp(shell->echo[0], "exit\0", 5) == 0
@@ -63,9 +62,9 @@ void	execute_builtin(t_process *process, t_data *shell)
 	if (ft_strncmp(&process->command[0], "unset\0", 6) == 0
 		|| ft_strncmp(&process->command[0], "UNSET\0", 6) == 0)
 		unset_command(shell, shell->echo[1]);
-	if (ft_strncmp(*shell->echo, "cd\0", 3) == 0
-		|| ft_strncmp(shell->line, "CD\0", 3) == 0)
-		cd_command(shell->echo, shell);
+	if (ft_strncmp(process->command, "cd\0", 3) == 0
+		|| ft_strncmp(process->command, "CD\0", 3) == 0)
+		cd_command(process, shell);
 	if (ft_strncmp(shell->echo[0], "export\0", 7) == 0
 		|| ft_strncmp(shell->echo[0], "EXPORT\0", 7) == 0)
 		export_command(process, shell);
@@ -75,6 +74,7 @@ bool	is_builtin(t_process *process, t_data *shell)
 {
 	bool	is_builtin_command;
 
+	(void)shell;
 	if (!process->command)
 		return (false);
 	is_builtin_command = false;
@@ -88,8 +88,8 @@ bool	is_builtin(t_process *process, t_data *shell)
 		|| ft_strcmp(process->command, "ECHO") == 0
 		|| ft_strcmp(&process->command[0], "unset") == 0
 		|| ft_strcmp(&process->command[0], "UNSET") == 0
-		|| ft_strcmp(*shell->echo, "cd") == 0
-		|| ft_strcmp(*shell->echo, "CD") == 0
+		|| ft_strcmp(process->command, "cd") == 0
+		|| ft_strcmp(process->command, "CD") == 0
 		|| ft_strcmp(process->command, "export") == 0
 		|| ft_strcmp(process->command, "EXPORT") == 0)
 		is_builtin_command = true;

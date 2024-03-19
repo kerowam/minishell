@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-extern int g_status;
+extern int	g_status;
 
 int	get_pipe_nbr(char *line, int i)
 {

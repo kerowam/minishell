@@ -12,7 +12,6 @@ void	env_add_back(t_env **root, t_env *new)
 	ptr->next = new;
 }
 
-// Para comprobar lo que se aloja en la linea dividida
 void	print_split(char **line_splited)
 {
 	int	i;

@@ -61,25 +61,3 @@ void	exit_command(t_process *process, t_data *shell)
 	else
 		print_exit(shell, process);
 }
-
-void	no_path(t_process *process, int input_fd, int output_fd)
-{
-	char	*full_path;
-
-	full_path = NULL;
-	if (access(process->command, F_OK | X_OK) == 0)
-		full_path = ft_strdup(process->command);
-	else
-	{
-		put_error(NOTCOMMAND, 127);
-		return ;
-	}
-	process->pid = fork();
-	if (process->pid == 0)
-	{
-		help_child(process, input_fd, output_fd);
-		child_process(process, full_path);
-	}
-	father_process(process, input_fd, output_fd);
-	free(full_path);
-}

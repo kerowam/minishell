@@ -57,38 +57,32 @@ void	child_process(t_process *process, char *full_path)
 	exit(EXIT_FAILURE);
 }
 
-int	execute_command(t_process *process, t_data *shell, int input_fd, int output_fd)
+int	execute_command(t_process *process, t_data *shell,
+	int input_fd, int output_fd)
 {
 	int		i;
-	char	*temp;
 	char	*full_path;
 
 	i = 0;
 	find_path(process, shell);
 	if (process->env == NULL)
-	{
 		no_path(process, input_fd, output_fd);
-		return (EXIT_SUCCESS);
-	}
-	while (process->env[i] != NULL)
+	else
 	{
-		temp = ft_strjoin(process->env[i], "/");
-		full_path = ft_strjoin(temp, process->command);
-		if (access(full_path, F_OK | X_OK) != -1)
+		while (process->env[i] != NULL)
 		{
-			process->pid = fork();
-			if (process->pid == 0)
+			process->temp = ft_strjoin(process->env[i], "/");
+			full_path = ft_strjoin(process->temp, process->command);
+			if (access(full_path, F_OK | X_OK) != -1)
 			{
-				help_child(process, input_fd, output_fd);
-				child_process(process, full_path);
+				do_fork(process, input_fd, output_fd, full_path);
+				free_elements(process->temp, full_path);
+				return (EXIT_FAILURE);
 			}
-			father_process(process, input_fd, output_fd);
-			free_elements(temp, full_path);
-			return (EXIT_FAILURE);
+			free_elements(process->temp, full_path);
+			i++;
 		}
-		free_elements(temp, full_path);
-		i++;
+		no_path(process, input_fd, output_fd);
 	}
-	no_path(process, input_fd, output_fd);
 	return (EXIT_SUCCESS);
 }

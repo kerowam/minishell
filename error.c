@@ -47,5 +47,7 @@ void	put_error2(int error_type, int error_code)
 	else if (error_type == CLOSEERROR)
 		printf("minishell: error: close failed\n");
 	else if (error_type == SINTAXERROR)
-		perror("minishell: error sintáctico cerca del elemento inesperado `newline'");
+		perror("minishell: error: syntax error near unexpected`newline'");
+	else if (error_type == REDIRECTOUT)
+		perror("minishell: error redirecting output");
 }

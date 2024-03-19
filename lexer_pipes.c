@@ -92,7 +92,6 @@ void	handle_pipes(t_list **list, int i, t_list **pipes_splited)
 	free(tmp_word);
 	tmp_word = NULL;
 	return ;
-
 }
 
 void	split_pipes(t_list **list, t_list **pipes_splited)

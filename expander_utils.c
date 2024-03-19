@@ -5,7 +5,8 @@ int	get_len_word(char *str, int i)
 	int	len;
 
 	len = 0;
-	while (str[i] != ' ' && str[i] && str[i] != '\"' && str[i] != '\'' && str[i] != '$')
+	while (str[i] != ' ' && str[i] && str[i] != '\"'
+		&& str[i] != '\'' && str[i] != '$')
 	{
 		i++;
 		len++;
