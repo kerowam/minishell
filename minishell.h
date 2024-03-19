@@ -222,7 +222,9 @@ char	*get_expanded_value(t_env *env, char *key);
 char	*get_status(char *str);
 char	*join_expand_value(char *value, char *end_str, char *tmp);
 char	*expand_value(char *str, int i, t_env *env, char *end_str);
-char	*join_expand(char *str, int i, char *end_str);
+char	*join_expand2(char *str, int i, char *end_str);
+char	*join_expand(char *str, int start, char *end_str, int i);
+char	*join_expand3(char *str, int i, char *end_str);
 
 //expander2.c
 char	*expand(char *str, t_env *env);

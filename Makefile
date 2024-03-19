@@ -38,7 +38,8 @@ SRCS = main.c\
 		signals.c\
 		executor2.c\
 		utils3.c\
-		expander2.c
+		expander2.c\
+		#unset.c
 
 CC = gcc
 
@@ -47,14 +48,13 @@ OBJS = ${SRCS:.c=.o}
 all: ${LIBFT}/libft.a $(NAME)
 
 $(NAME): $(OBJS)
-	ar rcs minishell.a $(OBJS)
-	gcc $(CFLAGS) -lreadline -L/Users/nmontiel/.brew/opt/readline/lib -I/Users/nmontiel/.brew/opt/readline/include $(SRCS) ${LIBFT}/libft.a -o $(NAME)
+	@$(CC) $(CFLAGS) $(SRCS) ${LIBFT}/libft.a -o $(NAME) -lreadline
 
 #	gcc $(CFLAGS) -lreadline -L/Users/nmontiel/.brew/opt/readline/lib -I/Users/nmontiel/.brew/opt/readline/include $(SRCS) ${LIBFT}/libft.a -o $(NAME)
 	
-#	
-	
+#	ar rcs minishell.a $(OBJS)
 #	gcc $(CFLAGS) -lreadline -L/Users/gfredes-/.brew/opt/readline/lib -I/Users/gfredes-/.brew/opt/readline/include $(SRCS) ${LIBFT}/libft.a -o $(NAME)
+	
 
 %.o: %.c
 	@$(CC) $(CFLAGS) -o $@ -c $< $(HEADERS) && printf "Compiling: $(notdir $<)\n"

@@ -44,7 +44,7 @@ void	echo_command(t_process *process, int exists)
 		i = 0;
 		while (arg[i] != '\0')
 		{
-			if (arg[i] != '\'' && arg[i] != '\"')
+			//if (arg[i] != '\'' && arg[i] != '\"')
 				printf("%c", arg[i]);
 			i++;
 		}

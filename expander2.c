@@ -2,9 +2,41 @@
 
 int	search_end_str(char *str, int i)
 {
-	while (str[i] && str[i] != '$' && str[i] != '\'')
+	while (str[i] && str[i] != '$' && str[i] != '\"' && str[i] != '\'')
 		i++;
 	return (i);
+}
+
+int	search_end_str2(char *str, int i)
+{
+	while (str[i] && str[i] != '$')
+		i++;
+	return (i);
+}
+
+char	*expand_quoted(char *str, t_env *env)
+{
+	int		i;
+	char	*end_str;
+
+	i = 0;
+	end_str = NULL;
+	while (str[i])
+	{
+		if (str[i] == '$')
+		{
+			i++;
+			end_str = expand_value(str, i, env, end_str);
+			while (str[i] && str[i] != '$' && str[i] != ' ' && str[i] != '\"' && str[i] != '\'')
+				i++;
+		}
+		else
+		{
+			end_str = join_expand3(str, i, end_str);
+			i = search_end_str2(str, i);
+		}
+	}
+	return (end_str);
 }
 
 char	*expand(char *str, t_env *env)
@@ -12,6 +44,8 @@ char	*expand(char *str, t_env *env)
 	int		i;
 	char	*end_str;
 	int		start;
+	char	*tmp;
+	char	*join;
 
 	i = 0;
 	end_str = NULL;
@@ -21,18 +55,39 @@ char	*expand(char *str, t_env *env)
 		{
 			start = i;
 			i = search_end_quoted_string(str[i], str, i + 1);
-			end_str = join_expand(str, start, end_str);
+			end_str = join_expand(str, start, end_str, i);
+		}
+		else if (str[i] == '\"')
+		{
+			start = i;
+			i = search_end_quoted_string(str[i], str, i + 1);
+			tmp = ft_substr(str, start, i - start);
+			//end_str = join_expand(str, start, end_str, i);
+			if (ft_strchr(tmp, '$') != 0)
+				tmp = expand_quoted(tmp, env);
+			if (!end_str)
+			{
+				end_str = ft_strdup(tmp);
+				ft_free_char(tmp);
+				return (end_str);
+			}
+			else
+			{
+				join = ft_strjoin(end_str, tmp);
+				ft_free_char(end_str);
+				return (ft_free_char(tmp), join);
+			}
 		}
 		else if (str[i] == '$')
 		{
 			i++;
 			end_str = expand_value(str, i, env, end_str);
-			while (str[i] && str[i] != '$' && str[i] != ' ' && str[i] != '\'' && str[i] != '\"')
+			while (str[i] && str[i] != '$' && str[i] != ' ' && str[i] != '\"' && str[i] != '\'')
 				i++;
 		}
 		else
 		{
-			end_str = join_expand(str, i, end_str);
+			end_str = join_expand2(str, i, end_str);
 			i = search_end_str(str, i);
 		}
 	}
