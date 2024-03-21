@@ -1,103 +1,106 @@
 #include "minishell.h"
 
-void	env_command(char **cmd, t_data *shell)
-{
-	t_env	*current_env;
+extern int	g_status;
 
-	if (cmd[1])
+void	env_command(t_data *shell)
+{
+	t_env	*head;
+
+	head = shell->env;
+	while (head)
 	{
-		printf("\033[0;33mconchita: env: \033[0m\n");
-		printf("\033[0;33mNo arguments supported\n\033[0m\n");
-		return ;
+		if (head != NULL && head->value)
+			printf("%s=%s\n", head->name, head->value);
+		head = head->next;
 	}
-	current_env = shell->env;
-	while (current_env)
-	{
-		if (current_env->value[0])
-			printf("%s%s\n", current_env->name, current_env->value);
-		current_env = current_env->next;
-	}
+	g_status = 0;
 }
 
-void	pwd_command(t_data *shell)
+void	pwd_command(t_data *shell, t_process *process)
 {
-	if (getcwd(shell->cwd, sizeof(shell->cwd)) != NULL)
-		printf("%s\n", shell->cwd);
-	else
-		perror("getcwd");
+	char	*path;
+
+	(void)process;
+	(void)shell;
+	path = malloc(sizeof(char) * 100);
+	path = getcwd(path, 100);
+	printf("%s\n", path);
+	free(path);
+	g_status = 0;
 }
 
-void	echo_command(char **str, int exists)
+void	echo_command(t_process *process, int exists)
 {
-	int	str_size;
-	int	i;
+	int		i;
+	char	*arg;
+	t_list	*aux;
 
-	str_size = 0;
-	while (str[str_size])
-		str_size++;
-	if (str_size > 1)
+	aux = process->argv;
+	while (aux != NULL)
 	{
-		str_size = 0;
-		while (str[++str_size] && !ft_strncmp(str[str_size], "-n", 2))
+		arg = (char *)aux->content;
+		if (ft_strncmp(arg, "-n", 2) == 0)
 			exists = 1;
-		while (str[str_size])
+		i = 0;
+		while (arg[i] != '\0' && ft_strcmp(&arg[i], "-n") != 0)
 		{
-			i = -1;
-			while (str[str_size][++i])
-				if (str[str_size][i] != '\'' && str[str_size][i] != '\"')
-					printf("%c", str[str_size][i]);
-			if (str[str_size + 1] || str[str_size][0] == '\0')
-				printf(" ");
-			str_size++;
+			printf("%c", arg[i]);
+			i++;
 		}
+		if (aux->next != NULL)
+			printf(" ");
+		aux = aux->next;
 	}
-	if (exists == 0)
+	if (!exists)
 		printf("\n");
+	g_status = 0;
 }
 
 void	unset_command(t_data *shell, char *name)
 {
-	t_env	*prov;
+	t_env	*aux;
 	t_env	*del;
 	t_env	*prev;
 
 	if (!name)
 		return ;
-	prov = shell->env;
+	aux = shell->env;
 	prev = NULL;
-	while (prov)
+	while (aux)
 	{
-		if (!ft_strncmp(prov->name, name, ft_strlen(name)))
+		if (ft_strcmp(aux->name, name) == 0)
 		{
-			del = prov;
+			del = aux;
 			if (prev)
-				prev->next = prov->next;
+				prev->next = aux->next;
 			else
-				shell->env = prov->next;
-			free(del->name);
-			free(del->value);
-			free(del);
-			break ;
+				shell->env = aux->next;
+			free_unset(del);
+			g_status = 0;
+			return ;
 		}
-		prev = prov;
-		prov = prov->next;
+		prev = aux;
+		aux = aux->next;
 	}
 }
 
-void	export_command(char **cmd, t_data *shell)
+void	export_command(t_process *process, t_data *shell)
 {
-	int	i;
-
-	i = 1;
-	if (!cmd[1])
+	if (process->command && !process->args)
+	{
 		only_export(shell);
+		g_status = 0;
+	}
 	else
 	{
-		while (cmd[i])
+		while (process->argv->content)
 		{
-			if (check_args(cmd[i], cmd[0]))
-				create_variable(cmd[i], shell);
-			i++;
+			if (check_args(process->argv->content, process->argv->content))
+			{
+				create_variable(process->argv->content, shell);
+				g_status = 0;
+			}
+			break ;
 		}
 	}
 }

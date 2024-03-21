@@ -12,7 +12,7 @@ void	update_pwd(t_data *shell)
 		{
 			free(prov->value);
 			getcwd(dir, sizeof(dir));
-			prov->value = ft_strjoin("=", dir);
+			prov->value = ft_strdup(dir);
 			if (!prov->value)
 				return ;
 			break ;
@@ -33,7 +33,7 @@ void	update_oldpwd(t_data *shell)
 		{
 			free(prov->value);
 			getcwd(dir, sizeof(dir));
-			prov->value = ft_strjoin("=", dir);
+			prov->value = ft_strdup(dir);
 			if (!prov->value)
 				return ;
 			break ;
@@ -52,7 +52,7 @@ void	update_oldpwd_again(t_data *shell, char *pwd)
 		if (ft_strncmp(prov->name, "OLDPWD", 6) == 0)
 		{
 			free(prov->value);
-			prov->value = ft_strjoin("=", pwd);
+			prov->value = ft_strdup(pwd);
 			if (!prov->value)
 				return ;
 			break ;
@@ -70,7 +70,7 @@ void	obtain_env(t_data *shell, char *env_var)
 	{
 		if (ft_strncmp(prov->name, env_var, ft_strlen(prov->name)) == 0)
 		{
-			shell->cd = ft_strdup(prov->value + 1);
+			shell->cd = ft_strdup(prov->value);
 			if (!shell->cd)
 				return ;
 			break ;

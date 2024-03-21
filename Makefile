@@ -36,6 +36,14 @@ SRCS = main.c\
 		parser_utils3.c\
 		quote_cleaner_utils.c\
 		signals.c\
+		executor2.c\
+		utils3.c\
+		expander2.c\
+		main_utils.c\
+		here_doc_utils2.c\
+		utils4.c\
+		expander_utils2.c\
+		expander3.c\
 
 CC = gcc
 
@@ -44,9 +52,12 @@ OBJS = ${SRCS:.c=.o}
 all: ${LIBFT}/libft.a $(NAME)
 
 $(NAME): $(OBJS)
-	gcc $(CFLAGS) -lreadline -L/Users/nmontiel/.brew/opt/readline/lib -I/Users/nmontiel/.brew/opt/readline/include $(SRCS) ${LIBFT}/libft.a -o $(NAME)
+#	@$(CC) $(CFLAGS) $(SRCS) ${LIBFT}/libft.a -o $(NAME) -lreadline
+
+#	gcc $(CFLAGS) -lreadline -L/Users/nmontiel/.brew/opt/readline/lib -I/Users/nmontiel/.brew/opt/readline/include $(SRCS) ${LIBFT}/libft.a -o $(NAME)
 	
-#	@$(CC) $(CFLAGS) $(SRCS) ${LIBFT}/libft.a ${LEAK}/memory_leaks.a -o $(NAME) -lreadline
+#	ar rcs minishell.a $(OBJS)
+	gcc $(CFLAGS) -lreadline -L/Users/gfredes-/.brew/opt/readline/lib -I/Users/gfredes-/.brew/opt/readline/include $(SRCS) ${LIBFT}/libft.a -o $(NAME)
 	
 
 %.o: %.c
@@ -54,7 +65,6 @@ $(NAME): $(OBJS)
 
 $(LIBFT)/libft.a:
 	@${MAKE} -C ${LIBFT}
-
 
 clean:
 	@rm -rf $(OBJS)
